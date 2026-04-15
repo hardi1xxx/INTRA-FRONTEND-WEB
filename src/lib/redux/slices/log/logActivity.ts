@@ -19,12 +19,12 @@ const initialState : {
     fetchingExport: false,
     param: {
         start: 0,
-        length: 10
+        length: 5
     },
     logActivity: {
         search: null,
-        start_date: null,
-        end_date: null,
+        date_start: null,
+        date_end: null,
         data: [],
         draw: null,
         recordsTotal: null,
@@ -53,8 +53,8 @@ const logActivity = createSlice({
         errorLogActivity: (state,action) => {
             state.logActivity = {
                 search: null,
-                start_date: null,
-                end_date: null,
+                date_start: null,
+                date_end: null,
                 data: [],
                 draw: null,
                 recordsTotal: null,
@@ -69,13 +69,13 @@ const logActivity = createSlice({
         requestExportLogActivity: (state) => {
             state.fetchingExport = true
             state.error = null
-
+      
             return state
         },
         receiveExportLogActivity: (state) => {
             state.fetchingExport = false
             state.error = null
-
+    
             return state
         }
     }

@@ -1,338 +1,338 @@
 'use client'
 
 import MainPage from "@/components/MainPage";
-import { Add, IosShare } from "@mui/icons-material";
-import { Box, CircularProgress } from "@mui/material";
+import { Add, Clear, IosShare, Search } from "@mui/icons-material";
+import { Box, Button, CircularProgress, LinearProgress } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { GridRenderCellParams } from "@/components/DataGrid"
-import DataGridAction, { DataGridActionType } from "@/components/DataGridAction";
+import { useCallback, useState } from "react";
+import DataGrid, { CustomDatagridProps, GridColDef, GridRenderCellParams, useGridApiRef } from "@/components/DataGrid"
+import { dateTimeFormat } from "@/components/helper";
+import DataGridAction from "@/components/DataGridAction";
 import { useConfirm } from "material-ui-confirm";
-import ActionButtonResponsive, { ActionButtonResponseType } from "@/components/ActionButtonResponsive";
+import ActionButtonResponsive from "@/components/ActionButtonResponsive";
+import NoRowsOverlay from "@/components/DatagridOverlay/NoRowsOverlay";
+import DatagridCustomToolbar from "@/components/DataGridCustomToolbar";
 import { useDispatch, useSelector } from "react-redux";
 import { DELETE_SETTING_LATEST_FEATURE, EXPORT_SETTING_LATEST_FEATURE, GET_SETTING_LATEST_FEATURE } from "@/lib/redux/types";
 import { RootState } from "@/lib/redux/store";
 import FormLatestFeature from "./form";
-import { ColDef, GetRowIdParams, ICellRendererParams } from "ag-grid-community";
-import { AgGridReact } from "ag-grid-react";
-import AGGrid, { CustomAGGridProps } from "@/components/AGGrid";
-import { receiveLatestFeature } from "@/lib/redux/slices/master/latestFeature";
-import FilterLatestFeature from "./filter";
-import { usePathname } from "next/navigation";
-import { checkAccessCreate, checkAccessDelete, checkAccessEdit } from "@/components/helper";
-
-type ColumnLatestFeature = {
-    id?: number,
-    date_update?: string,
-    modul?: string,
-    keterangan?: string,
-    created_at?: string,
-    created_by?: string,
-    updated_at?: string,
-    updated_by?: string,
-    created_nik?: string,
-    updated_nik?: string,
-    no?: string,
-    action?: string
-}
+import CustomRangeDatePicker from "@/components/CustomRangeDatePicker";
 
 const SettingLatestFeaturePage = () => {
-    const dispatch = useDispatch();
-    const confirm = useConfirm();
-    const pathname = usePathname()
-
-    const { params, rows, recordsTotal, fetching, fetchingExport } = useSelector((state: RootState) => state.latestFeature)
-    const [resetSearch, setResetSearch] = useState<boolean>(false)
-    const [isFiltered, setIsFiltered] = useState<boolean>(false);
+    const {
+        rows,
+        fetching,
+        fetchingExport,
+        params,
+        recordsTotal,
+    } = useSelector((state: RootState) => state.latestFeature)
+    const dispatch = useDispatch()
+    const confirm = useConfirm()
+    const [dateRange, setDateRange] = useState<dayjs.Dayjs[]>([dayjs(new Date()), dayjs(new Date())])
     const [pageProps, setPageProps] = useState<{
         start: number;
         length: number;
         order: string;
-        search: string;
     }>({
         start: 0,
         length: 10,
-        order: "",
-        search: "",
-    });
-
-    const [openForm, setOpenForm] = useState<boolean>(false);
+        order: ''
+    })
     const [selectedData, setSelectedData] = useState<{
         id?: number,
         date_update?: Dayjs,
         modul?: string,
         keterangan?: string,
-    }>({});
+    }>({})
+    const [openForm, setOpenForm] = useState<boolean>(false)
 
-    // define columns table
-    const columns: ColDef<ColumnLatestFeature, any>[] = [
+    const apiRef = useGridApiRef();
+
+    const columns: GridColDef[] = [
         {
             field: "no",
             headerName: "No.",
-            width: 70,
-            minWidth: 70,
-            pinned: "left",
-            sortable: false,
-            valueGetter: (props) => {
-                return (props.node?.rowIndex ?? 0) + pageProps.start + 1;
-            },
+            width: 50,
+            renderCell: (params: GridRenderCellParams<any>) => {
+                return getRowIndex(params.rowNode.id as number) + 1
+            }
         },
         {
             field: "modul",
             headerName: "Modul",
-            minWidth: 150,
+            width: 200,
         },
         {
             field: "keterangan",
             headerName: "Information",
-            minWidth: 250,
+            width: 200,
         },
         {
             field: "date_update",
             headerName: "Date Update",
-            minWidth: 200,
+            width: 200,
+            renderCell: (params) => {
+                return params.value != null ? dateTimeFormat(params.value) : '-'
+            }
         },
         {
-            field: "created_at",
-            headerName: "Created At",
+            field: 'created_at',
+            headerName: 'Created At',
             minWidth: 170,
-            cellRenderer: (params: GridRenderCellParams<any>) => {
-                return params.value ?? "-";
-            },
+            resizable: true,
+            renderCell: (params) => {
+                return params.value != null ? dateTimeFormat(params.value) : '-'
+            }
         },
         {
-            field: "created_nik",
-            headerName: "Created Nik",
+            field: 'created_nik',
+            headerName: 'Created NIK',
             minWidth: 170,
-            cellRenderer: (params: GridRenderCellParams<any>) => {
-                return params.value ?? "-";
-            },
+            resizable: true,
+            renderCell: (params) => {
+                return params.value ?? '-'
+            }
         },
         {
-            field: "created_by",
-            headerName: "Created By",
+            field: 'created_by',
+            headerName: 'Created By',
             minWidth: 170,
-            cellRenderer: (params: GridRenderCellParams<any>) => {
-                return params.value ?? "-";
-            },
+            resizable: true,
+            renderCell: (params) => {
+                return params.value ?? '-'
+            }
         },
         {
-            field: "updated_at",
-            headerName: "Updated At",
+            field: 'updated_at',
+            headerName: 'Updated At',
             minWidth: 170,
-            cellRenderer: (params: GridRenderCellParams<any>) => {
-                return params.value ?? "-";
-            },
+            resizable: true,
+            renderCell: (params) => {
+                return params.value != null ? dateTimeFormat(params.value) : '-'
+            }
         },
         {
-            field: "updated_nik",
-            headerName: "Updated Nik",
+            field: 'updated_nik',
+            headerName: 'Updated NIK',
             minWidth: 170,
-            cellRenderer: (params: GridRenderCellParams<any>) => {
-                return params.value ?? "-";
-            },
+            resizable: true,
+            renderCell: (params) => {
+                return params.value ?? '-'
+            }
         },
         {
-            field: "updated_by",
-            headerName: "Updated By",
+            field: 'updated_by',
+            headerName: 'Updated By',
             minWidth: 170,
-            cellRenderer: (params: GridRenderCellParams<any>) => {
-                return params.value ?? "-";
-            },
+            resizable: true,
+            renderCell: (params) => {
+                return params.value ?? '-'
+            }
         },
-        // action button
         {
-            field: "action",
-            headerName: "Action",
-            width: 80,
-            minWidth: 80,
-            pinned: "right",
+            field: 'action',
+            headerName: 'Action',
+            headerAlign: 'center',
+            width: 60,
+            align: 'center',
             editable: false,
             sortable: false,
-            cellRenderer: (params: ICellRendererParams<any>) => {
-                const dataActions: DataGridActionType = {
-                    item: []
-                }
-                if (checkAccessEdit(pathname.substring(1))) {
-                    dataActions.item.push({
-                        text: 'Edit',
-                        onClick: () => {
-                            setSelectedData({
-                                date_update: dayjs(params.data.date_update),
-                                id: params.data.id,
-                                keterangan: params.data.keterangan,
-                                modul: params.data.modul
-                            })
-                            setOpenForm(true)
-                        }
-                    })
-                }
-                if (checkAccessDelete(pathname.substring(1))) {
-                    dataActions.item.push({
-                        text: 'Delete',
-                        onClick: () => {
-                            confirm({ description: "Are you sure to delete this data?" })
-                                .then(() => {
-                                    dispatch({ type: DELETE_SETTING_LATEST_FEATURE, id: params.data.id })
+            disableColumnMenu: true,
+            renderCell: (params: GridRenderCellParams<any>) => {
+                return (
+                    <DataGridAction item={[
+                        {
+                            text: 'Edit',
+                            onClick: () => {
+                                setSelectedData({
+                                    ...params.row,
+                                    date_update: dayjs(params.row.date_update)
                                 })
-                                .catch((err) => {
+                                setOpenForm(true)
+                            }
+                        },
+                        {
+                            text: 'Delete',
+                            onClick: () => {
+                                confirm({ description: "Are you sure to delete this data?" })
+                                    .then(() => {
+                                        dispatch({ type: DELETE_SETTING_LATEST_FEATURE, id: params.row.id })
+                                    })
+                                    .catch((err: any) => {
 
-                                })
+                                    })
+                            }
                         }
-                    })
-                }
-                if (dataActions.item.length > 0) {
-                    return (
-                        <DataGridAction item={dataActions.item} />
-                    )
-                } else {
-                    return (
-                        <Box sx={{ textAlign: 'center' }}>-</Box>
-                    )
-                }
+                    ]} />
+                )
             }
-        },
+        }
     ]
 
-    // function create button
-    const onCreateButtonClick = () => {
-        setOpenForm(true);
-        setSelectedData({});
-    };
+    const getRowIndex = useCallback<(id: number) => number>(
+        (id) => apiRef.current.getAllRowIds().indexOf(id) + (pageProps?.start || 0),
+        [apiRef, pageProps],
+    );
 
-    // function export excel
-    const onExportButtonClick = () => {
-        dispatch({ type: EXPORT_SETTING_LATEST_FEATURE });
-    };
-
-    const gridRef = useRef<AgGridReact>(null);
-    const getRowId = useCallback((params: GetRowIdParams<any>): any => {
-        return params.data.id ?? 0;
-    }, []);
-
-    // function for parsing get order param
-    const getOrderParam = (order: string) => {
-        let orderParam = ''
-        if (order != '') {
-            for (const splitted of order.split('|')) {
-                const split = splitted.split(',')
-                if (split[1] != 'null' && split[1] != 'undefined') {
-                    orderParam += `${split[0]},${split[1]}`
-                }
+    const onClickSearch = () => {
+        dispatch({
+            type: GET_SETTING_LATEST_FEATURE,
+            data: {
+                ...params,
+                start_date: dateRange[0]?.format('YYYY-MM-DD'),
+                end_date: dateRange[1]?.format('YYYY-MM-DD')
             }
-        }
-        return orderParam
+        })
     }
 
-    const onServerSidePropsChange: CustomAGGridProps["onServerSidePropsChange"] = (data) => {
-        setPageProps({
-            start: data.start,
-            length: data.length,
-            order: getOrderParam(data.order),
-            search: data.search,
-        });
-        setResetSearch(false)
-        if (isFiltered) {
-            dispatch({
-                type: GET_SETTING_LATEST_FEATURE,
-                params: {
-                    ...params,
-                    start: data.start,
-                    length: data.length,
-                    search: data.search,
-                    order_param: getOrderParam(data.order),
-                },
-            });
-        } else {
-            dispatch(receiveLatestFeature({
-                data: [],
-                recordsFiltered: 0,
-                params: {
-                    type: "table",
-                    column: "",
-                    filter_param: "",
-                    order_param: "",
-                    start: 0,
-                    length: 10,
-                    search: "",
-                }
-            }))
-        }
+    const onClickReset = () => {
+        setDateRange([dayjs(new Date()), dayjs(new Date())])
     }
 
-    const [actionButtons, setActionButtons] = useState<ActionButtonResponseType>({ items: [] })
+    const onServerSidePropsChange: CustomDatagridProps['onServerSidePropsChange'] = (param) => {
+        setPageProps(param)
+        dispatch({
+            type: GET_SETTING_LATEST_FEATURE,
+            data: {
+                ...param,
+                start_date: dateRange[0]?.format('YYYY-MM-DD'),
+                end_date: dateRange[1]?.format('YYYY-MM-DD')
+            }
+        })
+    }
 
-    useEffect(() => {
-        const temp: ActionButtonResponseType = {
-            items: []
-        }
-        if (checkAccessCreate(pathname.substring(1))) {
-            temp.items.push({
-                color: "primary",
-                variant: "contained",
-                size: "small",
-                onClick: onCreateButtonClick,
-                text: "Create Data",
-                startIcon: <Add />,
-            })
-        }
-        setActionButtons(temp)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const onExportButtonClick = () => {
+        dispatch({
+            type: EXPORT_SETTING_LATEST_FEATURE,
+            data: {
+                start_date: params.start_date,
+                end_date: params.end_date,
+            }
+        })
+    }
 
+    const onCreateButtonClick = () => {
+        setSelectedData({})
+        setOpenForm(true)
+    }
 
     return (
         <MainPage
             title="Setting Latest Feature"
         >
-            <FormLatestFeature open={openForm} setOpen={setOpenForm} data={selectedData} setIsFiltered={setIsFiltered} />
-
-            <FilterLatestFeature pageProps={pageProps} setIsFiltered={setIsFiltered} setResetSearch={setResetSearch} />
+            <FormLatestFeature open={openForm} setOpen={setOpenForm} data={selectedData} />
+            <Box
+                sx={{
+                    backgroundColor: 'white',
+                    flexDirection: { sm: 'row', xs: 'column' },
+                    alignItems: { sm: 'center', xs: 'stretch' },
+                    width: { sm: '550px', xs: 'auto' }
+                }}
+                display={'flex'}
+                p={'20px'}
+                borderRadius={'8px'}
+                gap={'1rem'}
+                alignItems={'center'}
+            >
+                <Box sx={{ width: { sm: '350px', xs: '100%' } }}>
+                    <CustomRangeDatePicker 
+                        value={dateRange}
+                        onChange={(value) => setDateRange(value)}
+                        startDateLabel="Start Date"
+                        endDateLabel="End Date"
+                    />
+                </Box>
+                <Box display={'flex'} gap={'1rem'} justifyContent={'end'}>
+                    <Button
+                        color="primary"
+                        variant='contained'
+                        size="small"
+                        type="submit"
+                        onClick={onClickSearch}
+                        startIcon={<Search />}>
+                        Search
+                    </Button>
+                    <Button
+                        color="info"
+                        variant='contained'
+                        size="small"
+                        onClick={onClickReset}
+                        startIcon={<Clear />}>
+                        Reset
+                    </Button>
+                </Box>
+            </Box>
 
             <Box
                 sx={{
-                    backgroundColor: "white",
+                    backgroundColor: 'white'
                 }}
-                display={"flex"}
-                flexDirection={"column"}
-                p={"10px"}
-                paddingY={"15px"}
-                pb={"20px"}
-                borderRadius={"8px"}
-                gap={"1rem"}
+                display={'flex'}
+                flexDirection={'column'}
+                width={'calc(100% - 40px)'}
+                p={'20px'}
+                borderRadius={'8px'}
+                gap={'1rem'}
+                flexGrow={1}
             >
-                <ActionButtonResponsive
-                    items={[{
-                        color: "info",
-                        variant: "contained",
-                        size: "small",
-                        onClick: onExportButtonClick,
-                        text: "Export Excel",
-                        disabled: fetchingExport || rows.length === 0,
-                        endIcon: fetchingExport && <CircularProgress color="inherit" size={"1rem"} />,
-                        startIcon: <IosShare />,
+                <ActionButtonResponsive items={[
+                    {
+                        color: 'primary',
+                        variant: 'contained',
+                        size: 'small',
+                        onClick: onCreateButtonClick,
+                        text: 'Create',
+                        startIcon: <Add />
                     },
-                    ...actionButtons.items]}
+                    {
+                        color: 'info',
+                        variant: 'contained',
+                        size: 'small',
+                        onClick: onExportButtonClick,
+                        text: 'Export',
+                        disabled: fetchingExport,
+                        endIcon: fetchingExport && <CircularProgress color='inherit' size={'1rem'} />,
+                        startIcon: <IosShare />
+                    },
+                ]}
                 />
                 <Box
                     flexGrow={1}
-                    height={"550px"}
+                    height={'380px'}
+                    minHeight={'380px'}
                     sx={{
-                        backgroundColor: "white",
+                        backgroundColor: 'white'
                     }}
                 >
-                    <AGGrid
-                        gridRef={gridRef}
-                        rowData={rows}
-                        columnDefs={columns}
-                        totalData={recordsTotal}
-                        getRowId={getRowId}
-                        isLoading={fetching}
-                        height={"562px"}
-                        showSearchInput
+                    <DataGrid
+                        apiRef={apiRef}
+                        columns={columns}
+                        rows={rows}
+                        pagination
+                        pageSizeOptions={[10, 30, 50, 100]}
+                        initialState={{
+                            pagination: { paginationModel: { pageSize: 10, page: 0, } },
+                            filter: {
+                                filterModel: {
+                                    items: [],
+                                    quickFilterValues: [''],
+                                },
+                            },
+                        }}
+                        slots={{
+                            loadingOverlay: LinearProgress,
+                            noRowsOverlay: NoRowsOverlay,
+                            toolbar: DatagridCustomToolbar
+                        }}
+                        density="compact"
+                        sx={{ '--DataGrid-overlayHeight': '150px' }}
+                        loading={fetching}
+                        disableRowSelectionOnClick
+                        keepNonExistentRowsSelected
+                        
                         serverSideMode
                         onServerSidePropsChange={onServerSidePropsChange}
-                        resetSearch={resetSearch}
+                        rowCount={recordsTotal}
                     />
                 </Box>
             </Box>

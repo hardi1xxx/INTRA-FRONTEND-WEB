@@ -4,7 +4,7 @@ import { MouseEventHandler, ReactNode } from 'react';
 import { useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export type ActionButtonResponseType = {
+type ActionButtonResponseType = {
     items: {
         text: string,
         onClick: () => void

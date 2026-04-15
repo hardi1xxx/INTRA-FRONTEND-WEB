@@ -1,7 +1,7 @@
 'use client'
 
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, Input } from "@mui/material"
+import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, TextField, Typography, Input } from "@mui/material"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import Visibility from '@mui/icons-material/Visibility';
@@ -18,10 +18,10 @@ type ModalChangePasswordType = {
     setOpen: React.Dispatch<SetStateAction<boolean>>,
 }
 
-const ModalChangePassword = ({ open, setOpen }: ModalChangePasswordType) => {
+const ModalChangePassword = ({open,setOpen}: ModalChangePasswordType) => {
     const dispatch = useDispatch()
-    const { fetching } = useSelector((state: RootState) => state.auth)
-    const { severity } = useSelector((state: RootState) => state.notification)
+    const {fetching, auth, error} = useSelector((state: RootState) => state.auth)
+    const {text,severity} = useSelector((state: RootState) => state.notification)
     const [showCurrentPassword, setShowCurrentPassword] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
@@ -31,6 +31,7 @@ const ModalChangePassword = ({ open, setOpen }: ModalChangePasswordType) => {
         formState: {
             errors
         },
+        setValue,
         reset
     } = useForm({
         resolver: yupResolver(changePasswordSchema),
@@ -42,13 +43,13 @@ const ModalChangePassword = ({ open, setOpen }: ModalChangePasswordType) => {
     })
 
     // submit change password
-    const onSubmit: SubmitHandler<ChangePasswordServiceRequest> = (data) => {
-        dispatch({ type: CHANGE_PASSWORD, param: data })
+    const onSubmit : SubmitHandler<ChangePasswordServiceRequest> = (data) => {
+        dispatch({type: CHANGE_PASSWORD,param: data})
     }
 
     // reset and close modal when success change password
     useEffect(() => {
-        if (severity == 'success') {
+        if(severity == 'success'){
             reset({
                 current_password: '',
                 password: '',
@@ -56,10 +57,9 @@ const ModalChangePassword = ({ open, setOpen }: ModalChangePasswordType) => {
             })
             setOpen(false)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [severity])
+    },[severity])
 
-    return (
+    return(
         <Dialogs
             open={open}
             title={`Change Password`}
@@ -73,30 +73,30 @@ const ModalChangePassword = ({ open, setOpen }: ModalChangePasswordType) => {
                             name="current_password"
                             control={control}
                             render={({ field }) => <FormControl variant="standard" size='small' fullWidth>
-                                <InputLabel>Current Password</InputLabel>
-                                <Input
-                                    {...field}
-                                    size='small'
-                                    fullWidth
-                                    type={showCurrentPassword ? 'text' : 'password'}
-                                    id="current_password"
-                                    autoComplete="current_password"
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                                onMouseDown={(e) => e.preventDefault()}
-                                                edge="end"
-                                            >
-                                                {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                />
-                            </FormControl>}
+                            <InputLabel>Current Password</InputLabel>
+                            <Input
+                                {...field}
+                                size='small'
+                                fullWidth
+                                type={showCurrentPassword ? 'text' : 'password'}
+                                id="current_password"
+                                autoComplete="current_password"
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        edge="end"
+                                    >
+                                        {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>}
                         />
-                        {!!errors.current_password?.message && (
+                        {!! errors.current_password?.message && (
                             <FormHelperText error id="accountId-error">
                                 {errors.current_password?.message}
                             </FormHelperText>
@@ -108,30 +108,30 @@ const ModalChangePassword = ({ open, setOpen }: ModalChangePasswordType) => {
                             name="password"
                             control={control}
                             render={({ field }) => <FormControl variant="standard" size='small' fullWidth>
-                                <InputLabel>New Password</InputLabel>
-                                <Input
-                                    {...field}
-                                    size='small'
-                                    fullWidth
-                                    type={showPassword ? 'text' : 'password'}
-                                    id="password"
-                                    autoComplete="password"
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                onMouseDown={(e) => e.preventDefault()}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                />
-                            </FormControl>}
+                            <InputLabel>New Password</InputLabel>
+                            <Input
+                                {...field}
+                                size='small'
+                                fullWidth
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                autoComplete="password"
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>}
                         />
-                        {!!errors.password?.message && (
+                        {!! errors.password?.message && (
                             <FormHelperText error id="accountId-error">
                                 {errors.password?.message}
                             </FormHelperText>
@@ -143,46 +143,46 @@ const ModalChangePassword = ({ open, setOpen }: ModalChangePasswordType) => {
                             name="password_confirmation"
                             control={control}
                             render={({ field }) => <FormControl variant="standard" size='small' fullWidth>
-                                <InputLabel>New Password Confirmation</InputLabel>
-                                <Input
-                                    {...field}
-                                    size='small'
-                                    fullWidth
-                                    type={showPasswordConfirmation ? 'text' : 'password'}
-                                    id="password_confirmation"
-                                    autoComplete="password_confirmation"
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
-                                                onMouseDown={(e) => e.preventDefault()}
-                                                edge="end"
-                                            >
-                                                {showPasswordConfirmation ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                />
-                            </FormControl>}
+                            <InputLabel>New Password Confirmation</InputLabel>
+                            <Input
+                                {...field}
+                                size='small'
+                                fullWidth
+                                type={showPasswordConfirmation ? 'text' : 'password'}
+                                id="password_confirmation"
+                                autoComplete="password_confirmation"
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        edge="end"
+                                    >
+                                        {showPasswordConfirmation ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>}
                         />
-                        {!!errors.password_confirmation?.message && (
+                        {!! errors.password_confirmation?.message && (
                             <FormHelperText error id="accountId-error">
                                 {errors.password_confirmation?.message}
                             </FormHelperText>
                         )}
                     </Grid>
-
+                    
                     <Grid item xs={12} display={'flex'} flexDirection={'row-reverse'} alignItems={'center'} gap={'1rem'}>
-                        <Button
-                            color="primary"
-                            variant='contained'
-                            size="small"
-                            type="submit"
+                        <Button 
+                            color="primary" 
+                            variant='contained' 
+                            size="small" 
+                            type="submit" 
                             endIcon={
-                                fetching && <CircularProgress color='inherit' size={'1rem'} />
+                                fetching && <CircularProgress color='inherit' size={'1rem'}/>
                             }
-                            disabled={fetching}
+                            disabled = {fetching}
                         >
                             Submit
                         </Button>

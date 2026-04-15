@@ -1,11 +1,13 @@
 import './globals.css'
+import 'ag-grid-community/styles/ag-grid.css'
+import 'ag-grid-community/styles/ag-theme-quartz.css'
 import type { Metadata } from "next";
 import StoreProvider from "@/app/StoreProvider";
 import ToastProvider from '@/components/Toast';
 
 export const metadata: Metadata = {
-  title: "Intra System",
-  description: "Integration Tracking System @ Telkom Akses",
+  title: "INTRA System",
+  description: "Integration Tracking System",
 };
 
 export default function AppLayout({

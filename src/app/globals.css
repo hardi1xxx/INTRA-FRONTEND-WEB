@@ -1,51 +1,51 @@
 .bg-theme {
-  background-color: #223c85 !important;
+  background-color: #ba9577 !important;
 }
 .bg-theme-secondary {
-  background-color: #2d50b0;
+  background-color:  #f6d4a8;
 }
 
 .text-theme {
-  color: #223c85;
+  color: #311d1b;
 }
 .text-theme-secondary {
-  color: #2d50b0;
+  color: #543830;
 }
 .btn-theme {
-  background-color: #2d50b0 !important;
+  background-color: #825f4f !important;
   color: white;
 }
 
 .btn-theme:hover {
-  background-color: #223c85 !important;
+  background-color: #ba9577 !important;
   color: white;
 }
 
 .accordion-custom::before {
-  content: none;
+  content: none
 }
 
 .MuiList-root .selected-accordion,
 .MuiList-root .Mui-selected {
-  background-color: #2d50b0 !important;
+  background-color: #f6d4a8!important;
   color: white !important;
   border-radius: 12px !important;
 }
 
-.MuiList-root .Mui-selected > .MuiListItemText-root > .MuiTypography-root,
-.MuiList-root .Mui-selected > .MuiListItemIcon-root {
+.MuiList-root .Mui-selected>.MuiListItemText-root>.MuiTypography-root,
+.MuiList-root .Mui-selected>.MuiListItemIcon-root {
   color: white !important;
   font-weight: 600;
 }
 
 .MuiList-root .MuiListItemButton-root:hover {
-  background-color: #223c85 !important;
+  background-color: #ba9577 !important;
   color: white !important;
   border-radius: 12px !important;
   z-index: 2;
 }
 
-.MuiAccordionDetails-root > .MuiList-root::after {
+.MuiAccordionDetails-root>.MuiList-root::after {
   content: "";
   position: absolute;
   left: 12px;
@@ -53,33 +53,26 @@
   height: 100%;
   width: 1px;
   opacity: 1;
-  background: #2d50b0;
+  background: #ba9577;
 }
 
-/* .color1 {color: #311d1b;}
+
+.color1 {color: #311d1b;}
 .color2 {color: #543830;}
 .color3 {color: #825f4f;}
 .color4 {color: #ba9577;}
-.color5 {color: #f6d4a8;} */
+.color5 {color: #f6d4a8;}
+
 
 .css-1fat2ok::before {
   height: 0px !important;
 }
 
-.MuiButton-root:hover,
-.MuiIconButton-root:hover {
+.MuiButton-root:hover, .MuiIconButton-root:hover {
   transform: scale(1.092) !important;
   transition: 0.175s !important;
 }
 
-.MuiButton-containedPrimary,
-.MuiPaginationItem-colorPrimary[class~="Mui-selected"] {
+.MuiButton-containedPrimary, .MuiPaginationItem-colorPrimary[class~="Mui-selected"] {
   color: white !important;
-}
-
-.button-gray {
-  background-color: #747272;
-}
-.button-gray:hover {
-  background-color: #747272;
 }

@@ -16,10 +16,10 @@ export function* getLogActivitySagas({ param }: AnyAction) {
     yield put(requestLogActivity())
 
     const response: DefaultServiceResponse & {
-      result: GetLogActivityDataResponse;
+        result: GetLogActivityDataResponse;
     } = yield getLogActivity(param)
 
-    yield put(receiveLogActivity({ result: response.result, param: param }))
+    yield put(receiveLogActivity({result: response.result, param: param}))
   } catch (error: any) {
     const { message, statusCode } = errorHandler(error)
     yield put(errorLogActivity(message))

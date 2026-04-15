@@ -1,5 +1,5 @@
 export const titleCase = (s: string) =>{
-  return s.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase()).replaceAll('-', ' ')
+  return s.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase())
 }
 
 
@@ -26,7 +26,6 @@ export const dateFormat = (date: Date | string) : string | null => {
 }
 
 export const dateTimeFormat = (date: Date | string) : string | null => {
-  if(!date) return ""
   if(typeof date == 'string'){
     if(date == null || date == undefined){
       return null
@@ -50,31 +49,6 @@ export const dateTimeFormat = (date: Date | string) : string | null => {
   const second = date.getSeconds();
 
   return day+' '+monthName[month]+' '+year+' '+pad(hour,2)+':'+pad(minute,2)+':'+pad(second,2);
-}
-
-export const dateTimeFormatWithoutSecond = (date: Date | string) : string | null => {
-  if(typeof date == 'string'){
-    if(date == null || date == undefined){
-      return null
-    }
-    date = new Date(date)
-  }
-
-  if(date == null || date == undefined){
-    return null
-  }
-
-  const day = date.getDate();
-
-  const month = date.getMonth();
-  const monthName = ['Jan','Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
-
-  const year = date.getFullYear();
-
-  const hour = date.getHours();
-  const minute = date.getMinutes();
-
-  return day+' '+monthName[month]+' '+year+' '+pad(hour,2)+':'+pad(minute,2);
 }
 
 export const pad = (num: string| number, size: number, charPad: string = '0',direction: 'left' | 'right' = 'left') => {
@@ -226,20 +200,4 @@ export function capitalizeFirstLetter(string : string) {
 
 export function convertNullToStrip(string: string){
   return !string || string == '' ? '-' : string
-}
-
-export function checkAccessShow(path: string): boolean {
-  return (JSON.parse(window.localStorage.getItem("intra_auth_menu_access") ?? "[]").find((value: string) => path.startsWith(`/${value}`)) != undefined) || (["/auth/change-password", "/dashboard", "/notfound", "/forbidden", "/login", "/profile", "/notifications"].includes(path))
-}
-
-export function checkAccessCreate(path: string): boolean {
-  return JSON.parse(window.localStorage.getItem("intra_auth_menu_access_create") ?? "[]").includes(path)
-}
-
-export function checkAccessEdit(path: string): boolean {
-  return JSON.parse(window.localStorage.getItem("intra_auth_menu_access_edit") ?? "[]").includes(path)
-}
-
-export function checkAccessDelete(path: string): boolean {
-  return JSON.parse(window.localStorage.getItem("intra_auth_menu_access_delete") ?? "[]").includes(path)
 }

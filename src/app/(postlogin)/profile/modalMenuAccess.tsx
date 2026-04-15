@@ -2,13 +2,13 @@ import Modals from "@/components/modals"
 import { Box, Button, Checkbox, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { MenuListType, menuList } from "../menuList";
 import { useEffect, useState } from "react";
 import { getCookie } from "cookies-next";
 import { getMenuAccess } from "@/lib/services";
 import { MenuAccessResponse } from "@/lib/services/auth";
-import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 
 type ModalMenuAccessType = {
     open: boolean,
@@ -20,7 +20,7 @@ type MenuAccessType = Unpacked<MenuAccessResponse>
 
 const ModalMenuAccess = ({open,setOpen} : ModalMenuAccessType) => {
     const [checkData,setCheckData] = useState<MenuAccessResponse>([])
-
+        
     // load data menu access
     useEffect(() => {
         const processSetCheckData = async () => {
@@ -31,12 +31,12 @@ const ModalMenuAccess = ({open,setOpen} : ModalMenuAccessType) => {
         processSetCheckData()
     },[])
 
-    // element list menu access
-    const renderTree = (menu: MenuListType[]) =>
-        menu.map(value =>
-            <TreeItem
-                key={value.id}
-                itemId={value.id}
+    // element list menu access 
+    const renderTree = (menu: MenuListType[]) => 
+        menu.map(value => 
+            <TreeItem 
+                key={value.id} 
+                nodeId={value.id} 
                 label={
                     <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Typography variant="subtitle1" sx={{flexGrow: 1}}>{value.text}</Typography>
@@ -44,7 +44,7 @@ const ModalMenuAccess = ({open,setOpen} : ModalMenuAccessType) => {
                             {
                                 value.child == undefined &&
                                 <>
-
+                                
                                     <Box width={'60px'} textAlign={'center'}>
                                         <Checkbox readOnly disabled checked={checkData.find(valueCheck => valueCheck.menu == value.id)?.show || false} />
                                     </Box>
@@ -100,11 +100,14 @@ const ModalMenuAccess = ({open,setOpen} : ModalMenuAccessType) => {
                             <Typography variant="subtitle1" sx={{flexGrow: 1}} width={'60px'} textAlign={'center'} color={'white'}>Delete</Typography>
                         </Box>
                     </Box>
-                        <SimpleTreeView
+                        <TreeView
+                            aria-label="file system navigator"
+                            defaultCollapseIcon={<ExpandMoreIcon />}
+                            defaultExpandIcon={<ChevronRightIcon />}
                             sx={{ height: 380, flexGrow: 1, width: {sm: 700, xs: 'auto'}, overflowY: 'auto' }}
                             >
                                 {renderTree(menuList)}
-                        </SimpleTreeView>
+                        </TreeView>
                 </Box>
                 <Box display={'flex'} flexDirection={'row-reverse'} justifyContent={'end'} width={'100%'} marginTop={'1rem'} gap={'1rem'}>
                     <Button color="error" variant='contained' size="small" type="button" onClick={onCancel}>

@@ -1,31 +1,27 @@
-import { errorRole, receiveExportRole, requestExportRole} from "@/lib/redux/slices/master/role"
+import { errorRole} from "@/lib/redux/slices/master/role"
 import { setTextNotification } from "@/lib/redux/slices/notification"
 import { exportExcelRole } from "@/lib/services"
 import { put, takeEvery } from "redux-saga/effects"
 import { errorHandler } from "../../errorHandler"
 import { EXPORT_ROLE } from "@/lib/redux/types"
-import { getDateNow } from "@/components/helper"
 
 type AnyAction = {
-  type: string,
-  search: string
+  type: string
 }
 
-export function* exportRoleSagas({ search }: AnyAction) {
+export function* exportRoleSagas({}: AnyAction) {
   try {
-    yield put(requestExportRole())
-    const response : Blob = yield exportExcelRole(search)
+    const response : Blob = yield exportExcelRole()
 
     const url = window.URL.createObjectURL(new Blob([response]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Setting-Role-User-export-${getDateNow()}.xlsx`);
+    link.setAttribute('download', `Master-Role.xlsx`);
     document.body.appendChild(link);
     link.click();
-
-    yield put(receiveExportRole())
+    
   } catch (error: any) {
-    const { message } = errorHandler(error)
+    const { message, statusCode } = errorHandler(error)
     yield put(errorRole(message))
     yield put(setTextNotification({ text: message, severity: "error" }))
   }

@@ -1,75 +1,58 @@
-import auth from "@/lib/redux/slices/auth";
-import customization from "@/lib/redux/slices/customization";
-import notification from "@/lib/redux/slices/notification";
 import createSagaMiddleware from "@redux-saga/core";
 import { configureStore } from "@reduxjs/toolkit";
+import customization from '@/lib/redux/slices/customization';
+import notification from '@/lib/redux/slices/notification';
+import auth from '@/lib/redux/slices/auth';
 
 // redux master
-import departementUser from "@/lib/redux/slices/master/departementUser";
-import jobPosition from "@/lib/redux/slices/master/job-position";
-import latestFeature from "@/lib/redux/slices/master/latestFeature";
-import menuAccess from "@/lib/redux/slices/master/menuAccess";
-import menuAccessMobile from "@/lib/redux/slices/master/menuAccessMobile";
-import role from "@/lib/redux/slices/master/role";
-import shift from "@/lib/redux/slices/master/shift";
-import user from "@/lib/redux/slices/master/user";
+import role from '@/lib/redux/slices/master/role'
+import menuAccess from '@/lib/redux/slices/master/menuAccess'
+import user from '@/lib/redux/slices/master/user'
+import latestFeature from '@/lib/redux/slices/master/latestFeature'
+
+// redux master pcx library
+import pcxLibraryColorway from '@/lib/redux/slices/pcxLibrary/colorway'
 
 // redux log
 import logActivity from "./slices/log/logActivity";
-
-// log notification
-import logNotification from "./slices/log/logNotification";
 
 // system update
 import systemUpdate from "./slices/systemUpdate";
 
 // redux notifications
-import notifications from "./slices/notifications";
-
-// Report PT3
-import reportPT3 from "@/lib/redux/slices/report/reportPT3";
+import notifications from './slices/notifications'
 
 import { rootSaga } from "./sagas";
 
-const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware()
 const store = configureStore({
-  reducer: {
-    customization,
-    notification,
-    auth,
+    reducer: {
+        customization,
+        notification,
+        auth,
+        role,
+        menuAccess,
+        user,
+        latestFeature,
+        // log
+        logActivity,
 
-    departementUser,
-    shift,
+        // system update
+        systemUpdate,
 
-    // Setting
-    role,
-    menuAccess,
-    user,
-    jobPosition,
-    latestFeature,
-    menuAccessMobile,
+        //notifications
+        notifications,
 
-    // log
-    logActivity,
+        // master pcx library
+        pcxLibraryColorway,
 
-    // log notification
-    logNotification,
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false, serializableCheck: false, }).concat(sagaMiddleware)
+})
 
-    // system update
-    systemUpdate,
+sagaMiddleware.run(rootSaga)
 
-    //notifications
-    notifications,
-
-    // Report PT3
-    reportPT3,
-  },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false, serializableCheck: false }).concat(sagaMiddleware),
-});
-
-sagaMiddleware.run(rootSaga);
-
-export type AppStore = ReturnType<() => typeof store>;
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = AppStore["dispatch"];
-export default store;
+export type AppStore = ReturnType<() => typeof store>
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = AppStore['dispatch']
+export default store

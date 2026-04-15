@@ -2,22 +2,22 @@ import { errorLatestFeature, receiveLatestFeature, requestLatestFeature } from "
 import { setTextNotification } from "@/lib/redux/slices/notification"
 import { DefaultServiceResponse, getLatestFeature, deleteLatestFeature } from "@/lib/services"
 import { GetLatestFeatureRequestType, LatestFeatureResponseType } from "@/lib/services/master/latestFeature"
-import { put, select, takeEvery } from "redux-saga/effects"
+import { put, takeEvery } from "redux-saga/effects"
 import { errorHandler } from "../../errorHandler"
 import { DELETE_SETTING_LATEST_FEATURE } from "@/lib/redux/types"
-import { RootState } from "@/lib/redux/store"
 
 type AnyAction = {
     type: string
     id: number
+    params: GetLatestFeatureRequestType
 }
 
-export function* deleteLatestFeatureSagas({ id }: AnyAction) {
+export function* deleteLatestFeatureSagas({ id, params }: AnyAction) {
     try {
         yield put(requestLatestFeature())
 
         yield deleteLatestFeature(id)
-        const params: GetLatestFeatureRequestType = yield select((state: RootState) => state.latestFeature.params)
+
         const response: DefaultServiceResponse & { result: { data: LatestFeatureResponseType[], recordsTotal: number, recordsFiltered: number } } = yield getLatestFeature(params)
 
         yield put(receiveLatestFeature({

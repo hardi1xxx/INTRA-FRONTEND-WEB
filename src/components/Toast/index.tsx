@@ -3,7 +3,7 @@
 import { setTextNotification } from "@/lib/redux/slices/notification";
 import { RootState } from "@/lib/redux/store";
 import { deleteCookie } from "cookies-next";
-import { ReactNode, createContext, useCallback, useEffect, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ const ToastProvider = ({ children }: { children: ReactNode }) => {
     const [open,setOpen] = useState(false)
     const { text, severity, responseCode } = useSelector((state: RootState) => state.notification)
 
-    const show = useCallback((content: string, type: "error" | "info" | "success" | "warning") => {
+    const show = (content: string, type: "error" | "info" | "success" | "warning") => {
         if (!open) {
             setOpen(true)
             if (type === 'success') {
@@ -40,7 +40,7 @@ const ToastProvider = ({ children }: { children: ReactNode }) => {
             }, 1000)
         }
         return true
-    }, [open])
+    }
 
     useEffect(() => {
         if (text && severity) {
@@ -49,23 +49,20 @@ const ToastProvider = ({ children }: { children: ReactNode }) => {
             } else {
                 show(text, severity)
                 if (responseCode === 401) {
-                    deleteCookie('intra_auth_token')
-                    deleteCookie('intra_auth_name')
-                    deleteCookie('intra_auth_nik')
-                    deleteCookie('intra_auth_picture')
-                    deleteCookie('intra_auth_role')
-                    deleteCookie('intra_auth_is_app')
-                    deleteCookie('intra_auth_is_web')
-                    deleteCookie('intra_auth_departement_id')
-                    deleteCookie('intra_auth_expires_at')
-                    deleteCookie('intra_auth_menu_access')
+                    deleteCookie('token')
+                    deleteCookie('name')
+                    deleteCookie('nik')
+                    deleteCookie('picture')
+                    deleteCookie('role')
+                    deleteCookie('expires_at')
+                    deleteCookie('menu_access')
     
                     router.refresh()
                 }
             }
             dispatch(setTextNotification({text: undefined,severity: undefined}))
         }
-    }, [dispatch, responseCode, router, severity, show, text])
+    }, [severity])
 
     return (
         <ToastContext.Provider value={{ show }}>

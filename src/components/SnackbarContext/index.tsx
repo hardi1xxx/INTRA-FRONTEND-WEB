@@ -58,7 +58,7 @@ const SnackbarProvider = ({ children } : {children: ReactNode}) => {
                 })
             }
         }
-    },[responseCode, router, severity, text])
+    },[severity])
 
     useEffect(() => {
         if(!open){
@@ -66,7 +66,7 @@ const SnackbarProvider = ({ children } : {children: ReactNode}) => {
                 dispatch(setTextNotification({text: undefined,severity: undefined}))
             }
         }
-    },[dispatch, open, severity, text])
+    },[open])
 
     return(
         <SnackbarContext.Provider value={{show}}>

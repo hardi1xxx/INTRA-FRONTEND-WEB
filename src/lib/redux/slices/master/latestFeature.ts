@@ -13,14 +13,10 @@ const initialState: {
     rows: [],
     fetchingExport: false,
     params: {
-        column: '',
         start: 0,
         length: 10,
         start_date: '',
-        end_date: '',
-        search: '',
-        filter_param: '',
-        order_param: '',
+        end_date: ''
     },
     recordsTotal: 0,
 }
@@ -36,8 +32,8 @@ const latestFeature = createSlice({
             return state
         },
         receiveLatestFeature: (state, { payload }) => {
-            state.rows = payload.data ?? []
-            state.recordsTotal = payload.recordsFiltered ?? 0
+            state.rows = payload.data
+            state.recordsTotal = payload.recordsFiltered
             state.params = payload.params
             state.fetching = false
 

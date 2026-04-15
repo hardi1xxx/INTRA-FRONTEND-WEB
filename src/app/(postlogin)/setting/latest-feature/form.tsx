@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { RootState } from "@/lib/redux/store"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
@@ -10,9 +9,9 @@ import { useEffect, useState } from "react"
 import { Dialogs } from "@/components/dialog"
 import { CREATE_SETTING_LATEST_FEATURE, UPDATE_SETTING_LATEST_FEATURE } from "@/lib/redux/types"
 import FormBuilder from "@/components/FormBuilder"
-import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, InputLabel } from "@mui/material"
+import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, InputLabel, TextField } from "@mui/material"
 import { Save } from "@mui/icons-material"
-import { DateTimePicker } from "@mui/x-date-pickers"
+import { DatePicker, DateTimePicker } from "@mui/x-date-pickers"
 
 type FormLatestFeatureType = {
     open: boolean,
@@ -22,11 +21,10 @@ type FormLatestFeatureType = {
         date_update?: Dayjs,
         modul?: string,
         keterangan?: string,
-    },
-    setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>,
+    }
 }
 
-const FormLatestFeature = ({ open, setOpen, data, setIsFiltered }: FormLatestFeatureType) => {
+const FormLatestFeature = ({ open, setOpen, data }: FormLatestFeatureType) => {
     const dispatch = useDispatch()
     const {
         params,
@@ -60,15 +58,11 @@ const FormLatestFeature = ({ open, setOpen, data, setIsFiltered }: FormLatestFea
                     fieldName: "modul",
                     label: "Modul",
                     autoFocus: true,
-                    maxLength: 255,
-                    required: true
                 },
                 {
                     fieldName: "keterangan",
                     label: "Information",
-                    multiline: true,
-                    maxLength: 255,
-                    required: true
+                    multiline: true
                 }
             ]
         }
@@ -97,7 +91,7 @@ const FormLatestFeature = ({ open, setOpen, data, setIsFiltered }: FormLatestFea
 
     const onSubmit: SubmitHandler<FormLatestFeatureType['data']> = (data) => {
         if (data.id) {
-            dispatch({
+            dispatch({ 
                 type: UPDATE_SETTING_LATEST_FEATURE,
                 id: data.id,
                 data: { ...data, date_update: data.date_update?.format("YYYY-MM-DD HH:mm:ss") },
@@ -110,7 +104,6 @@ const FormLatestFeature = ({ open, setOpen, data, setIsFiltered }: FormLatestFea
                 params
             })
         }
-        setIsFiltered(true)
     }
 
     return (
@@ -167,7 +160,6 @@ const FormLatestFeature = ({ open, setOpen, data, setIsFiltered }: FormLatestFea
                                                 variant: "outlined"
                                             },
                                         }}
-                                        ampm={false}
                                     />
                                     <FormHelperText id="date_update-text">
                                         {errors['date_update']?.message as string}
