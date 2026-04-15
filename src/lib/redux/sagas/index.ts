@@ -22,11 +22,6 @@ import { watchGetMenuAccessMobileByRoleAsync } from "./master/menuAccessMobile/g
 import { watchSaveMenuAccessMobileByRoleAsync } from "./master/menuAccessMobile/saveByRole";
 import { watchUpdateMenuAccessMobileAsync } from "./master/menuAccessMobile/update";
 
-//master shift
-import { watchExportShiftAsync } from "./master/shift/export";
-import { watchGetShiftAsync } from "./master/shift/get";
-import { watchUpdateShiftAsync } from "./master/shift/upsert";
-
 //master status lapangan
 import { watchExportStatusLapanganAsync } from "./master/statusLapangan/export";
 import { watchGetStatusLapanganAsync } from "./master/statusLapangan/get";
@@ -150,11 +145,6 @@ export function* rootSaga() {
     watchUpdateLatestFeatureAsync(),
     watchDeleteLatestFeatureAsync(),
     watchExportLatestFeatureAsync(),
-
-    // master shift
-    watchGetShiftAsync(),
-    watchUpdateShiftAsync(),
-    watchExportShiftAsync(),
 
     // master status lapangan
     watchGetStatusLapanganAsync(),

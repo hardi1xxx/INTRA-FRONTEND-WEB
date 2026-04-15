@@ -34,14 +34,6 @@ export const menuList: MenuListType[] = [
     icon: <FolderIcon />,
     child: [
       {
-        id: "master/shift",
-        text: "Shift",
-        url: "/master/shift",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
-      },
-      {
         id: "master/status-lapangan",
         text: "Status Lapangan",
         url: "/master/status-lapangan",

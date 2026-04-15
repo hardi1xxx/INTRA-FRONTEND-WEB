@@ -2,7 +2,7 @@ import { SyntheticEvent, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Clear, Search } from "@mui/icons-material";
 import { Autocomplete, AutocompleteInputChangeReason, Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { Control, Controller, FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { Control, Controller, FieldValues, Path, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { debounce } from "@mui/material/utils";
@@ -174,7 +174,18 @@ const FilterWidget = ({ setIsFiltered, setResetSearch }: FilterType) => {
 
 export default FilterWidget;
 
-function ControllerWidget({
+type Props<T extends FieldValues> = {
+  control: Control<T>;
+  field: Path<T>;
+  label: string;
+  error?: string;
+  loading: boolean;
+  options: any[];
+  onInputChange: ((event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void) | undefined;
+  onClose: () => void;
+};
+
+function ControllerWidget<T extends FieldValues>({
   control,
   field,
   label,
@@ -182,17 +193,8 @@ function ControllerWidget({
   loading,
   options,
   onInputChange,
-  onClose,
-}: {
-  control: Control<FieldValues>;
-  field: string;
-  label: string;
-  error?: string;
-  loading: boolean;
-  options: string[];
-  onInputChange: ((event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void) | undefined;
-  onClose: () => void;
-}) {
+  onClose
+}: Props<T>) {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   return (

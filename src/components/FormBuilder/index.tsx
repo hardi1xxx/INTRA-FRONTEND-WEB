@@ -1,9 +1,13 @@
 import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, Input, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import { IField, IForm, IFormLayout } from "./interfaces"
-import { Controller } from "react-hook-form"
+import { Control, Controller, FieldErrors, FieldValues } from "react-hook-form"
 import { ReactNode } from "react"
 
-const generateField = (valueField : IField,control : any, errors : any) : ReactNode => {
+const generateField = <T extends FieldValues>(
+  valueField: IField,
+  control: Control<T>,
+  errors: FieldErrors<T>
+): ReactNode => {
     
     return(
         <Grid item xs={valueField.width || 12} key={valueField.fieldName}>
@@ -152,8 +156,19 @@ const generateCard = (value: IFormLayout,control : any, errors : any) => {
         </Grid>
     )
 }
+type FormBuilderProps<T extends FieldValues> = {
+  formLayout: IFormLayout[];
+  control: Control<T>;
+  errors: FieldErrors<T>;
+  withCard?: boolean;
+};
 
-const FormBuilder = ({ formLayout, control, errors, withCard = true } : IForm) => {
+const FormBuilder = <T extends FieldValues>({
+  formLayout,
+  control,
+  errors,
+  withCard = true
+}: FormBuilderProps<T>) => {
     
     if(!withCard){
         return(

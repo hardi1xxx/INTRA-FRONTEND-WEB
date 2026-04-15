@@ -13,7 +13,6 @@ import menuAccessMobile from "@/lib/redux/slices/master/menuAccessMobile";
 import role from "@/lib/redux/slices/master/role";
 import user from "@/lib/redux/slices/master/user";
 
-import shift from "@/lib/redux/slices/master/shift";
 import statusLapangan from "@/lib/redux/slices/master/statusLapangan";
 import witel from "@/lib/redux/slices/master/witel";
 
@@ -45,7 +44,6 @@ const store = configureStore({
     auth,
 
     departementUser,
-    shift,
     statusLapangan,
     witel,
 

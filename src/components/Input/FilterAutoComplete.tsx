@@ -1,8 +1,25 @@
 import { Autocomplete, AutocompleteInputChangeReason, FormControl, FormHelperText, TextField } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
-export function FilterAutoComplete({
+type Props<T extends FieldValues> = {
+  control: Control<T>;
+  field: Path<T>;
+  label: string;
+  error?: string;
+  loading: boolean;
+  options: any[];
+  onInputChange?: (
+    event: SyntheticEvent<Element, Event>,
+    value: string,
+    reason: AutocompleteInputChangeReason
+  ) => void;
+  getOptionLabel?: (option: any) => string;
+  onChange?: (value: any) => void;
+  onClose?: () => void;
+};
+
+export function FilterAutoComplete<T extends FieldValues>({
   control,
   field,
   label,
@@ -12,18 +29,7 @@ export function FilterAutoComplete({
   onInputChange,
   getOptionLabel,
   ...props
-}: {
-  control: Control<any>;
-  field: string;
-  label: string;
-  error?: string;
-  loading: boolean;
-  options: any;
-  onInputChange: ((event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void) | undefined;
-  getOptionLabel?: (option: any) => string;
-  onChange?: (value: any) => void;
-  onClose?: () => void;
-}) {
+}: Props<T>) {
   const [open, setOpen] = useState(false);
   return (
     <Controller

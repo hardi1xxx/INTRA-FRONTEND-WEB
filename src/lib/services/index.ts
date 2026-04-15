@@ -10,7 +10,6 @@ import { MenuAccessServices, MenuAccessServiceType } from "./master/menuAccess";
 import { RoleServices, RoleServiceType } from "./master/role";
 import { UserServices, UserServiceType } from "./master/user";
 
-import { ShiftServices, ShiftServicesType } from "./master/shift";
 import { StatusLapanganServices, StatusLapanganServicesType } from "./master/statusLapangan";
 import { WitelServices, WitelServicesType } from "./master/witel";
 
@@ -36,7 +35,6 @@ type ServiceType = AuthServiceType &
   DepartementUserServicesType &
 
   // Master
-  ShiftServicesType &
   StatusLapanganServicesType &
   WitelServicesType &
 
@@ -127,7 +125,6 @@ const services: ServiceType = {
 
   //master
   ...DepartementUserServices(axiosInstanceWithToken),
-  ...ShiftServices(axiosInstanceWithToken),
   ...StatusLapanganServices(axiosInstanceWithToken),
   ...WitelServices(axiosInstanceWithToken),
 
@@ -206,15 +203,6 @@ export const {
   getDepartementUserDatatable,
   updateDepartementUser,
   updateStatusDepartementUser,
-
-  // master shift
-  getDropdownShift,
-  getShiftDatatable,
-  updateStatusShift,
-  createShift,
-  deleteShift,
-  updateShift,
-  exportShift,
 
   // master status lapangan
   getDropdownStatusLapangan,
