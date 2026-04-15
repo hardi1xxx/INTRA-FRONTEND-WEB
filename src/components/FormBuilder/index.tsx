@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, Input, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, Input, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import { IField, IForm, IFormLayout } from "./interfaces"
 import { Controller } from "react-hook-form"
 import { ReactNode } from "react"
@@ -43,6 +43,15 @@ const generateField = (valueField : IField,control : any, errors : any) : ReactN
                                 variant="outlined"
                                 autoFocus={valueField.autoFocus}
                                 disabled={valueField.disabled}
+                                placeholder={valueField.placeholder}
+
+                                // displayEmpty={valueField.placeholder ? true : false}
+                                // renderValue={(value: any) => {
+                                //   if (!value) {
+                                //     return <Typography color="gray">{valueField.placeholder}</Typography>;
+                                //   }
+                                //   return value;
+                                // }}
                             >
                                 {
                                     valueField.select && (valueField.selectItem || []).map(
@@ -63,7 +72,10 @@ const generateField = (valueField : IField,control : any, errors : any) : ReactN
                             />
                         }
                         {
-                            !valueField.select && !valueField.check && <TextField
+                            valueField.custom && <>{valueField.customContent}</>
+                        }
+                        {
+                            !valueField.select && !valueField.check && !valueField.custom && <TextField
                                 {...field}
                                 id={valueField.fieldName}
                                 aria-describedby={`${valueField.fieldName}-text`}
@@ -77,6 +89,9 @@ const generateField = (valueField : IField,control : any, errors : any) : ReactN
                                 disabled={valueField.disabled}
                                 inputProps={{ maxLength: valueField.maxLength }}
                                 error={!!errors[valueField.fieldName as keyof typeof errors]?.message}
+                                onChange={(e) => {
+                                    field.onChange(valueField.transform?.(e.target.value) ?? e.target.value)
+                                }}
                             />
                         }
                         

@@ -1,114 +1,177 @@
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import SettingsIcon from '@mui/icons-material/Settings';
-import FolderIcon from '@mui/icons-material/Folder';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import React from 'react';
+import { Analytics, Groups } from "@mui/icons-material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FolderIcon from "@mui/icons-material/Folder";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export type MenuListType = {
-    id: string;
-    text: string;
-    url?: string;
-    icon?: JSX.Element;
-    canCreate?: boolean;
-    canEdit?: boolean;
-    canDelete?: boolean;
-    child?: MenuListType[];
-}
+  id: string;
+  text: string;
+  url?: string;
+  icon?: JSX.Element;
+  canCreate?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  child?: MenuListType[];
+};
 
 export const menuList: MenuListType[] = [
-    // Dashboard
-    {
-        id: 'dashboard',
-        text: 'Dashboard',
-        icon: <DashboardIcon />,
-        url: '/dashboard',
-        canCreate: false,
-        canEdit: false,
-        canDelete: false,
-    },
+  // Dashboard
+  {
+    id: "dashboard",
+    text: "Dashboard",
+    icon: <DashboardIcon />,
+    url: "/dashboard",
+    canCreate: false,
+    canEdit: false,
+    canDelete: false,
+  },
 
-    // Master
-    {
-        id: 'master',
-        text: 'Master',
-        icon: <FolderIcon />,
-        child: [
-            {
-                id: 'master/waste',
-                text: 'Waste',
-                url: '/master/waste',
-                canCreate: true,
-                canEdit: true,
-                canDelete: true,
-            },
-        ]
-    },
+  // Master
+  {
+    id: "master",
+    text: "Master",
+    icon: <FolderIcon />,
+    child: [
+      {
+        id: "master/shift",
+        text: "Shift",
+        url: "/master/shift",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+      {
+        id: "master/status-lapangan",
+        text: "Status Lapangan",
+        url: "/master/status-lapangan",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+      {
+        id: "master/witel",
+        text: "Witel",
+        url: "/master/witel",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+    ],
+  },
 
-    // Transaction
-    {
-        id: 'transaction',
-        text: 'Transaction',
-        icon: <FolderIcon />,
-        child: [
-            {
-                id: 'transaction/example',
-                text: 'Example Transaction',
-                url: '/transaction/example',
-                canCreate: true,
-                canEdit: true,
-                canDelete: true,
-            }
-        ]
-    },
+  // Transaction
+  {
+    id: "transaction",
+    text: "Transaction",
+    icon: <Groups />,
+    child: [
+      {
+        id: "transaction/daily-man-power",
+        text: "Daily Man Power",
+        url: "/transaction/daily-man-power",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+    ],
+  },
 
-    // Report
-    {
-        id: 'report',
-        text: 'Report',
-        icon: <FormatListBulletedIcon />,
-    },
+  // Report
+  {
+    id: "report",
+    text: "Report",
+    icon: <Analytics />,
+    child: [
+      {
+        id: "report/pt3",
+        text: "PT3",
+        url: "/report/pt3",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+    ],
+  },
 
-    // Setting
-    {
-        id: 'setting',
-        text: 'Setting',
-        icon: <SettingsIcon />,
-        child: [
-            {
-                id: 'report/user',
-                text: 'User',
-                url: '/report/user',
-                canCreate: true,
-                canEdit: true,
-                canDelete: true,
-            },
-            {
-                id: 'report/role',
-                text: 'Role',
-                url: '/report/role',
-                canCreate: true,
-                canEdit: true,
-                canDelete: true,
-            },
-            {
-                id: 'report/menu',
-                text: 'Menu',
-                url: '/report/menu',
-                canCreate: true,
-                canEdit: true,
-                canDelete: true,
-            },
-        ]
-    },
-
-    // Log Activity
-    {
-        id: 'log-activity',
+  // Setting
+  {
+    id: "setting",
+    text: "Setting",
+    icon: <SettingsIcon />,
+    child: [
+      {
+        id: "setting/job-position",
+        text: "Job Position",
+        url: "/setting/job-position",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+      {
+        id: "setting/department-user",
+        text: "Department User",
+        url: "/setting/department-user",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+      {
+        id: "setting/latest-feature",
+        text: "Latest Feature",
+        url: "/setting/latest-feature",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+      {
+        id: "setting/role-user",
+        text: "Role User",
+        url: "/setting/role-user",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+      {
+        id: "setting/menu-access-mobile",
+        text: "Menu Access Mobile",
+        url: "/setting/menu-access-mobile",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+      {
+        id: "setting/user",
+        text: "User",
+        url: "/setting/user",
+        canCreate: true,
+        canEdit: true,
+        canDelete: true,
+      },
+    ],
+  },
+  // Log
+  {
+    id: 'log',
+    text: 'Log',
+    icon: <FormatListBulletedIcon />,
+    child: [
+      {
+        id: 'log/log-activity',
         text: 'Log Activity',
-        icon: <FormatListBulletedIcon />,
-        url: '/log-activity',
+        url: '/log/log-activity',
         canCreate: false,
         canEdit: false,
         canDelete: false,
-    },
-]
+      },
+      {
+        id: 'log/log-notification',
+        text: 'Notification',
+        url: '/log/log-notification',
+        canCreate: false,
+        canEdit: false,
+        canDelete: false,
+      },
+    ],
+  },
+];

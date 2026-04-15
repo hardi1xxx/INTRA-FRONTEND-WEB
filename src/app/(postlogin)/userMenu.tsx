@@ -1,17 +1,17 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {  Avatar, Box, Card, CardContent, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Skeleton} from "@mui/material"
 import EditIcon from '@mui/icons-material/Edit';
-import Settings from '@mui/icons-material/Settings';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Link from "next/link";
 import { getCookie } from "cookies-next";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { RootState } from "@/lib/redux/store";
 import { usePathname, useRouter } from "next/navigation";
 import ModalProfilePicture from "./modalProfilePicture";
 import { useSnackbar } from "@/components/hooks";
-import { useConfirm } from "material-ui-confirm";
 
 const UserMenu = () => {
   const router = useRouter()
@@ -28,16 +28,16 @@ const UserMenu = () => {
 
   // init data on page load
   useEffect(() => {
-    setName(getCookie('intra_auth_name') || '')
-    setRole(getCookie('intra_auth_role') || '')
-    setProfilePicture(getCookie('intra_auth_picture') || '')
-    setNik(getCookie('intra_auth_nik') || '')
+    setName(getCookie('intra_auth_name') ?? '')
+    setRole(getCookie('intra_auth_role') ?? '')
+    setProfilePicture(getCookie('intra_auth_picture') ?? '')
+    setNik(getCookie('intra_auth_nik') ?? '')
   },[])
 
 
   useEffect(() => {
     if(picture != ''){
-      setProfilePicture(getCookie('intra_auth_picture') || '')
+      setProfilePicture(getCookie('intra_auth_picture') ?? '')
     }
 
     if(picture == ''){
@@ -63,7 +63,7 @@ const UserMenu = () => {
           transition: 'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           boxShadow: 'none',
           borderRadius: '8px',
-          background: '#f6d4a8',
+          background: '#2d50b0',
           overflow: 'hidden',
           position: 'relative',
         }}>
@@ -75,7 +75,7 @@ const UserMenu = () => {
               position: 'absolute',
               width: '157px',
               height: '157px',
-              background: '#ba9577 !important',
+              background: '#223c85 !important',
               borderRadius: '50%',
               top: '-105px',
               right: '-96px',
@@ -83,11 +83,11 @@ const UserMenu = () => {
             <List sx={{
               paddingTop: '0px'
             }}>
-              <ListItem 
-                disablePadding 
+              <ListItem
+                disablePadding
               >
                 <ListItemAvatar>
-                  <Avatar 
+                  <Avatar
                     onClick={() => setOpenEditProfile(true)}
                     sx={{
                       position: 'relative',
@@ -113,22 +113,22 @@ const UserMenu = () => {
                       }
                     }}
                   >
-                    <Box 
-                      className="edit-icon-hover" 
-                      sx={{ 
-                        height: '100%', 
-                        width: '100%', 
-                        display: 'none', 
-                        position: 'absolute', 
+                    <Box
+                      className="edit-icon-hover"
+                      sx={{
+                        height: '100%',
+                        width: '100%',
+                        display: 'none',
+                        position: 'absolute',
                         color: 'white',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.4)'                    
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)'
                       }}>
                       <EditIcon />
                     </Box>
                     {
-                      profilePicture != '/storage/' ? 
+                      profilePicture != '/storage/' ?
                       <img src={`${(process.env.NEXT_PUBLIC_TARGET_API)?.replace('/api','')}${profilePicture}`} alt="profile-picture" style={{
                         objectFit: 'cover',
                         objectPosition: 'bottom',
@@ -139,16 +139,16 @@ const UserMenu = () => {
                     }
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={name || <Skeleton variant="text" sx={{ fontSize: '1rem' }} />} secondary={role || <Skeleton variant="text" sx={{ fontSize: '1rem' }} />} primaryTypographyProps={{sx: {color: 'white !important'}}} secondaryTypographyProps={{sx: {color: 'white !important'}}}/>
+                <ListItemText primary={name ?? <Skeleton variant="text" sx={{ fontSize: '1rem' }} />} secondary={role ?? <Skeleton variant="text" sx={{ fontSize: '1rem' }} />} primaryTypographyProps={{sx: {color: 'white !important'}}} secondaryTypographyProps={{sx: {color: 'white !important'}}}/>
               </ListItem>
             </List>
             <Box>
-              <Link 
-                href={'/profile'} 
+              <Link
+                href={'/profile'}
                 style={{
-                  width: '100%', 
-                  textDecoration: 'none', 
-                  color: pathname == '/profile' ? '#50623A' : 'inherit', 
+                  width: '100%',
+                  textDecoration: 'none',
+                  color: pathname == '/profile' ? '#50623A' : 'inherit',
                   fontWeight: pathname == '/profile' ? 'bold' : 'normal',
                   fontFamily: 'Roboto,sans-serif',
                   fontSize: '0.875rem',
@@ -159,7 +159,7 @@ const UserMenu = () => {
                   borderRadius: '8px'
                 }}
               >
-                <Settings sx={{
+                <SettingsIcon sx={{
                   width: '44px',
                   marginRight: '12px'
                 }}/>
@@ -184,12 +184,12 @@ export const UserMenuMini = () => {
   const {severity,text} = useSelector((state:RootState) => state.notification)
 
   useEffect(() => {
-    setProfilePicture(getCookie('intra_auth_picture') || '')
+    setProfilePicture(getCookie('intra_auth_picture') ?? '')
   },[])
 
   useEffect(() => {
     if(picture != ''){
-      setProfilePicture(getCookie('intra_auth_picture') || '')
+      setProfilePicture(getCookie('intra_auth_picture') ?? '')
     }
 
     if(picture == ''){
@@ -209,11 +209,11 @@ export const UserMenuMini = () => {
 
   return(
     <>
-      <ListItem 
-        disablePadding 
+      <ListItem
+        disablePadding
       >
         <ListItemAvatar>
-          <Avatar 
+          <Avatar
             onClick={() => setOpenEditProfile(true)}
             sx={{
               position: 'relative',
@@ -239,22 +239,22 @@ export const UserMenuMini = () => {
               }
             }}
           >
-            <Box 
-              className="edit-icon-hover" 
-              sx={{ 
-                height: '100%', 
-                width: '100%', 
-                display: 'none', 
-                position: 'absolute', 
+            <Box
+              className="edit-icon-hover"
+              sx={{
+                height: '100%',
+                width: '100%',
+                display: 'none',
+                position: 'absolute',
                 color: 'white',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)'                    
+                backgroundColor: 'rgba(0, 0, 0, 0.4)'
               }}>
               <EditIcon />
             </Box>
             {
-              profilePicture != '/storage/' ? 
+              profilePicture != '/storage/' ?
               <img src={`${(process.env.NEXT_PUBLIC_TARGET_API)?.replace('/api','')}${profilePicture}`} alt="profile-picture" style={{
                 objectFit: 'cover',
                 objectPosition: 'bottom',

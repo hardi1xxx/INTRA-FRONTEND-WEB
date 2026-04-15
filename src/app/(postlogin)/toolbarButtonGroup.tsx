@@ -42,14 +42,14 @@ const ToolbarButtonGroup = () => {
     return(
         <Box display={'flex'} gap={'1rem'}>
             <SystemUpdatePopper />
-            <NotificationPopper />
+            {/* <NotificationPopper /> */}
             <Tooltip title="Toogle Fullscreen Mode">
                 <IconButton
                 color="primary"
                 aria-label="fullscreen"
                 onClick={() => setFullScreen(!fullScreen)}
                 edge="start"
-                sx={{ borderRadius: '8px', backgroundColor: '#f6d4a8', color: 'white', '&:hover': {backgroundColor: '#ba9577'}}}
+                sx={{ borderRadius: '8px', backgroundColor: '#2d50b0', color: 'white', '&:hover': {backgroundColor: '#223c85'}}}
                 >
                 {
                     fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />

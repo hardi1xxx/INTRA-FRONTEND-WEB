@@ -4,7 +4,7 @@ import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { Box, Container, Drawer, IconButton, List, Toolbar, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MenuIcon from '@mui/icons-material/Menu';
 import { ConfirmProvider } from "material-ui-confirm";
 import { RootState } from "@/lib/redux/store";
@@ -18,6 +18,8 @@ import themes from '@/components/themes';
 import AlertsProvider from '@/components/AlertContext';
 import ToolbarButtonGroup from './toolbarButtonGroup';
 import React from 'react';
+import { redirect, usePathname } from 'next/navigation';
+import { checkAccessShow } from '@/components/helper';
 
 const drawerWidth = 260;
 
@@ -62,6 +64,13 @@ export default function PostLoginLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname()
+  useEffect(() => {
+    if (!checkAccessShow(pathname)) {
+      redirect('/forbidden')
+    }
+  }, [pathname])
+  
   const theme = useTheme()
   const customization = useSelector((state: RootState) => state.customization);
 
@@ -136,7 +145,7 @@ export default function PostLoginLayout({
               >
                 <Toolbar>
                   <Typography variant="h5" noWrap component="div" fontWeight={'bold'}>
-                    {xsScreen ? 'INTRA' : 'INTRA - Integration Tracking System'}
+                    {xsScreen ? 'Intra' : 'Integrated Tracking System'}
                   </Typography>
                   <Box
                   sx={{ flexGrow: 1 }}
@@ -147,7 +156,7 @@ export default function PostLoginLayout({
                         aria-label="open drawer"
                         onClick={handleDrawerToggle}
                         edge="end"
-                        sx={{  ml: 2, borderRadius: '8px', backgroundColor: '#f6d4a8', color: 'white', '&:hover': {backgroundColor: '#ba9577'}}}
+                        sx={{  ml: 2, borderRadius: '8px', backgroundColor: '#2d50b0', color: 'white', '&:hover': {backgroundColor: '#223c85'}}}
                       >
                         <MenuIcon />
                       </IconButton>
@@ -186,7 +195,7 @@ export default function PostLoginLayout({
                   >
                     <Toolbar>
                       <Typography variant="h5" noWrap component="div" fontWeight={'bold'}>
-                        INTRA - Integration System System
+                        Ways of Waste System
                       </Typography>
                     </Toolbar>
                     {drawers}
@@ -244,7 +253,7 @@ export default function PostLoginLayout({
                   p: '20px', 
                   display: 'flex', 
                   flexDirection: 'column',
-                  gap: '24px',
+                  gap: '10px',
                   marginTop: '80px',
                   backgroundColor: '#eef2f6',
                   borderTopLeftRadius: {sm: '8px', xs: 'none' },

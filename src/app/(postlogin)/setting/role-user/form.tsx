@@ -1,5 +1,5 @@
-import { useForm,Controller,SubmitHandler } from 'react-hook-form';
-import {Dialogs} from "@/components/dialog"
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { Dialogs } from "@/components/dialog"
 import { yupResolver } from '@hookform/resolvers/yup';
 import { roleUserSchema } from './schema';
 import FormBuilder from '@/components/FormBuilder';
@@ -26,8 +26,8 @@ type FormRoleUserType = {
     }
 }
 
-const FormRoleUser = ({open, setOpen, data} : FormRoleUserType) => {
-    const [oldValue,setOldValue] = useState<{[key: string]: any}>()
+const FormRoleUser = ({ open, setOpen, data }: FormRoleUserType) => {
+    const [oldValue, setOldValue] = useState<{ [key: string]: any }>()
     const { role } = useSelector((state: RootState) => state.role)
     const dispatch = useDispatch()
     const {
@@ -36,7 +36,7 @@ const FormRoleUser = ({open, setOpen, data} : FormRoleUserType) => {
         handleSubmit,
         reset,
         setError
-      } = useForm({
+    } = useForm({
         resolver: yupResolver(roleUserSchema),
         defaultValues: {
             role: ''
@@ -44,45 +44,46 @@ const FormRoleUser = ({open, setOpen, data} : FormRoleUserType) => {
     })
 
     // configuration for field
-    const formLayout : IFormLayout[] = [
+    const formLayout: IFormLayout[] = [
         {
             width: 12,
             title: 'Role User',
             fields: [
                 {
                     fieldName: 'role',
-                    label: 'Role',
+                    label: 'Role *',
                     autoFocus: true,
+                    maxLength: 255,
                 },
             ]
         }
     ]
-    
+
     // set value to field when modal open
     useEffect(() => {
-        if(data.id){
+        if (data.id) {
             setOldValue(data)
             reset(data)
-        }else{
+        } else {
             setOldValue(undefined)
             reset({
                 role: ''
             })
         }
-    },[open])
+    }, [data, open, reset])
 
     // submit data
-    const onSubmit : SubmitHandler<FormRoleUserType['data']> = (data) => {
-        if(oldValue?.role.toLowerCase() != data.role?.toLocaleLowerCase()){
-            if(role.find(value => value.role.toLocaleLowerCase() === data.role?.toLocaleLowerCase())){
-                setError('role',{type: 'custom',message: 'Role already exists'})
+    const onSubmit: SubmitHandler<FormRoleUserType['data']> = (data) => {
+        if (oldValue?.role.toLowerCase() != data.role?.toLocaleLowerCase()) {
+            if (role.find(value => value.role?.toLocaleLowerCase() === data.role?.toLocaleLowerCase())) {
+                setError('role', { type: 'custom', message: 'Role already exists' })
                 return null
             }
         }
-        if(data.id){
-            dispatch({type: UPDATE_ROLE , data: data})
-        }else{
-            dispatch({type: CREATE_ROLE , data: data})
+        if (data.id) {
+            dispatch({ type: UPDATE_ROLE, data: data })
+        } else {
+            dispatch({ type: CREATE_ROLE, data: data })
         }
 
         onCancel()
@@ -93,11 +94,11 @@ const FormRoleUser = ({open, setOpen, data} : FormRoleUserType) => {
         reset()
         setOpen(false)
     }
-    
-    return(
+
+    return (
         <Dialogs
-            open = {open}
-            title = {`Form ${data.id ? 'Edit' : 'Add'} Role User`}
+            open={open}
+            title={`Form ${data.id ? 'Edit' : 'Add'} Role User`}
             setOpen={setOpen}
         >
             <form onSubmit={handleSubmit(onSubmit)}>

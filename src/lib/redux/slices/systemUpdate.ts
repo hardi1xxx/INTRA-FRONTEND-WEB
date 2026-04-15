@@ -32,6 +32,7 @@ const systemUpdate = createSlice({
         errorSystemUpdate: (state, { payload }) => {
             state.fetching = false
             state.error = payload
+            state.results = []
 
             return state
         }

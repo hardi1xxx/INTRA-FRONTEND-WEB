@@ -1,15 +1,18 @@
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Slide, SxProps, useMediaQuery } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Paper, PaperProps, Slide, SxProps, useMediaQuery } from "@mui/material"
 import { Breakpoint, useTheme } from '@mui/material/styles';
 import { TransitionProps } from "@mui/material/transitions";
 import { GridCloseIcon } from "@mui/x-data-grid";
+import Draggable from 'react-draggable';
 import React from "react";
 
 interface IDialogs {
     children: React.ReactNode,
     open: boolean,
     title: string,
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    dialogWidth?: false | Breakpoint 
+    setOpen: ((open: boolean) => void),
+    dialogWidth?: false | Breakpoint,
+    useFullScreen?: boolean,
+    onCloseAction?: () => void
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -30,9 +33,20 @@ const TransitionFromLeft = React.forwardRef(function Transition(
     return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export const Dialogs = ({ children, open, title, setOpen, dialogWidth = 'sm' }: IDialogs) => {
+function PaperComponent(props: PaperProps) {
+    return (
+        <Draggable
+            handle="#draggable-dialog-title"
+            cancel={'[class*="MuiDialogContent-root"]'}
+        >
+            <Paper {...props} />
+        </Draggable>
+    );
+}
+
+export const Dialogs = ({ children, open, title, setOpen, onCloseAction, dialogWidth = 'sm', useFullScreen }: IDialogs) => {
     const theme = useTheme()
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const mediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const dialogTitleStyle = {
         fontSize: '16px',
@@ -46,6 +60,7 @@ export const Dialogs = ({ children, open, title, setOpen, dialogWidth = 'sm' }: 
     }
 
     const onClose = () => {
+        onCloseAction?.()
         setOpen(false)
     }
 
@@ -54,12 +69,14 @@ export const Dialogs = ({ children, open, title, setOpen, dialogWidth = 'sm' }: 
             open={open}
             maxWidth={dialogWidth}
             fullWidth
-            fullScreen={fullScreen}
-            TransitionComponent={fullScreen ? TransitionFromLeft : Transition}
+            fullScreen={useFullScreen || mediumScreen}
+            TransitionComponent={(useFullScreen || mediumScreen) ? TransitionFromLeft : Transition}
             sx={sx}
             disableScrollLock={true}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
         >
-            <DialogTitle>
+            <DialogTitle style={{ cursor: 'move' }}>
                 <Box display="flex" alignItems="center">
                     <Box flexGrow={1} style={dialogTitleStyle}>{title}</Box>
                     <Box>

@@ -1,5 +1,5 @@
 import { errorLogActivity, receiveExportLogActivity, requestExportLogActivity } from "@/lib/redux/slices/log/logActivity";
-import { downloadLogActivityById } from "@/lib/services";
+// import { downloadLogActivityById } from "@/lib/services";
 import { put, takeEvery } from "redux-saga/effects";
 import { errorHandler } from "../../errorHandler";
 import { setTextNotification } from "@/lib/redux/slices/notification";
@@ -14,14 +14,14 @@ export function* downloadLogActivityByIdSagas({ id }: AnyAction) {
   try {
     yield put(requestExportLogActivity())
 
-    const response: Blob = yield downloadLogActivityById(id)
+    // const response: Blob = yield downloadLogActivityById(id)
 
-    const url = window.URL.createObjectURL(new Blob([response]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `Log Activity - ${id}.xlsx`);
-    document.body.appendChild(link);
-    link.click();
+    // const url = window.URL.createObjectURL(new Blob([response]));
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.setAttribute('download', `Log Activity - ${id}.xlsx`);
+    // document.body.appendChild(link);
+    // link.click();
 
     yield put(receiveExportLogActivity())
   } catch (error: any) {

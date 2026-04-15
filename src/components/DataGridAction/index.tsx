@@ -2,7 +2,7 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-type DataGridActionType = {
+export type DataGridActionType = {
     item: {
         text: string,
         onClick : (event : MouseEvent<HTMLLIElement>) => void

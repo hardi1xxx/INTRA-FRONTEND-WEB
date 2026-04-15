@@ -1,16 +1,18 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 
 import Box from '@mui/material/Box';
 import { Card, CardContent, Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Suspense, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { RootState } from '@/lib/redux/store';
 import FormLogin from './form';
 import { useSnackbar } from '@/components/hooks';
 import { useRouter } from 'next/navigation'
+import { setAuthFetching } from '@/lib/redux/slices/auth';
 
 const CardContainer = styled(Grid)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
@@ -45,32 +47,40 @@ const AppLogo = styled(`img`)(({theme}) => ({
 
 const LoginPage = () => {
     const router = useRouter()
+    const dispatch = useDispatch()
     const snackbar = useSnackbar()
     const {text,severity} = useSelector((state: RootState) => state.notification)
 
     // if login success redirect to dashboard
-    useEffect(() => {
-        const showSnackbar = async () => {
-            if(text){
-                if(severity == 'success'){
-                    const res = await snackbar.show(text,severity,500)
-                    if(res){
-                        window.location.href = '/dashboard'
-                    }
-                }
+    // useEffect(() => {
+    //     const showSnackbar = async () => {
+    //         if(text){
+    //             if(severity == 'success'){
+    //                 const res = await snackbar.show(text,severity,500)
+    //                 if(res){
+    //                     window.location.href = '/dashboard'
+    //                 }
+    //             }
                 
-                if(severity == 'error'){
-                    snackbar.show(text,severity,2000)
-                }
-            }
-        }
+    //             if(severity == 'error'){
+    //                 snackbar.show(text,severity,2000)
+    //             }
+    //         }
+    //     }
 
-        showSnackbar()
+    //     showSnackbar()
 
-        return () => {
+    //     return () => {
 
-        }
-    },[severity])
+    //     }
+    // },[severity, snackbar, text])
+
+    useEffect(() => {
+      return () => {
+        dispatch(setAuthFetching(false))
+      }
+    }, [dispatch])
+    
         
     return(
         <Grid container minHeight={'100%'} height={'100vh'} className='bg-theme-secondary'>
@@ -79,18 +89,18 @@ const LoginPage = () => {
                     <CardContent>
                         <Grid container item  xs={12} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                             <Grid item lg={6} xs={12} textAlign={'center'}>
-                                <Typography variant='h6' component={'h6'} fontWeight={'bold'}>INTRA - Integration Tracking System</Typography>
+                                <Typography variant='h6' component={'h6'} fontWeight={'bold'}>Integrated Tracking System</Typography>
                                 <Typography variant='caption' color={'lightslategray'} fontSize={'0.5rem'}>Development Version 0.0.1</Typography>
                             </Grid>
                             <Grid item lg={6} xs={12} textAlign={'center'}>
                                 <figure>
-                                    <img src="/images/logo2.png" style={{ width: '260px'}}/>
+                                    <img src="/images/logo.png" style={{ width: '260px'}} alt='logo'/>
                                 </figure>
                             </Grid>
                         </Grid>
                         <Grid container item  xs={12} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                             <Grid item lg={6} textAlign={'center'}>
-                                <AppLogo src="/images/intra.jpg" style={{maxWidth: '500px'}}/>
+                                <AppLogo src="/images/default2.png" style={{maxWidth: '450px'}}/>
                             </Grid>
                             <Grid item lg={6} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'} width={'100%'}>
                                 <BoxLogin textAlign={'center'}>
@@ -98,7 +108,9 @@ const LoginPage = () => {
                                     <Typography variant='subtitle1' fontWeight={'bold'} className='text-theme' mb={0}>User Login</Typography>
                                     <Typography variant='caption' color={'lightslategray'} fontSize={'0.5rem'} mb={'1rem'}>Please log in to continue</Typography>
 
+                                <Suspense>
                                     <FormLogin />
+                                </Suspense>
                                 </BoxLogin>
                             </Grid>
                         </Grid>

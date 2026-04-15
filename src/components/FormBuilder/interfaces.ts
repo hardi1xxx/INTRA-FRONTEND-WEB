@@ -27,6 +27,10 @@ export interface IField {
     width? : 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
     maxLength? : number,
     autoFocus? : boolean,
+    custom?: boolean,
+    customContent?: ReactNode,
+    placeholder?: string
+    transform?: (value: any) => any
 }
 
 export interface IFormLayout {

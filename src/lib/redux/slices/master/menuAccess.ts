@@ -17,10 +17,12 @@ const initialState: {
     updated_nik: number,
     updated_by: string,
   }[],
-  error?: any
+  error?: any,
+  fetchingExport: boolean,
 } = {
   fetching: false,
-  menuAccess: []
+  menuAccess: [],
+  fetchingExport: false,
 }
 
 const menuAccess = createSlice({
@@ -42,13 +44,24 @@ const menuAccess = createSlice({
     },
     errorMenuAccess: (state, action) => {
       state.fetching = false
+      state.fetchingExport = false
       state.error = action.payload
 
+      return state
+    },
+    requestExportMenuAccess: (state) => {
+      state.fetchingExport = true
+      state.error = null
+
+      return state
+    },
+    receiveExportMenuAccess: (state) => {
+      state.fetchingExport = false
       return state
     }
   }
 })
 
-export const { requestMenuAccess, receiveMenuAccess, errorMenuAccess } = menuAccess.actions
+export const { requestMenuAccess, receiveMenuAccess, errorMenuAccess, requestExportMenuAccess, receiveExportMenuAccess } = menuAccess.actions
 
 export default menuAccess.reducer

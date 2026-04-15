@@ -9,7 +9,7 @@ export type SystemUpdateResponseType = {
 
 export const getSystemUpdateService = (axios: AxiosInstance) => async (): Promise<DefaultServiceResponse & { result: SystemUpdateResponseType[] }> => {
     try {
-        const response = await axios.get('/log/show-data')
+        const response = await axios.get('/log/show-by-month')
 
         return response.data
     } catch (error: any) {

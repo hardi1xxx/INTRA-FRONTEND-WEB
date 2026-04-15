@@ -1,20 +1,23 @@
-import { errorUser, receiveExportUser, requestExportUser } from "@/lib/redux/slices/master/user";
+import { FilterParamsUser, errorUser, receiveExportUser, requestExportUser } from "@/lib/redux/slices/master/user";
 import { exportUser } from "@/lib/services";
-import { put, takeEvery } from "redux-saga/effects";
+import { put, select, takeEvery } from "redux-saga/effects";
 import { errorHandler } from "../../errorHandler";
 import { setTextNotification } from "@/lib/redux/slices/notification";
 import { EXPORT_MASTER_USER } from "@/lib/redux/types";
+import { RootState } from "@/lib/redux/store";
+import { getDateNow } from "@/components/helper";
 
 export function* exportUserSagas() {
   try {
     yield put(requestExportUser())
 
-    const response: Blob = yield exportUser({})
+    const params: FilterParamsUser = yield select((state: RootState) => state.user.params)
+    const response: Blob = yield exportUser(params)
 
     const url = window.URL.createObjectURL(new Blob([response]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Master-User.xlsx`);
+    link.setAttribute('download', `Setting-User-export-${getDateNow()}.xlsx`);
     document.body.appendChild(link);
     link.click();
 

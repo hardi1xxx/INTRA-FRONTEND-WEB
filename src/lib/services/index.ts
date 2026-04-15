@@ -1,173 +1,291 @@
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { AuthServices, AuthServiceType } from "./auth";
-import { RoleServices, RoleServiceType } from "./master/role";
-import { MenuAccessServices, MenuAccessServiceType } from "./master/menuAccess";
-import { UserServices, UserServiceType } from "./master/user";
 import { LogActivityServices, LogActivityServiceType } from "./log-activity";
+import { DepartementUserServices, DepartementUserServicesType } from "./master/departementUser";
+import { JobPositionServices, JobPositionServicesType } from "./master/job-position";
 import { LatestFeatureServices, LatestFeatureServiceType } from "./master/latestFeature";
+import { MenuAccessMobileServices, MenuAccessMobileType } from "./master/menu-access-mobile";
+import { MenuAccessServices, MenuAccessServiceType } from "./master/menuAccess";
+import { RoleServices, RoleServiceType } from "./master/role";
+import { UserServices, UserServiceType } from "./master/user";
+
+import { ShiftServices, ShiftServicesType } from "./master/shift";
+import { StatusLapanganServices, StatusLapanganServicesType } from "./master/statusLapangan";
+import { WitelServices, WitelServicesType } from "./master/witel";
+
+import { NotificationsServices, NotificationsServiceType } from "./notifications";
 import { SystemUpdateServices, SystemUpdateServiceType } from "./system-update";
-import { NotificationsServiceType, NotificationsServices } from "./notifications";
-import { ColorwayServices, ColorwayServiceType } from "./pcx-library/colorway";
+import { LogNotificationServices, LogNotificationServiceType } from "./log-notification";
+
+import { DailyManPowerServices, DailyManPowerServicesType } from "./transaction/daily-man-power";
+
+import { ReportPT3Services, ReportPT3ServicesType } from "./report/pt3";
 
 export type DefaultServiceResponse = {
-    code: number,
-    message: string,
-    status: boolean,
-}
+  code: number;
+  message: string;
+  status: boolean;
+};
 
-type ServiceType =
-    AuthServiceType &
-    RoleServiceType &
-    MenuAccessServiceType &
-    UserServiceType &
-    LatestFeatureServiceType &
+type ServiceType = AuthServiceType &
+  RoleServiceType &
+  MenuAccessServiceType &
+  UserServiceType &
+  JobPositionServicesType &
+  DepartementUserServicesType &
 
-    // dashboard
+  // Master
+  ShiftServicesType &
+  StatusLapanganServicesType &
+  WitelServicesType &
 
-    //Log Activity
-    LogActivityServiceType &
+  // Transaction
+  DailyManPowerServicesType &
 
-    // system update
-    SystemUpdateServiceType &
+  // Report
+  ReportPT3ServicesType &
 
-    // notification
-    NotificationsServiceType &
+  //Log Activity
+  LogActivityServiceType &
+  LogNotificationServiceType &
 
-    // pcx library
-    ColorwayServiceType
-
+  //Latest Feature
+  LatestFeatureServiceType &
+  // system update
+  SystemUpdateServiceType &
+  // notification
+  NotificationsServiceType &
+  // master menu access mobile
+  MenuAccessMobileType;
 
 const axiosInstanceWithoutToken = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_TARGET_API,
-    headers: {
-        "Content-Type": "application/json",
-    }
-})
-
-axiosInstanceWithoutToken.interceptors.response.use((response) => response, (error) => {
-    if (error.code == "ERR_NETWORK") {
-        throw {
-            response: {
-                data: {
-                    code: 503,
-                    message: 'No Internet Connection',
-                    status: false,
-                    result: null
-                }
-            }
-        }
-    }
-    throw error;
+  baseURL: process.env.NEXT_PUBLIC_TARGET_API,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-const token = getCookie('intra_auth_token')
+axiosInstanceWithoutToken.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code == "ERR_NETWORK") {
+      throw {
+        response: {
+          data: {
+            code: 503,
+            message: "No Internet Connection",
+            status: false,
+            result: null,
+          },
+        },
+      };
+    }
+    throw error;
+  },
+);
+
+const token = getCookie("intra_auth_token");
 
 const axiosInstanceWithToken = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_TARGET_API,
-    headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
-    }
-})
-
-axiosInstanceWithToken.interceptors.response.use((response) => response, (error) => {
-    if (error.code == "ERR_NETWORK") {
-        throw {
-            response: {
-                data: {
-                    code: 503,
-                    message: 'No Internet Connection',
-                    status: false,
-                    result: null
-                }
-            }
-        }
-    }
-    throw error;
+  baseURL: process.env.NEXT_PUBLIC_TARGET_API,
+  headers: {
+    "Content-Type": "application/json",
+    // Authorization: `Bearer ${token}`,
+  },
 });
 
+axiosInstanceWithToken.interceptors.request.use((config) => {
+  const token = getCookie("intra_auth_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+axiosInstanceWithToken.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code == "ERR_NETWORK") {
+      throw {
+        response: {
+          data: {
+            code: 503,
+            message: "No Internet Connection",
+            status: false,
+            result: null,
+          },
+        },
+      };
+    }
+    throw error;
+  },
+);
+
 const services: ServiceType = {
-    ...AuthServices(axiosInstanceWithToken, axiosInstanceWithoutToken),
+  ...AuthServices(axiosInstanceWithToken, axiosInstanceWithoutToken),
 
-    //master
-    ...RoleServices(axiosInstanceWithToken),
-    ...MenuAccessServices(axiosInstanceWithToken),
-    ...UserServices(axiosInstanceWithToken),
-    ...LatestFeatureServices(axiosInstanceWithToken),
+  //master
+  ...DepartementUserServices(axiosInstanceWithToken),
+  ...ShiftServices(axiosInstanceWithToken),
+  ...StatusLapanganServices(axiosInstanceWithToken),
+  ...WitelServices(axiosInstanceWithToken),
 
-    // log activity
-    ...LogActivityServices(axiosInstanceWithToken),
+  // Transaction
+  ...DailyManPowerServices(axiosInstanceWithToken),
 
-    // system update
-    ...SystemUpdateServices(axiosInstanceWithToken),
+  // Report
+  ...ReportPT3Services(axiosInstanceWithToken),
 
-    // notifications
-    ...NotificationsServices(axiosInstanceWithToken),
+  //Setting
+  ...RoleServices(axiosInstanceWithToken),
+  ...MenuAccessServices(axiosInstanceWithToken),
+  ...UserServices(axiosInstanceWithToken),
+  ...JobPositionServices(axiosInstanceWithToken),
+  ...LatestFeatureServices(axiosInstanceWithToken),
+  ...MenuAccessMobileServices(axiosInstanceWithToken),
 
-    // pcx library
-    ...ColorwayServices(axiosInstanceWithToken),
-}
+  // log activity
+  ...LogActivityServices(axiosInstanceWithToken),
+  ...LogNotificationServices(axiosInstanceWithToken),
+
+  // system update
+  ...SystemUpdateServices(axiosInstanceWithToken),
+
+  // notifications
+  ...NotificationsServices(axiosInstanceWithToken),
+};
 
 export const {
-    login,
-    logout,
-    changePassword,
-    changeProfilePicture,
-    getMenuAccess,
+  login,
+  logout,
+  changePassword,
+  changeProfilePicture,
+  getMenuAccess,
 
-    // master role
-    getRole,
-    createRole,
-    updateRole,
-    deleteRole,
-    exportExcelRole,
+  // master role
+  getRole,
+  createRole,
+  updateRole,
+  deleteRole,
+  exportExcelRole,
 
-    getMenuAccessByRoleId,
-    saveMenuAccess,
-    exportExcelMenuAccess,
+  getMenuAccessByRoleId,
+  saveMenuAccess,
+  exportExcelMenuAccess,
 
-    // master user
-    getUser,
-    createUser,
-    updateUser,
-    deleteUser,
-    exportUser,
+  // master user
+  getUserFilterData,
+  getUserDropdownData,
+  createUser,
+  updateUser,
+  deleteUser,
+  exportUser,
+  resetPassword,
+  getUserDepartementDropdown,
+  getUserByID,
+  getUserByNik,
+  getUserJobPositionsDropdown,
+  getUserRoleDropdown,
 
-    // setting latest feature
-    getLatestFeature,
-    createLatestFeature,
-    updateLatestFeature,
-    deleteLatestFeature,
-    exportLatestFeature,
+  // master menu access mobile
+  getMenuAccessMobile,
+  createMenuAccessMobile,
+  updateMenuAccessMobile,
+  deleteMenuAccessMobile,
+  exportExcelMenuAccessMobile,
+  getMenuAccessMobileByRoleId,
+  saveMenuAccessMobileByRoleId,
+  exportExcelMenuAccessMobileByRole,
 
-    // log activity
-    getLogActivity,
-    deleteLogActivityById,
-    deleteLogActivityFilter,
-    downloadLogActivityById,
-    downloadLogActivityFilter,
+  // master department user
+  createDepartementUser,
+  deleteDepartementUser,
+  exportDepartementUser,
+  getDropdownDepartementUser,
+  getDepartementUserDatatable,
+  updateDepartementUser,
+  updateStatusDepartementUser,
 
-    // system update
-    getSystemUpdate,
+  // master shift
+  getDropdownShift,
+  getShiftDatatable,
+  updateStatusShift,
+  createShift,
+  deleteShift,
+  updateShift,
+  exportShift,
 
-    // notification
-    getNotifications,
-    getUnreadNotifications,
-    readNotifications,
-    getAllNotifications,
+  // master status lapangan
+  getDropdownStatusLapangan,
+  getStatusLapanganDatatable,
+  updateStatusStatusLapangan,
+  createStatusLapangan,
+  deleteStatusLapangan,
+  updateStatusLapangan,
+  exportStatusLapangan,
 
-    // pcx library color way
-    getDataDropdownColorway,
-    getColorway,
-    exportExcelColorway,
-    createColorway,
-    updateColorway,
-    deleteColorway,
-    downloadTemplateColorway,
-    uploadColorway,
-    inserFileColorway,
+  // master witel
+  getDropdownWitel,
+  getWitelDatatable,
+  updateStatusWitel,
+  createWitel,
+  deleteWitel,
+  updateWitel,
+  exportWitel,
 
+  // setting latest feature
+  getLatestFeature,
+  getLatestFeatureDropdown,
+  createLatestFeature,
+  updateLatestFeature,
+  deleteLatestFeature,
+  exportLatestFeature,
 
-    //Master Data
-} = services
+  // master job position
+  getDropdownJobPosition,
+  getJobPositionDatatable,
+  createJobPosition,
+  deleteJobPosition,
+  updateJobPosition,
+  updateStatusJobPosition,
+  exportJobPosition,
+
+  // log activity
+  getLogActivity,
+  deleteLogActivityById,
+  deleteLogActivityFilter,
+  downloadLogActivityFilter,
+
+  // system update
+  getSystemUpdate,
+
+  // notification
+  getNotifications,
+  getUnreadNotifications,
+  readNotifications,
+  getAllNotifications,
+  deleteLogNotificationById,
+  deleteLogNotificationFilter,
+  downloadLogNotificationById,
+  downloadLogNotificationFilter,
+  getLogNotification,
+
+  // Transaction
+  getDropdownDailyManPower,
+  getDailyManPowerDatatable,
+  createDailyManPower,
+  importDailyManPower,
+  deleteDailyManPower,
+  updateDailyManPower,
+  exportDailyManPower,
+
+  // Report PT3
+  getDropdownReportPT3,
+  getReportPT3Datatable,
+  createReportPT3,
+  importReportPT3,
+  deleteReportPT3,
+  updateReportPT3,
+  exportReportPT3,
+} = services;

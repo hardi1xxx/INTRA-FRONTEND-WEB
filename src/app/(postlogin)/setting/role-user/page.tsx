@@ -1,153 +1,103 @@
 'use client'
 
-import DataGridAction from "@/components/DataGridAction"
-import NoRowsOverlay from "@/components/DatagridOverlay/NoRowsOverlay"
 import MainPage from "@/components/MainPage"
 import { RootState } from "@/lib/redux/store"
-import { DELETE_ROLE, EXPORT_ROLE, GET_ROLE } from "@/lib/redux/types"
-import { Box, LinearProgress } from "@mui/material"
+import { DELETE_ROLE, EXPORT_ROLE, GET_MENU_ACCESS_MOBILE, GET_ROLE } from "@/lib/redux/types"
+import { Box, CircularProgress } from "@mui/material"
 import { useConfirm } from "material-ui-confirm"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import FormRole from "./form"
-import DataGrid, { GridColDef, GridRenderCellParams, GridRowSelectionModel, useGridApiRef } from "@/components/DataGrid"
-import ActionButtonResponsive from "@/components/ActionButtonResponsive"
-import { dateTimeFormat } from "@/components/helper"
+import ActionButtonResponsive, { ActionButtonResponseType } from "@/components/ActionButtonResponsive"
+import { checkAccessCreate, checkAccessDelete, checkAccessEdit, dateTimeFormat, titleCase } from "@/components/helper"
 import FormMenuAccess from "./menuAccess"
-import { Add, Delete, IosShare } from "@mui/icons-material"
-import DatagridCustomToolbar from "@/components/DataGridCustomToolbar"
-import { useAlerts } from "@/components/hooks"
+import { Add, IosShare } from "@mui/icons-material"
+import { DataRole } from "@/lib/redux/slices/master/role"
+import { ColDef, GetRowIdParams, ICellRendererParams } from "ag-grid-community"
+import { GridRenderCellParams } from "@mui/x-data-grid"
+import DataGridAction, { DataGridActionType } from "@/components/DataGridAction"
+import { AgGridReact } from "ag-grid-react"
+import AGGrid from "@/components/AGGrid"
+import { MenuListType } from "../../menuList"
+import FormMenuAccessMobile from "./menuAccessMobile"
+import { usePathname } from "next/navigation"
 
 const MasterRoleUserPage = () => {
-    const apiRef = useGridApiRef()
     const dispatch = useDispatch()
     const confirm = useConfirm();
-    const alert = useAlerts()
+    const pathname = usePathname()
 
-    const { role, error, fetching } = useSelector((state: RootState) => state.role)
+    const { role, fetching, fetchingExport } = useSelector((state: RootState) => state.role)
+    const { rows } = useSelector((state: RootState) => state.menuAccessMobile)
 
     const [openFormRole, setOpenFormRole] = useState<boolean>(false)
     const [openFormMenuAccess, setOpenFormMenuAccess] = useState<boolean>(false)
+    const [openFormMenuAccessMobile, setOpenFormMenuAccessMobile] = useState<boolean>(false)
+    const [menuMobileList, setMenuMobileList] = useState<MenuListType[]>([])
 
-    const [selectedData, setSelectedData] = useState<{
-        id?: number,
-        object_area?: string,
-        category_issue?: string,
-        issue?: string,
-        status?: number,
-        created_at?: string,
-        created_nik?: number,
-        created_by?: string,
-        updated_at?: string,
-        updated_nik?: number,
-        updated_by?: string,
-    }>({})
-
-    const [selectedDatas, setSelectedDatas] = useState<GridRowSelectionModel>([])
-    
-    // render row number
-    const getRowIndex = useCallback<(id: number) => number>(
-        (id) => apiRef.current.getAllRowIds().indexOf(id),
-        [apiRef],
-    );
-  
-    // column configuration
-    const columns: GridColDef[] = [
-      {
-        field: 'id',
-        headerName: 'No.',
-        width: 50,
-        renderCell:(params: GridRenderCellParams<any>) => {
-          return getRowIndex(params.rowNode.id as number) + 1
-        }
-      
-      },
-        {
-            field: 'role',
-            headerName: 'Role',
-            minWidth: 150
-        },
-        {
-            field: 'created_at',
-            headerName: 'Created At',
-            minWidth: 150,
-            renderCell: (params) => {
-                return dateTimeFormat(params.value)
-            }
-        },
-        {
-            field: 'created_nik',
-            headerName: 'Created NIK',
-            minWidth: 150
-        },
-        {
-            field: 'created_by',
-            headerName: 'Created By',
-            minWidth: 150,
-        },
-        {
-            field: 'updated_at',
-            headerName: 'Updated At',
-            minWidth: 150,
-            renderCell: (params) => {
-                return dateTimeFormat(params.value)
-            }
-        },
-        {
-            field: 'updated_nik',
-            headerName: 'Updated NIK',
-            minWidth: 150,
-        },
-        {
-            field: 'updated_by',
-            headerName: 'Updated By',
-            minWidth: 150,
-        },
-        {
-            field: 'action',
-            headerName: 'Action',
-            headerAlign: 'center',
-            width: 60,
-            align: 'center',
-            editable: false,
-            sortable: false,
-            disableColumnMenu: true,
-            renderCell: (params: GridRenderCellParams<any>) => {
-                return (
-                    <DataGridAction item={[
-                        {
-                            text: 'Edit',
-                            onClick: () => {
-                                setOpenFormRole(true)
-                                setSelectedData(params.row)
-                            }
-                        },
-                        {
-                            text: 'Delete',
-                            onClick: () => {
-                                confirm({ description: "Are you sure to delete this data?" })
-                                    .then(() => {
-                                        deleteData(params.row.id)
-                                    })
-                            }
-                        },
-                        {
-                            text: 'Menu Access',
-                            onClick: () => {
-                                setOpenFormMenuAccess(true)
-                                setSelectedData(params.row)
-                            }
-                        }
-                    ]} />
-                )
-            }
-        },
-    ]
+    const [selectedData, setSelectedData] = useState<DataRole>({})
 
     // get role data on page load
     useEffect(() => {
         dispatch({ type: GET_ROLE })
-    }, [])
+        dispatch({ type: GET_MENU_ACCESS_MOBILE })
+    }, [dispatch])
+
+    useEffect(() => {
+        const menuMobile: MenuListType[] = [];
+        const items = [...rows]
+        items.sort((a, b) => (a.menu ?? "").localeCompare(b.menu ?? ""))
+        for (const row of items) {
+            const menu = row.menu?.split('/') ?? []
+            if (menu.length > 1) {
+                // get parent
+                if (menuMobile.length > 0) {
+                    menuMobile.map(val => {
+                        if (val.id == menu[0]) {
+                            if (val.child && val.child?.length > 0) {
+                                val.child?.push({
+                                    id: row.menu ?? "",
+                                    text: titleCase(menu[menu.length - 1] ?? ""),
+                                    url: row.menu ?? "",
+                                    canCreate: true,
+                                    canEdit: true,
+                                    canDelete: true,
+                                })
+                            } else {
+                                val.child = [{
+                                    id: row.menu ?? "",
+                                    text: titleCase(menu[menu.length - 1] ?? ""),
+                                    url: row.menu ?? "",
+                                    canCreate: true,
+                                    canEdit: true,
+                                    canDelete: true,
+                                }]
+                            }
+                        }
+                    })
+                } else {
+                    menuMobile.push({
+                        id: row.menu ?? "",
+                        text: titleCase(row.menu ?? ""),
+                        url: row.menu ?? "",
+                        canCreate: true,
+                        canEdit: true,
+                        canDelete: true,
+                    })
+                }
+            } else {
+                menuMobile.push({
+                    id: row.menu ?? "",
+                    text: titleCase(row.menu ?? ""),
+                    url: row.menu ?? "",
+                    canCreate: true,
+                    canEdit: true,
+                    canDelete: true,
+                })
+            }
+        }
+        setMenuMobileList(menuMobile)
+    }, [rows])
 
     // show modal input
     const onCreateButtonClick = () => {
@@ -155,116 +105,245 @@ const MasterRoleUserPage = () => {
         setSelectedData({})
     }
 
-    // delete data
-    const deleteData = (id: number) => {
-        dispatch({ type: DELETE_ROLE, id: id })
-    }
-
-    // delete multiple selected data
-    const deleteSelected = () => {
-        if (selectedDatas.length === 0) {
-            alert.show("Error", "No data selected!")
-        } else {
-            confirm({ description: "Are you sure to delete selected data?" }).then(() => {
-                for (const id of selectedDatas) {
-                    dispatch({ type: DELETE_ROLE, id: id })
+    // define columns table
+    const columns: ColDef<DataRole & { no?: string, action?: string }, any>[] = [
+        {
+            field: "no",
+            headerName: "No.",
+            width: 70,
+            minWidth: 70,
+            pinned: 'left',
+            sortable: false,
+            valueGetter: (props) => {
+                return (props.node?.rowIndex ?? 0) + 1;
+            },
+        },
+        {
+            field: 'role',
+            headerName: 'Role',
+            minWidth: 210,
+            comparator: (valueA: any, valueB: any) => valueA.toLowerCase().localeCompare(valueB.toLowerCase()),
+        },
+        {
+            field: 'created_at',
+            headerName: 'Created At',
+            minWidth: 200,
+            cellRenderer: (params: GridRenderCellParams<any>) => {
+                return params.value != null ? dateTimeFormat(params.value) : '-'
+            },
+            getQuickFilterText: (params) => {
+                return '';
+            }
+        },
+        {
+            field: 'created_nik',
+            headerName: 'Created Nik',
+            minWidth: 200,
+            cellRenderer: (params: GridRenderCellParams<any>) => {
+                return params.value ?? '-'
+            },
+            getQuickFilterText: (params) => {
+                return '';
+            }
+        },
+        {
+            field: 'created_by',
+            headerName: 'Created By',
+            minWidth: 200,
+            comparator: (valueA: any, valueB: any) => {
+                const valA = valueA ?? ''
+                const valB = valueB ?? ''
+                return valA.toLowerCase().localeCompare(valB.toLowerCase())
+            },
+            cellRenderer: (params: GridRenderCellParams<any>) => {
+                return params.value ?? '-'
+            },
+            getQuickFilterText: (params) => {
+                return '';
+            }
+        },
+        {
+            field: 'updated_at',
+            headerName: 'Updated At',
+            minWidth: 200,
+            cellRenderer: (params: GridRenderCellParams<any>) => {
+                return params.value != null ? dateTimeFormat(params.value) : '-'
+            },
+            getQuickFilterText: (params) => {
+                return '';
+            }
+        },
+        {
+            field: 'updated_nik',
+            headerName: 'Updated Nik',
+            minWidth: 200,
+            cellRenderer: (params: GridRenderCellParams<any>) => {
+                return params.value ?? '-'
+            },
+            getQuickFilterText: (params) => {
+                return '';
+            }
+        },
+        {
+            field: 'updated_by',
+            headerName: 'Updated By',
+            minWidth: 200,
+            comparator: (valueA: any, valueB: any) => {
+                const valA = valueA ?? ''
+                const valB = valueB ?? ''
+                return valA.toLowerCase().localeCompare(valB.toLowerCase())
+            },
+            cellRenderer: (params: GridRenderCellParams<any>) => {
+                return params.value ?? '-'
+            },
+            getQuickFilterText: (params) => {
+                return '';
+            }
+        },
+        // action button
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 80,
+            pinned: 'right',
+            editable: false,
+            sortable: false,
+            cellRenderer: (params: ICellRendererParams<any>) => {
+                const dataActions: DataGridActionType = {
+                    item: []
                 }
-                setSelectedDatas([])
-            }).catch((err: any) => {
-                alert.show("Error", err.toString())
-            })
-        }
-    }
+                if (checkAccessEdit(pathname.substring(1))) {
+                    dataActions.item.push({
+                        text: 'Edit',
+                        onClick: () => {
+                            setSelectedData(params.data)
+                            setOpenFormRole(true)
+                        }
+                    })
+                    dataActions.item.push({
+                        text: 'Menu Access',
+                        onClick: () => {
+                            setOpenFormMenuAccess(true)
+                            setSelectedData(params.data)
+                        }
+                    })
+                    dataActions.item.push({
+                        text: 'Menu Access Mobile',
+                        onClick: () => {
+                            setOpenFormMenuAccessMobile(true)
+                            setSelectedData(params.data)
+                        }
+                    })
+                }
+                if (checkAccessDelete(pathname.substring(1))) {
+                    dataActions.item.push({
+                        text: 'Delete',
+                        onClick: () => {
+                            confirm({ description: "Are you sure to delete this data?" })
+                                .then(() => {
+                                    dispatch({ type: DELETE_ROLE, id: params.data.id })
+                                })
+                                .catch((err) => {
+
+                                })
+                        }
+                    })
+                }
+                if (dataActions.item.length > 0) {
+                    return (
+                        <DataGridAction item={dataActions.item} />
+                    )
+                } else {
+                    return (
+                        <Box sx={{ textAlign: 'center' }}>-</Box>
+                    )
+                }
+            }
+        },
+    ]
 
     // export excel
     const onExportExcelButtonClick = () => {
-        dispatch({ type: EXPORT_ROLE })
+        dispatch({ type: EXPORT_ROLE, search: gridRef.current!.api.getQuickFilter() ?? '' })
     }
+
+    const gridRef = useRef<AgGridReact>(null)
+    const getRowId = useCallback((params: GetRowIdParams<any>): any => {
+        return params.data.id ?? 0
+    }, []);
+
+    const [actionButtons, setActionButtons] = useState<ActionButtonResponseType>({ items: [] })
+
+    useEffect(() => {
+        const temp: ActionButtonResponseType = {
+            items: []
+        }
+        if (checkAccessCreate(pathname.substring(1))) {
+            temp.items.push({
+                color: 'primary',
+                variant: 'contained',
+                size: 'small',
+                onClick: onCreateButtonClick,
+                text: 'Create Data',
+                startIcon: <Add />
+            })
+        }
+        setActionButtons(temp)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
 
     return (
         <MainPage
-            title="Master Data Role"
+            title="Setting Role User"
         >
             <Box
                 sx={{
-                    backgroundColor: 'white'
+                    backgroundColor: "white",
                 }}
-                display={'flex'}
-                flexDirection={'column'}
-                width={'calc(100% - 40px)'}
-                p={'20px'}
-                borderRadius={'8px'}
-                gap={'1rem'}
-                flexGrow={1}
+                display={"flex"}
+                flexDirection={"column"}
+                // width={"calc(100% - 40px)"}
+                p={"10px"}
+                paddingY={"15px"}
+                pb={"20px"}
+                borderRadius={"8px"}
+                gap={"1rem"}
+            // flexGrow={0.1}
             >
                 {/* container button group */}
-                <ActionButtonResponsive items={[
-                    {
-                        color: 'primary',
-                        variant: 'contained',
-                        size: 'small',
-                        onClick: onCreateButtonClick,
-                        text: 'Create',
-                        startIcon: <Add />
-                    },
-                    {
-                        color: 'error',
-                        variant: 'contained',
-                        size: 'small',
-                        onClick: deleteSelected,
-                        text: 'Delete Selected',
-                        startIcon: <Delete />
-                    },
-                    {
-                        color: 'secondary',
-                        variant: 'contained',
-                        size: 'small',
-                        onClick: onExportExcelButtonClick,
-                        text: 'Export Excel',
-                        sx: { color: 'white' },
-                        startIcon: <IosShare />
-                    },
-                ]}
-                />
+                <ActionButtonResponsive items={[{
+                    color: 'info',
+                    variant: 'contained',
+                    size: 'small',
+                    onClick: onExportExcelButtonClick,
+                    text: 'Export Excel',
+                    disabled: fetchingExport || role.length === 0,
+                    endIcon: fetchingExport && <CircularProgress color='inherit' size={'1rem'} />,
+                    startIcon: <IosShare />
+                }, ...actionButtons.items]} />
                 <Box
                     flexGrow={1}
-                    height={'380px'}
-                    minHeight={'380px'}
+                    height={'550px'}
                     sx={{
                         backgroundColor: 'white'
                     }}
                 >
-                    <DataGrid
-                        onRowSelectionModelChange={(newRowSelectionModel) => setSelectedDatas(newRowSelectionModel)}
-                        rowSelectionModel={selectedDatas}
-                        checkboxSelection
-                        rows={role}
-                        columns={columns}
-                        pagination={true}
-                        pageSizeOptions={[10, 30, 50, 100]}
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                    pageSize: 10,
-                                },
-                            },
-                        }}
-                        slots={{
-                            loadingOverlay: LinearProgress,
-                            noRowsOverlay: NoRowsOverlay,
-                            toolbar: DatagridCustomToolbar
-                        }}
-                        density="compact"
-                        sx={{ '--DataGrid-overlayHeight': '150px' }}
-                        loading={fetching}
-                        disableRowSelectionOnClick
-                        keepNonExistentRowsSelected
-                        apiRef={apiRef}
+                    <AGGrid
+                        gridRef={gridRef}
+                        rowData={role}
+                        columnDefs={columns}
+                        totalData={role.length}
+                        getRowId={getRowId}
+                        isLoading={fetching}
+                        height={"562px"}
+                        showSearchInput
                     />
                 </Box>
             </Box>
             <FormRole open={openFormRole} setOpen={setOpenFormRole} data={selectedData} />
             <FormMenuAccess open={openFormMenuAccess} setOpen={setOpenFormMenuAccess} data={selectedData} />
+            <FormMenuAccessMobile open={openFormMenuAccessMobile} setOpen={setOpenFormMenuAccessMobile} data={selectedData} menuList={menuMobileList} />
         </MainPage>
     )
 }

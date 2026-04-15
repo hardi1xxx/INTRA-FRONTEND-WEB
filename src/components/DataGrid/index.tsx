@@ -121,7 +121,7 @@ const CustomDataGrid = ({ ...props }: (DataGridProps) & CustomDatagridProps) => 
         if (props.onServerSidePropsChange && props.serverSideMode) {
             props.onServerSidePropsChange(param)
         }
-    }, [paginationModel, sortModel, filterModel])
+    }, [paginationModel, sortModel, filterModel, props])
 
     return (
         <>
@@ -150,6 +150,9 @@ const CustomDataGrid = ({ ...props }: (DataGridProps) & CustomDatagridProps) => 
                     },
                     '& .MuiDataGrid-footerContainer': {
                         height: '50px !important'
+                    },
+                    '& .MuiTablePagination-root .MuiTablePagination-toolbar': {
+                        padding: '0px 2px 0px 16px !important'
                     }
                 }}
             />
@@ -179,6 +182,9 @@ const CustomDataGrid = ({ ...props }: (DataGridProps) & CustomDatagridProps) => 
                     },
                     '& .MuiDataGrid-footerContainer': {
                         height: '50px !important'
+                    },
+                    '& .MuiTablePagination-root .MuiTablePagination-toolbar': {
+                        padding: '0px 2px 0px 16px !important'
                     }
                 }}
             />}

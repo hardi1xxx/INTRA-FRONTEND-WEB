@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import { getCookie } from 'cookies-next'
 
 
@@ -77,9 +77,14 @@ const auth = createSlice({
             return state
         },
         receiveAuth: (state, action) => {
-            state.fetching = false
+            // state.fetching = false
             state.auth = action.payload
             delete state.error
+
+            return state
+        },
+        setAuthFetching: (state, action: PayloadAction<boolean>) => {
+            state.fetching = action.payload
 
             return state
         },
@@ -100,15 +105,16 @@ const auth = createSlice({
 })
 
 export const {
-    requestAuth, 
-    receiveAuth, 
-    errorAuth, 
-    requestChangePassword, 
-    receiveChangePassword, 
-    errorChangePassword, 
-    requestChangeProfilePicture, 
-    receiveChangeProfilePicture, 
-    errorChangeProfilePicture
+    requestAuth,
+    receiveAuth,
+    errorAuth,
+    requestChangePassword,
+    receiveChangePassword,
+    errorChangePassword,
+    requestChangeProfilePicture,
+    receiveChangeProfilePicture,
+    errorChangeProfilePicture,
+    setAuthFetching,
 } = auth.actions
 
 export default auth.reducer

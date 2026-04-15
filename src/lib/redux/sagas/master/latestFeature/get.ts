@@ -8,18 +8,18 @@ import { GET_SETTING_LATEST_FEATURE } from "@/lib/redux/types"
 
 type AnyAction = {
     type: string,
-    data: GetLatestFeatureRequestType
+    params: GetLatestFeatureRequestType
 }
 
-export function* getLatestFeatureSagas({ data }: AnyAction) {
+export function* getLatestFeatureSagas({ params }: AnyAction) {
     try {
         yield put(requestLatestFeature())
 
-        const response: DefaultServiceResponse & { result: { data: LatestFeatureResponseType[], recordsTotal: number, recordsFiltered: number } } = yield getLatestFeature(data)
+        const response: DefaultServiceResponse & { result: { data: LatestFeatureResponseType[], recordsTotal: number, recordsFiltered: number } } = yield getLatestFeature(params)
 
         yield put(receiveLatestFeature({
            ...response.result,
-           params: data
+           params: params
         }))
     } catch (error: any) {
         const { message, statusCode } = errorHandler(error)

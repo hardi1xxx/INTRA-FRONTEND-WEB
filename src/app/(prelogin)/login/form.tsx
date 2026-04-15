@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { loginSchema } from './schema';
 import { LOGIN } from '@/lib/redux/types';
 import { RootState } from "@/lib/redux/store";
+import { useSearchParams } from "next/navigation";
 
 interface IFormInput{
     nik?: string,
@@ -17,9 +18,10 @@ interface IFormInput{
 const FormLogin = () => {
     const dispatch = useDispatch()
     const {fetching, error, auth} = useSelector((state: RootState) => state.auth)
-    
+    const searchParams = useSearchParams()
+
     const submitButtonRef = useRef<HTMLButtonElement>(null)
-    
+
     const [showPassword, setShowPassword] = useState(false);
 
     const {
@@ -33,10 +35,10 @@ const FormLogin = () => {
             password: '',
         }
       })
-    
+
     // submit data login
     const onSubmit : SubmitHandler<IFormInput> = (data) => {
-        dispatch({type: LOGIN , param: {nik: data.nik, password: data.password}})
+        dispatch({type: LOGIN , param: {nik: data.nik, password: data.password, redirect: searchParams.get('redirect')}})
     }
 
     // toggle button show password
@@ -66,6 +68,14 @@ const FormLogin = () => {
                         autoFocus
                         error={errors.nik != undefined}
                         helperText={errors.nik?.message}
+                        inputProps={{
+                            inputMode: 'numeric',
+                            pattern: '[0-9]*'
+                        }}
+                        onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 8);
+                            field.onChange(value);
+                        }}
                     />}
                 />
                 <Controller
@@ -109,7 +119,7 @@ const FormLogin = () => {
                 )}
 
                 <Typography variant='caption' color={'lightslategray'} fontSize={'0.5rem'} mb={'1rem'}>Forgot your password ? contact admin</Typography>
-                
+
                 <Button
                 ref={submitButtonRef}
                 type="submit"
@@ -125,7 +135,7 @@ const FormLogin = () => {
                 </Button>
                 <Typography variant='caption' color={'lightslategray'} fontSize={'0.5rem'} mb={'1rem'}>Dont have an account? contact admin</Typography>
 
-                <Typography variant='caption' fontWeight={'bold'} fontSize={'0.5rem'}>© 2026. INTRA TEAM</Typography>
+                <Typography variant='caption' fontWeight={'bold'} fontSize={'0.5rem'}>© 2025.Intra Team</Typography>
             </Box>
         </form>
     )
