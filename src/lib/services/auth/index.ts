@@ -15,16 +15,15 @@ export type MenuAccessResponse = {
 }[];
 
 export type LoginServiceResponse = DefaultServiceResponse & {
-  result: {
-    id: number;
-    token: string;
-    name: string;
-    nik: string;
-    picture: string;
-    is_app: number;
-    is_web: number;
-    departement_id: number;
+  data: {
+    access_token: string;
     expires_at: number;
+    user : {
+      id: number;
+      name: string;
+      nik: string;
+      picture: string;
+    };
     roles: string;
     menu_access: MenuAccessResponse;
   };

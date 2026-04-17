@@ -19,9 +19,6 @@ export function* logoutSagas() {
     deleteCookie("intra_auth_nik");
     deleteCookie("intra_auth_picture");
     deleteCookie("intra_auth_role");
-    deleteCookie("intra_auth_is_app");
-    deleteCookie("intra_auth_is_web");
-    deleteCookie("intra_auth_departement_id");
     deleteCookie("intra_auth_expires_at");
     deleteCookie("intra_auth_menu_access");
 

@@ -12,44 +12,37 @@ export function* loginSagas({ param }: AnyAction) {
   try {
     yield put(requestAuth());
     const loginResponse: LoginServiceResponse = yield login(param);
-    if (!loginResponse.result.is_web) {
-      yield put(errorAuth("Unauthorized!"));
-      yield put(setTextNotification({ text: "Unauthorized!", severity: "error" }));
-      return;
-    }
+    console.log(loginResponse)
 
-    setCookie("intra_auth_user_id", loginResponse.result.id);
-    setCookie("intra_auth_token", loginResponse.result.token);
-    setCookie("intra_auth_name", loginResponse.result.name);
-    setCookie("intra_auth_nik", loginResponse.result.nik);
-    setCookie("intra_auth_picture", loginResponse.result.picture);
-    setCookie("intra_auth_role", loginResponse.result.roles);
-    setCookie("intra_auth_is_app", loginResponse.result.is_app);
-    setCookie("intra_auth_is_web", loginResponse.result.is_web);
-    setCookie("intra_auth_departement_id", loginResponse.result.departement_id);
-    setCookie("intra_auth_expires_at", loginResponse.result.expires_at);
+    setCookie("intra_auth_user_id", loginResponse.data.user.id);
+    setCookie("intra_auth_token", loginResponse.data.access_token);
+    setCookie("intra_auth_name", loginResponse.data.user.name);
+    setCookie("intra_auth_nik", loginResponse.data.user.nik);
+    setCookie("intra_auth_picture", loginResponse.data.user.picture);
+    setCookie("intra_auth_role", loginResponse.data.roles);
+    setCookie("intra_auth_expires_at", loginResponse.data.expires_at);
     setCookie(
       "intra_auth_menu_access",
-      loginResponse.result.menu_access.filter((value) => value.show).map((value) => value.menu)
+      loginResponse.data.menu_access.filter((value) => value.show).map((value) => value.menu)
     );
     window.localStorage.setItem(
       "intra_auth_menu_access",
-      JSON.stringify(loginResponse.result.menu_access.filter((value) => value.show).map((value) => value.menu))
+      JSON.stringify(loginResponse.data.menu_access.filter((value) => value.show).map((value) => value.menu))
     );
     window.localStorage.setItem(
       "intra_auth_menu_access_create",
-      JSON.stringify(loginResponse.result.menu_access.filter((value) => value.create).map((value) => value.menu))
+      JSON.stringify(loginResponse.data.menu_access.filter((value) => value.create).map((value) => value.menu))
     );
     window.localStorage.setItem(
       "intra_auth_menu_access_edit",
-      JSON.stringify(loginResponse.result.menu_access.filter((value) => value.edit).map((value) => value.menu))
+      JSON.stringify(loginResponse.data.menu_access.filter((value) => value.edit).map((value) => value.menu))
     );
     window.localStorage.setItem(
       "intra_auth_menu_access_delete",
-      JSON.stringify(loginResponse.result.menu_access.filter((value) => value.delete).map((value) => value.menu))
+      JSON.stringify(loginResponse.data.menu_access.filter((value) => value.delete).map((value) => value.menu))
     );
 
-    yield put(receiveAuth({ name: loginResponse.result.name, role: loginResponse.result.roles }));
+    yield put(receiveAuth({ name: loginResponse.data.user.name, role: loginResponse.data.roles }));
 
     yield put(setTextNotification({ text: "Login Successfull", severity: "success" }));
     window.location.href = param.redirect || '/dashboard';

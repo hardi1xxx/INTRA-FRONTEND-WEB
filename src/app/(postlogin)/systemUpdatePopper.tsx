@@ -17,9 +17,9 @@ const SystemUpdatePopper = () => {
     const id = open ? 'notification-popper' : undefined;
 
     // get data system update from backend
-    useEffect(() => {
-        dispatch({ type: GET_SYSTEM_UPDATE })
-    }, [dispatch])
+    // useEffect(() => {
+    //     dispatch({ type: GET_SYSTEM_UPDATE })
+    // }, [dispatch])
 
     // set read is true
     useEffect(() => {

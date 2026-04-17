@@ -65,11 +65,11 @@ export default function PostLoginLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname()
-  useEffect(() => {
-    if (!checkAccessShow(pathname)) {
-      redirect('/forbidden')
-    }
-  }, [pathname])
+  // useEffect(() => {
+  //   if (!checkAccessShow(pathname)) {
+  //     redirect('/forbidden')
+  //   }
+  // }, [pathname])
   
   const theme = useTheme()
   const customization = useSelector((state: RootState) => state.customization);

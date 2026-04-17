@@ -23,7 +23,7 @@ import usePermission from "@/components/use-permission";
 export default function Page() {
   const dispatch = useDispatch();
   const confirm = useConfirm();
-  const permission = usePermission("report/pt3");
+  // const permission = usePermission("report/pt3");
 
   const [openForm, setOpenForm] = useState<boolean>(false);
 
@@ -191,7 +191,7 @@ export default function Page() {
           item: []
         }
 
-        if(permission.edit){
+        // if(permission.edit){
           dataActions.item.push({
             text: "Edit",
             onClick: () => {
@@ -199,9 +199,9 @@ export default function Page() {
               setSelectedData(row.data!);
             },
           })
-        }
+        // }
 
-        if(permission.delete){
+        // if(permission.delete){
           dataActions.item.push({
             text: "Delete",
             onClick: () => {
@@ -215,7 +215,7 @@ export default function Page() {
                 .catch((err) => {});
             },
           })
-        }
+        // }
 
         if (dataActions.item.length > 0) {
           return (
@@ -335,8 +335,8 @@ export default function Page() {
                   endIcon: fetchingExport && <CircularProgress color="inherit" size={"1rem"} />,
                   startIcon: <IosShare />,
                 },
-                ...(permission.create
-                  ? [
+                // ...(permission.create
+                //   ? [
                       {
                         color: "error",
                         variant: "contained",
@@ -353,8 +353,8 @@ export default function Page() {
                         text: "Create Data",
                         startIcon: <Add />,
                       } satisfies ActionButtonResponseType["items"][number],
-                    ]
-                  : []),
+                  //   ]
+                  // : []),
               ]}
             />
           </div>

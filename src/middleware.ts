@@ -8,9 +8,6 @@ export function middleware(request: NextRequest) {
     request.cookies.delete("intra_auth_name");
     request.cookies.delete("intra_auth_expires_at");
     request.cookies.delete("intra_auth_role");
-    request.cookies.delete("intra_auth_is_app");
-    request.cookies.delete("intra_auth_is_web");
-    request.cookies.delete("intra_auth_departement_id");
     request.cookies.delete("intra_auth_nik");
     request.cookies.delete("intra_auth_picture");
     request.cookies.delete("intra_auth_menu_access");
