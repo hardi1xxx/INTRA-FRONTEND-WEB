@@ -238,7 +238,7 @@ function MasterJobPositionPage() {
         flexDirection={"column"}
         // width={"calc(100% - 40px)"}
         p={"15px 10px 20px 10px"}
-        borderRadius={"8px"}
+        borderRadius={"12px"}
         gap={"1rem"}
       // flexGrow={0.1}
       >

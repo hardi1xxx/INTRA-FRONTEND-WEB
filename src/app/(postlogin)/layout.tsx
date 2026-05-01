@@ -156,7 +156,7 @@ export default function PostLoginLayout({
                         aria-label="open drawer"
                         onClick={handleDrawerToggle}
                         edge="end"
-                        sx={{  ml: 2, borderRadius: '8px', backgroundColor: '#2d50b0', color: 'white', '&:hover': {backgroundColor: '#223c85'}}}
+                        sx={{  ml: 2, borderRadius: '12px', backgroundColor: '#2d50b0', color: 'white', '&:hover': {backgroundColor: '#223c85'}}}
                       >
                         <MenuIcon />
                       </IconButton>

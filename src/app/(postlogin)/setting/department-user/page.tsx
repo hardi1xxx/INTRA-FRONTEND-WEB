@@ -257,7 +257,7 @@ function Page() {
         px={"10px"}
         pt={"15px"}
         pb={"20px"}
-        borderRadius={"8px"}
+        borderRadius={"12px"}
         gap={"1rem"}
         flexGrow={0.1}
       >

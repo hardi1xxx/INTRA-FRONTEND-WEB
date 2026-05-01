@@ -38,7 +38,7 @@ const SystemUpdatePopper = () => {
                     onClick={() => setOpen(true)}
                     edge="start"
                     ref={notificationButton}
-                    sx={{ borderRadius: '8px', backgroundColor: '#007bff', color: 'white', '&:hover': { backgroundColor: '#0069d9' } }}
+                    sx={{ borderRadius: '12px', backgroundColor: '#007bff', color: 'white', '&:hover': { backgroundColor: '#0069d9' } }}
                 >
                     <BrowserUpdatedIcon />
                     <Box position={'absolute'} top={'-5px'} right={'-5px'} display={results.length > 0 && !read ? 'flex' : 'none'} zIndex={5}>
@@ -59,7 +59,7 @@ const SystemUpdatePopper = () => {
                                 <Card sx={{
                                     border: 'none rgba(224, 224, 224, 0.596)',
                                     boxShadow: 'rgba(0, 0, 0, 0.2) 0px 8px 10px -5px, rgba(0, 0, 0, 0.14) 0px 16px 24px 2px, rgba(0, 0, 0, 0.12) 0px 6px 30px 5px',
-                                    borderRadius: '8px'
+                                    borderRadius: '12px'
                                 }}>
                                     <Grid container>
                                         <Grid item xs={12} container padding={'16px 16px 0px 16px'}>

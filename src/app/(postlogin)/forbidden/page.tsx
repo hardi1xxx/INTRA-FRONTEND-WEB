@@ -11,7 +11,7 @@ function NotFoundPage() {
 			flexDirection={'column'}
 			width={'calc(100% - 40px)'}
 			p={'20px'}
-			borderRadius={'8px'}
+			borderRadius={'12px'}
 			gap={'1rem'}
 			flexGrow={1}
 			alignItems={'center'}

@@ -27,7 +27,7 @@ const MainPage = ({ title, children, breadcrumbFontSize = '12px' }: MainPageType
           gap: "1rem",
           justifyContent: "space-between",
           padding: "1rem",
-          borderRadius: "8px",
+          borderRadius: "12px",
           bgcolor: "#2d50b0",
         }}
       >

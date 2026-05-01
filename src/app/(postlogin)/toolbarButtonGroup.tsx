@@ -49,7 +49,7 @@ const ToolbarButtonGroup = () => {
                 aria-label="fullscreen"
                 onClick={() => setFullScreen(!fullScreen)}
                 edge="start"
-                sx={{ borderRadius: '8px', backgroundColor: '#2d50b0', color: 'white', '&:hover': {backgroundColor: '#223c85'}}}
+                sx={{ borderRadius: '12px', backgroundColor: '#2d50b0', color: 'white', '&:hover': {backgroundColor: '#223c85'}}}
                 >
                 {
                     fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />
@@ -63,7 +63,7 @@ const ToolbarButtonGroup = () => {
                 onClick={handleLogout}
                 disabled={fetching}
                 edge="start"
-                sx={{ borderRadius: '8px', backgroundColor: '#dc3545', color: 'white', '&:hover': {backgroundColor: '#c82333'}}}
+                sx={{ borderRadius: '12px', backgroundColor: '#dc3545', color: 'white', '&:hover': {backgroundColor: '#c82333'}}}
                 >
                     {fetching ? <CircularProgress size={'1rem'}/> : <Logout />}
                 </IconButton>

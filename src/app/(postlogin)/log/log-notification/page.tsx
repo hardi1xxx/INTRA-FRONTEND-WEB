@@ -298,7 +298,7 @@ const LogNotificationPage = () => {
                 flexDirection={"column"}
                 paddingX={"10px"}
                 paddingY={"10px"}
-                borderRadius={"8px"}
+                borderRadius={"12px"}
                 gap={"1rem"}
             >
                 <Box display={"flex"} flexDirection={"column"} width={"100%"} gap={"1rem"}>
@@ -344,7 +344,7 @@ const LogNotificationPage = () => {
                 p={"10px"}
                 paddingY={"15px"}
                 pb={"20px"}
-                borderRadius={"8px"}
+                borderRadius={"12px"}
                 gap={"1rem"}
             >
                 {/* action button for export and delete based on date range */}

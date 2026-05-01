@@ -13,7 +13,12 @@ import { witelActions } from "@/lib/redux/slices/master/witel";
 import { parseStatus } from "@/lib/services/parseStatus";
 import { FilterAutoComplete } from "@/components/Input/FilterAutoComplete";
 
-export default function TableFilter() {
+
+type FilterType = {
+  setResetSearch: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const TableFilter = ({ setResetSearch }: FilterType) => {
   const dispatch = useDispatch();
   const { dropdownOptions, dropdownOptionsLoading, params } = useSelector((state: RootState) => state.witel);
 
@@ -97,11 +102,9 @@ export default function TableFilter() {
       }}
       display={"flex"}
       flexDirection={"column"}
-      paddingX={"10px"}
-      paddingY={"10px"}
-      borderRadius={"8px"}
-      gap={"1rem"}
-      flexGrow={0.1}
+      padding={'24px'}
+      borderRadius={"12px"}
+      gap={"0.5rem"}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display={"flex"} flexDirection={"column"} width={"100%"} gap={"1rem"}>
@@ -185,10 +188,10 @@ export default function TableFilter() {
             {/* button action */}
             <Grid item xs={12} md={12}>
               <Box display={'flex'} justifyContent={'end'} alignItems={'center'} gap={'1rem'} height={'100%'}>
-                <Button color="info" variant="contained" size="small" onClick={onClear} startIcon={<Clear />}>
+                <Button color="info" variant="contained" size="small" onClick={onClear} startIcon={<Clear />} sx={{borderRadius: "12px"}}>
                     Clear
                 </Button>
-                <Button color="primary" variant="contained" size="small" type="submit" startIcon={<Search />}>
+                <Button color="primary" variant="contained" size="small" type="submit" startIcon={<Search />} sx={{borderRadius: "12px"}}>
                     Search
                 </Button>
               </Box>
@@ -199,3 +202,5 @@ export default function TableFilter() {
     </Box>
   );
 }
+
+export default TableFilter;

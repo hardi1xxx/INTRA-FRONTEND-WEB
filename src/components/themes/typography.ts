@@ -112,7 +112,7 @@ export default function themeTypography(theme : any) {
     },
     commonAvatar: {
       cursor: 'pointer',
-      borderRadius: '8px'
+      borderRadius: '12px'
     },
     smallAvatar: {
       width: '22px',

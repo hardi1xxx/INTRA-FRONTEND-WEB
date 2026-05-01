@@ -44,7 +44,7 @@ const NotificationPopper = () => {
                     onClick={() => setOpen(true)}
                     edge="start"
                     ref={notificationButton}
-                    sx={{ borderRadius: '8px', backgroundColor: '#17a2b8', color: 'white', '&:hover': { backgroundColor: '#138496' } }}
+                    sx={{ borderRadius: '12px', backgroundColor: '#17a2b8', color: 'white', '&:hover': { backgroundColor: '#138496' } }}
 
                 >
                     <NotificationsIcon />
@@ -66,7 +66,7 @@ const NotificationPopper = () => {
                                 <Card sx={{
                                     border: 'none rgba(224, 224, 224, 0.596)',
                                     boxShadow: 'rgba(0, 0, 0, 0.2) 0px 8px 10px -5px, rgba(0, 0, 0, 0.14) 0px 16px 24px 2px, rgba(0, 0, 0, 0.12) 0px 6px 30px 5px',
-                                    borderRadius: '8px'
+                                    borderRadius: '12px'
                                 }}>
                                     <Grid container>
                                         <Grid item xs={12} container padding={'16px 16px 0px 16px'}>

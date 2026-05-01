@@ -9,7 +9,7 @@ import { RootState } from "@/lib/redux/store";
 import { DELETE_WITEL, EXPORT_WITEL, GET_WITEL, UPDATE_STATUS_WITEL } from "@/lib/redux/types";
 import { Box, CircularProgress, debounce } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { WithId } from "@/type/services";
 import { Add, IosShare } from "@mui/icons-material";
@@ -20,6 +20,9 @@ import { UpsertWitelRequest } from "./schema";
 import { ColDef, ICellRendererParams, IRowNode } from "ag-grid-community";
 import CustomSwitch from "@/components/Switch";
 import usePermission from "@/components/use-permission";
+import { AgGridReact } from "ag-grid-react";
+import { CustomDatagridProps } from "@/components/DataGrid";
+import AGGrid from "@/components/AGGrid";
 
 export default function Page() {
   const dispatch = useDispatch();
@@ -27,6 +30,9 @@ export default function Page() {
   // const permission = usePermission("master/witel");
 
   const [openForm, setOpenForm] = useState<boolean>(false);
+  const [resetSearch, setResetSearch] = useState<boolean>(false);
+
+  const gridRef = useRef<AgGridReact>(null);
 
   const [selectedData, setSelectedData] = useState<UpsertWitelRequest & WithId>();
  
@@ -204,110 +210,77 @@ export default function Page() {
       });
     };
 
+    // function for get data with serverside method
+    const onServerSidePropsChange: CustomDatagridProps["onServerSidePropsChange"] = (data) => {
+      const combined = params.length !== data.length ? { ...params, ...data, start: 0 } : { ...params, ...data };
+      dispatch(witelActions.setParams(combined));
+      setResetSearch(false);
+      if (isFiltered) {
+        dispatch({ type: GET_WITEL });
+      } else {
+        dispatch(witelActions.receiveNo());
+      }
+    };
+
   return (
     <MainPage title="Master Witel">
-      <Table
-        /**
-         * page data and state
-         */
-        data={data || []}
-        isLoading={fetching || fetchingExport}
-        /**
-         * current page
-         */
-        page={dataTotal === 0 ? undefined : params.start / params.length + 1}
-        onPageChange={(page) => {
-          dispatch(witelActions.setParams({ ...params, start: (page - 1) * params.length }));
-          if(dataTotal === 0 && data.length === 0) return;
-          dispatch({ type: GET_WITEL });
+      <TableFilter setResetSearch={setResetSearch} />
+
+      <Box
+        sx={{
+          backgroundColor: "white",
+          // height: "auto",
         }}
-        /**
-         * page size
-         */
-        pageSize={params.length}
-        onPageSizeChange={(pageSize) => {
-          dispatch(witelActions.setParams({ ...params, start: 0, length: pageSize }));
-          if(dataTotal === 0 && data.length === 0) return;
-          dispatch({ type: GET_WITEL });
-        }}
-        /**
-         * global search
-         */
-        globalSearch={params.search}
-        onGlobalSearchChange={debounce(
-          (search) => {
-            dispatch(witelActions.setParams({ ...params, start: 0, search }));
-            if(!isFiltered) return;
-            dispatch({ type: GET_WITEL });
-          },
-          isFiltered ? 500 : 0
-        )}
-        /**
-         * total page and total data
-         */
-        totalData={dataTotal}
-        /**
-         * sort
-         */
-        sort={params.order ? [{ column: params.order.split(",")[0], order: params.order.split(",")[1] as "asc" | "desc" }] : []}
-        onSortChange={(sort) => {
-          dispatch(witelActions.setParams({ ...params, order: sort.map((s) => `${s.column},${s.order}`).join(",") }));
-          if(dataTotal === 0 && data.length === 0) return;
-          dispatch({ type: GET_WITEL });
-        }}
+        display={"inline-flex"}
+        flexDirection={"column"}
+        borderRadius={"12px"}
+        gap={"1rem"}
+      // flexGrow={0.1}
       >
-        <TableFilter />
         <Box
+          flexGrow={1}
+          borderRadius={"12px"}
           sx={{
             backgroundColor: "white",
           }}
-          display={"flex"}
-          flexDirection={"column"}
-          px={"10px"}
-          pt={"15px"}
-          pb={"20px"}
-          borderRadius={"8px"}
-          gap={"1rem"}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <TableGlobalSearch />
-            <ActionButtonResponsive
-              items={[
-                {
-                  color: "info",
-                  variant: "contained",
-                  size: "small",
-                  onClick: onExportButtonClick,
-                  text: "Export Excel",
-                  disabled: fetchingExport || data.length === 0,
-                  endIcon: fetchingExport && <CircularProgress color="inherit" size={"1rem"} />,
-                  startIcon: <IosShare />,
-                },
-                // ...(permission.create
-                  // ? [
-                      {
-                        color: "primary",
-                        variant: "contained",
-                        size: "small",
-                        onClick: onCreateButtonClick,
-                        text: "Create Data",
-                        startIcon: <Add />,
-                      } satisfies ActionButtonResponseType["items"][number],
-                  //   ]
-                  // : []),
-              ]}
-            />
-          </div>
-          <TableAggrid columnDefs={columns} />
-          <TablePagination />
+          <AGGrid
+            gridRef={gridRef} 
+            actionButton={[
+              {
+                color: "info",
+                variant: "contained",
+                size: "small",
+                onClick: onExportButtonClick,
+                text: "Export Excel",
+                disabled: fetchingExport || data.length <= 0,
+                endIcon: fetchingExport && <CircularProgress color="inherit" size={"1rem"} />,
+                startIcon: <IosShare />,
+              },
+              // ...(permission.create
+              //   ? [
+              //       {
+              //         color: "primary",
+              //         variant: "contained",
+              //         size: "small",
+              //         onClick: onCreateButtonClick,
+              //         text: "Create Data",
+              //         startIcon: <Add />,
+              //       } satisfies ActionButtonResponseType["items"][number],
+              //     ]
+              //   : []),
+            ]}
+            rowData={data} 
+            columnDefs={columns} 
+            totalData={dataTotal} 
+            isLoading={fetching}
+            showSearchInput 
+            serverSideMode 
+            onServerSidePropsChange={onServerSidePropsChange} 
+            resetSearch={resetSearch} 
+          />
         </Box>
-      </Table>
+      </Box>
       <UpsertForm open={openForm} setOpen={setOpenForm} data={selectedData} onUpsert={() => {}} />
     </MainPage>
   );

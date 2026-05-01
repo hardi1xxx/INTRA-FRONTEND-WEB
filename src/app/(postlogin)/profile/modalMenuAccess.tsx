@@ -90,8 +90,8 @@ const ModalMenuAccess = ({open,setOpen} : ModalMenuAccessType) => {
                 <Box maxWidth={'200px'}>
                     <TextField label="Role" variant="standard" disabled value={getCookie('intra_auth_role')} fullWidth/>
                 </Box>
-                <Box border={'1px solid #789461'} borderRadius={'8px'}>
-                    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} padding={'8px'}  borderRadius={'8px 8px 0px 0px'} bgcolor={'#789461'}>
+                <Box border={'1px solid #789461'} borderRadius={'12px'}>
+                    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} padding={'8px'}  borderRadius={'12px 12px 0px 0px'} bgcolor={'#789461'}>
                         <Typography variant="subtitle1" sx={{flexGrow: 1}} color={'white'}>Nama Menu</Typography>
                         <Box display={'flex'} flexDirection={'row'} width={'240px'} justifyContent={'space-between'}>
                             <Typography variant="subtitle1" sx={{flexGrow: 1}} width={'60px'} textAlign={'center'} color={'white'}>Access</Typography>

@@ -62,7 +62,7 @@ const UserMenu = () => {
           color: 'rgb(54, 65, 82)',
           transition: 'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           boxShadow: 'none',
-          borderRadius: '8px',
+          borderRadius: '12px',
           background: '#2d50b0',
           overflow: 'hidden',
           position: 'relative',
@@ -156,7 +156,7 @@ const UserMenu = () => {
                   alignItems: 'center',
                   backgroundColor: 'rgb(255, 255, 255)',
                   padding: '10px 0',
-                  borderRadius: '8px'
+                  borderRadius: '12px'
                 }}
               >
                 <SettingsIcon sx={{

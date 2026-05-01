@@ -298,7 +298,7 @@ const SettingLatestFeaturePage = () => {
                 p={"10px"}
                 paddingY={"15px"}
                 pb={"20px"}
-                borderRadius={"8px"}
+                borderRadius={"12px"}
                 gap={"1rem"}
             >
                 <ActionButtonResponsive

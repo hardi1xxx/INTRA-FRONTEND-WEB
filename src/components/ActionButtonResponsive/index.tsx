@@ -42,7 +42,22 @@ const ActionButtonResponsive = ({items}: ActionButtonResponseType) => {
                 {
                     items.map((value,index) => {
                         return(
-                            <Button key={index} {...value}>
+                            <Button
+                                key={index + 1}
+                                {...value}
+                                sx={{
+                                    borderRadius: "12px",
+                                    textTransform: "none",
+                                    padding:"5px 12px",
+                                    // width: "130px",
+                                    ...value.sx,
+                                    // borderColor: "#757575",
+                                    // font: "10px"
+                                }}
+                                // color="inherit"
+                                // variant="outlined"
+                                size="small"
+                            >
                                 {value.text}
                             </Button>
                         )

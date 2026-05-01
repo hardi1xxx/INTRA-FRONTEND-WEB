@@ -91,7 +91,7 @@ const FilterWidget = ({ setIsFiltered, setResetSearch }: FilterType) => {
       flexDirection={"column"}
       // width={"calc(100% - 40px)"}
       p={"10px"}
-      borderRadius={"8px"}
+      borderRadius={"12px"}
       gap={"0.5rem"}
       // flexGrow={0.1}
     >

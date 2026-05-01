@@ -130,7 +130,7 @@ const FilterUser = ({ setIsFiltered, pageProps, setResetSearch }: FilterUserType
             // width={"calc(100% - 40px)"}
             paddingX={"10px"}
             paddingY={"10px"}
-            borderRadius={"8px"}
+            borderRadius={"12px"}
             gap={"1rem"}
         >
             <Box display={"flex"} flexDirection={"column"} width={"100%"} gap={"1rem"}>

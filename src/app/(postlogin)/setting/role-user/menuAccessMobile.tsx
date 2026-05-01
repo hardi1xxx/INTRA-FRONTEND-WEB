@@ -359,8 +359,8 @@ const FormMenuAccessMobile = ({ open, data, setOpen, menuList }: FormMenuAccessM
                         />
                     </Box>
                 </Box>
-                <Box border={'1px solid #825f4f'} borderRadius={'8px'}>
-                    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} padding={'8px'} borderRadius={'8px 8px 0px 0px'} bgcolor={'#825f4f'}>
+                <Box border={'1px solid #825f4f'} borderRadius={'12px'}>
+                    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} padding={'8px'} borderRadius={'12px 12px 0px 0px'} bgcolor={'#825f4f'}>
                         <Typography variant="subtitle1" sx={{ flexGrow: 1 }} color={'white'}>Nama Menu</Typography>
                         <Box display={'flex'} flexDirection={'row'} width={'240px'} justifyContent={'space-between'}>
                             <Box alignContent={'center'} textAlign={'center'}>

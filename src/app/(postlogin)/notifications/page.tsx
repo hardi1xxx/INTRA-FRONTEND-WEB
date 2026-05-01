@@ -59,7 +59,7 @@ const NotificationPage = () => {
                 height={'calc(100vh - 400px)'}
                 overflow={'auto'}
                 p={'20px'}
-                borderRadius={'8px'}
+                borderRadius={'12px'}
                 gap={'1rem'}
                 flexGrow={1}
             >
