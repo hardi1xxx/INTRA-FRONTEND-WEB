@@ -1,0 +1,441 @@
+@use '../assets/scss/themes-vars.module' as *;
+
+.bg-theme {
+  background-color: $primaryMain !important;
+}
+
+.bg-theme-secondary {
+  background-color: $primary200;
+}
+
+.text-theme {
+  color: $primaryMain;
+}
+
+.text-theme-secondary {
+  color: $primary200;
+}
+
+.btn-theme {
+  background-color: $primary200 !important;
+  color: white;
+}
+
+.btn-theme:hover {
+  background-color: $primaryMain !important;
+  color: white;
+}
+
+.accordion-custom::before {
+  content: none !important;
+}
+
+.MuiList-root .selected-accordion,
+.MuiList-root .Mui-selected {
+  background-color: $primary200 !important;
+  color: white !important;
+  border-radius: 12px !important;
+}
+
+.MuiList-root .Mui-selected > .MuiListItemText-root > .MuiTypography-root,
+.MuiList-root .Mui-selected > .MuiListItemIcon-root {
+  color: white !important;
+  font-weight: 600;
+}
+
+.MuiList-root .MuiListItemButton-root:hover {
+  background-color: $primary200 !important;
+  border-radius: 12px !important;
+  z-index: 2;
+}
+
+.MuiList-root .MuiListItemButton-root:hover 
+.MuiListItemText-root .MuiTypography-root {
+  color: white !important;
+}
+
+.MuiList-root .selected-accordion .MuiSvgIcon-root {
+  fill: white;
+}
+
+/* .color1 {color: #311d1b;}
+.color2 {color: #543830;}
+.color3 {color: #825f4f;}
+.color4 {color: #ba9577;}
+.color5 {color: #f6d4a8;} */
+
+.css-1fat2ok::before {
+  height: 0px !important;
+}
+
+.MuiButton-root:hover,
+.MuiIconButton-root:hover {
+  transform: scale(1.092) !important;
+  transition: 0.175s !important;
+}
+
+.MuiButton-containedPrimary,
+.MuiPaginationItem-colorPrimary[class~="Mui-selected"] {
+  color: white !important;
+}
+
+.button-gray {
+  background-color: $grey500 !important;
+}
+
+.button-gray:hover {
+  background-color: $grey600 !important;
+}
+
+// ACCORDION DETAILS
+$treeLine: $primary100;
+
+.MuiAccordionDetails-root>.MuiList-root::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 12px !important;
+  top: 0px !important;
+  height: 100% !important;
+  background: $treeLine !important;
+  width: 1.5px !important;
+  opacity: 1 !important;
+}
+
+.MuiAccordionDetails-root>.MuiList-root:last-child:after {
+  height: 0px !important;
+}
+
+.MuiCollapse-root {
+  .selected-accordion {
+    background-color: #CBE9C8 !important;
+    color: black !important;
+
+    .MuiSvgIcon-root {
+      fill: black !important;
+    }
+  }
+}
+
+.MuiAccordionDetails-root>.MuiList-root::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 12px !important;
+  height: 34px !important;
+  width: 15px !important;
+  opacity: 1 !important;
+  border-bottom: 2px solid $treeLine !important;
+  border-left: 2px solid $treeLine !important;
+  border-bottom-left-radius: 10px !important;
+  background: transparent !important;
+  display: inline !important;
+  top: -13px !important;
+}
+
+.MuiAccordionDetails-root>.MuiAccordion-root {
+  padding-left: 20px;
+  margin-bottom: 0px !important;
+  margin-top: 0px !important;
+}
+
+.MuiAccordionDetails-root>.MuiAccordion-root::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 12px !important;
+  top: 0px !important;
+  height: 100% !important;
+  background: $treeLine !important;
+  width: 1.5px !important;
+  opacity: 1 !important;
+}
+
+.MuiAccordionDetails-root>.MuiAccordion-root:last-child::after {
+  height: 0px !important;
+}
+
+.MuiAccordionDetails-root>.MuiAccordion-root::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 12px !important;
+  height: 34px !important;
+  width: 10px !important;
+  opacity: 1 !important;
+  border-bottom: 2px solid $treeLine !important;
+  border-left: 2px solid $treeLine !important;
+  border-bottom-left-radius: 10px !important;
+  background: transparent !important;
+  display: inline !important;
+  top: -15px !important;
+
+  :first-child {
+    top: 0px !important;
+  }
+}
+
+#drawers .MuiAccordionDetails-root {
+  padding: 5px 0px 0px 0px !important;
+}
+
+#drawers .MuiTypography-root {
+  font-size: 12px !important;
+}
+
+#drawers .MuiAccordionDetails-root .MuiList-root .MuiListItemButton-root {
+  padding: 0px;
+  height: auto !important;
+  border: none !important;
+  background: transparent !important;
+
+  .MuiListItemText-root {
+    padding: 9px;
+    margin-left: 8px;
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+    border: 2px solid white !important;
+    background: $paper !important;
+  }
+}
+
+#drawers .MuiButtonBase-root {
+  border-radius: 12px !important;
+  height: 38px!important;
+  min-height: 38px !important;
+  position: relative;
+  z-index: 20;
+
+  .MuiAccordionSummary-content {
+    margin: 0px !important;
+  }
+}
+
+#drawers .MuiAccordionDetails-root .MuiList-root .Mui-selected .MuiListItemText-root,
+#drawers .MuiAccordionDetails-root .MuiList-root .MuiListItemButton-root:hover .MuiListItemText-root {
+  border: 2px solid #58A050 !important;
+  border-radius: 12px !important;
+  
+  .MuiTypography-root {
+    color: black !important;
+  }
+}
+
+.MuiAccordionDetails-root .MuiList-root .MuiListItemButton-root:hover,
+.MuiAccordionDetails-root .MuiListItemButton-root .Mui-selected:hover {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.MuiAccordionDetails-root .MuiList-root .Mui-selected .MuiListItemText-root .MuiTypography-root,
+.MuiAccordionDetails-root .MuiList-root .MuiListItemButton-root:hover .MuiListItemText-root .MuiTypography-root {
+  color: $primaryMain !important;
+  font-weight: normal;
+}
+
+.MuiAccordionDetails-root .MuiList-root .MuiListItemButton-root:hover .MuiSvgIcon-root {
+  fill: white !important;
+}
+
+.MuiAccordionDetails-root .MuiList-root .Mui-selected .MuiListItemText-root .MuiTypography-root {
+  color: $primaryMain !important;
+}
+
+.MuiListItemButton-root:hover .MuiListItemIcon-root {
+  color: white !important;
+}
+
+.MuiAccordionDetails-root .MuiListItemButton-root:active {
+  background: $primaryMain !important;
+}
+
+
+// DATE RANGE PICKER
+.rdp-root {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.rdp-months {
+  widtH: 400px
+}
+
+.rdp-caption_label {
+  margin-left: 10px;
+}
+
+input.inputDateRange {
+  border: 1px solid #dedede;
+  padding: 10px;
+  width: 83%;
+  border-radius: 0.5rem;
+}
+
+input.inputDateRange:focus {
+  outline: 2px solid $primaryMain !important;
+}
+
+.rdp-nav button svg {
+  fill: $primaryMain !important;
+}
+
+.rdp-month .rdp-range_start button,
+.rdp-month .rdp-range_end button {
+  background: $primaryMain !important;
+  border: 2px solid $primaryMain;
+}
+
+.rdp-month .rdp-range_start {
+  background: linear-gradient(90deg, transparent 50%, $primary20 50%) !important;
+}
+
+.rdp-month .rdp-range_end {
+  background: linear-gradient(90deg, $primary20 50%, transparent 50%) !important;
+}
+
+.rdp-range_start.rdp-range_end {
+  background: revert !important;
+}
+
+.rdp-range_middle {
+  background: $primary20 !important;
+}
+
+.rdp-today:not(.rdp-outside) {
+  color: $primaryMain !important;
+}
+
+.rdp {
+  --rdp-cell-size: 32px;        // ukuran bulatan tanggal
+  --rdp-caption-font-size: 14px;
+  --rdp-day-font-size: 12px;
+  --rdp-weekday-font-size: 11px;
+}
+
+/* Judul bulan (December 2025) */
+.rdp-caption_label {
+  font-size: 14px !important;
+  font-weight: 600;
+}
+
+/* Hari (Su Mo Tu ...) */
+.rdp-weekday {
+  font-size: 11px !important;
+}
+
+/* Angka tanggal */
+.rdp-day {
+  font-size: 12px !important;
+}
+
+/* Tanggal yang dipilih */
+.rdp-day_selected,
+.rdp-day_range_start,
+.rdp-day_range_end {
+  font-size: 12px !important;
+}
+
+input.inputDateRange {
+  font-size: 12px;
+  padding: 6px 8px;
+  height: 32px;
+}
+
+.rdp-nav_button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== react-day-picker resize ===== */
+.rdp {
+  font-size: 12px; /* keseluruhan */
+}
+
+.rdp-caption_label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rdp-weekday {
+  font-size: 11px;
+}
+
+.rdp-day {
+  font-size: 11px;
+}
+
+.rdp-day_button {
+  width: 28px;
+  height: 28px;
+}
+
+.rdp-nav_button svg {
+  width: 16px;
+  height: 16px;
+}
+
+// AGGrid
+.ag-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.ag-theme-quartz .ag-header-cell {
+  font-size: 12px !important;
+  background-color: $primary200;
+  color: white;
+}
+
+.ag-header-cell.center-header .ag-header-cell-label {
+  display: flex !important;
+  justify-content: center !important; 
+  text-align: center;
+}
+
+.ag-cell.ag-cell-center {
+  justify-content: center !important;
+}
+
+.ag-header-group-cell.center-header .ag-header-cell-comp-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  text-align: center;
+}
+
+.ag-header-cell.bg-blue,
+.ag-header-group-cell.bg-blue {
+  background-color: $infoLight !important;
+}
+
+.ag-header-cell.bg-green,
+.ag-header-group-cell.bg-green {
+  background-color: $successLight !important;
+}
+
+.ag-header-cell.bg-yellow,
+.ag-header-group-cell.bg-yellow {
+  background-color: $warningLight !important;
+}
+
+.ag-header-cell.bg-red,
+.ag-header-group-cell.bg-red {
+  background-color: $errorLight !important;
+}
+
+.ag-header-cell.bg-purple,
+.ag-header-group-cell.bg-purple {
+  background-color: $secondaryLight !important;
+}
+
+.ag-root-wrapper{
+  border-radius: 12px !important;
+}
+
+.ag-row.row-with-balance {
+  background-color: $errorLight !important;
+}
+
+.ag-cell-wrapper {
+  overflow: hidden;
+}
+
+.ag-cell-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

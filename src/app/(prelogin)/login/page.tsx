@@ -83,7 +83,7 @@ const LoginPage = () => {
     
         
     return(
-        <Grid container minHeight={'100%'} height={'100vh'} className='bg-theme-secondary'>
+        <Grid container minHeight={'100%'} height={'100vh'} className='bg-theme'>
             <CardContainer container item xs={12} display={'flex'} alignItems={'start'} pt={'112.5px'} justifyContent={'center'}>
                 <Card sx={{borderRadius: '15px',maxWidth:'855px'}}>
                     <CardContent>

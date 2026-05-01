@@ -1,11 +1,11 @@
-import './globals.css'
+import './globals.scss'
 import type { Metadata } from "next";
 import StoreProvider from "@/app/StoreProvider";
 import ToastProvider from '@/components/Toast';
 
 export const metadata: Metadata = {
-  title: "Intra System",
-  description: "Integration Tracking System @ Telkom Akses",
+  title: "INTRA System",
+  description: "INTRA System",
 };
 
 export default function AppLayout({

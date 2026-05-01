@@ -121,15 +121,15 @@ const FormLogin = () => {
                 <Typography variant='caption' color={'lightslategray'} fontSize={'0.5rem'} mb={'1rem'}>Forgot your password ? contact admin</Typography>
 
                 <Button
-                ref={submitButtonRef}
-                type="submit"
-                fullWidth
-                variant="contained"
-                className='btn-theme'
-                endIcon={
-                    fetching && <CircularProgress color='inherit' size={'1rem'}/>
-                }
-                disabled = {fetching}
+                    ref={submitButtonRef}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    className='btn-theme'
+                    endIcon={
+                        fetching && <CircularProgress color='inherit' size={'1rem'}/>
+                    }
+                    disabled = {fetching}
                 >
                 Login
                 </Button>
