@@ -16,16 +16,23 @@ export type MenuAccessResponse = {
 
 export type LoginServiceResponse = DefaultServiceResponse & {
   data: {
-    access_token: string;
-    expires_at: number;
-    user : {
+    access_token: boolean; // ⚠️ sesuai backend (meskipun ini aneh)
+    token_type: string;
+    expires_in: number;
+    user: {
       id: number;
       name: string;
       nik: string;
-      picture: string;
+      email: string;
+      email_verified_at: string | null;
+      is_active: boolean;
+      created_at: string | null;
+      updated_at: string | null;
+      role_id: number;
     };
-    roles: string;
-    menu_access: MenuAccessResponse;
+    role: string;
+    is_web: boolean;
+    menu_access: string[];
   };
 };
 

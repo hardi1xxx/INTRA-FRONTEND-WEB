@@ -1,88 +1,111 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip, TooltipProps, Typography, styled, tooltipClasses } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+  TooltipProps,
+  Typography,
+  styled,
+  tooltipClasses,
+} from "@mui/material";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { MenuListType, menuList } from "./menuList";
+import { menuList, MenuListType } from "./menuList";
 import Link from "next/link";
-import { getCookie } from "cookies-next";
 
-// tooltip component
-const LightTooltip = styled(({ className, ...props }: TooltipProps) => <Tooltip {...props} classes={{ popper: className }} />)(({ theme }) => ({
+// ================= TOOLTIP =================
+const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
-    color: "rgba(0, 0, 0, 0.87)",
+    color: "rgba(0,0,0,0.87)",
     boxShadow: theme.shadows[1],
     fontSize: 11,
-    borderRadius: "16px",
+    borderRadius: 16,
   },
 }));
 
-const CustomDrawer = ({ isCollapsed }: { isCollapsed: boolean }): any => {
-  const pathname = usePathname();
-  const [selectedUrl, setSelectedUrl] = useState<string>();
-  const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+// ================= HELPER =================
+const hasMenuAccess = (menuId: string, menuAccess: string[]) => {
+  return menuAccess.some(
+    (a) => a === menuId || a.startsWith(menuId + "/")
+  );
+};
 
+const getMenuAccess = (): string[] => {
+  try {
+    const data = window.localStorage.getItem("intra_auth_menu_access");
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+};
+
+// ================= COMPONENT =================
+const CustomDrawer = ({ isCollapsed }: { isCollapsed: boolean }) => {
+  const pathname = usePathname();
+
+  const [menuAccess, setMenuAccess] = useState<string[]>([]);
+  const [selectedUrl, setSelectedUrl] = useState<string>();
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState(true);
   const [openedTooltip, setOpenedTooltip] = useState<string>();
 
-  // event when dropdown menu clicked
-  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-    if (isExpanded) {
-      setExpanded({ ...expanded, [panel]: true });
-    } else {
-      const newExpanded = { ...expanded };
-      delete newExpanded[panel];
-      setExpanded(newExpanded);
-    }
-  };
-
-  // close other opened menu when click new menu
+  // ================= INIT =================
   useEffect(() => {
-    const newExpanded: { [key: string]: boolean } = {};
-    for (const [key, _] of Object.entries(expanded)) {
-      newExpanded[key] = selectedUrl?.includes(key) || false;
-    }
-    setExpanded(newExpanded);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUrl]);
+    setIsLoading(true);
 
-  // init expanded menu when page loaded
-  useEffect(() => {
-    setIsLoading(true)
-    let pathnameBreakdowns = pathname.split("/");
-    pathnameBreakdowns = pathnameBreakdowns.filter((value, index) => value != "");
+    const paths = pathname.split("/").filter(Boolean);
+    let current = "";
+    const expandMap: Record<string, boolean> = {};
 
-    let paths = "";
-    let expandedInsert: { [key: string]: boolean } = {};
-    for (const path of pathnameBreakdowns) {
-      paths += path;
-      expandedInsert[paths] = true;
-      paths += "/";
-    }
-    setExpanded(expandedInsert);
+    paths.forEach((p) => {
+      current += p;
+      expandMap[current] = true;
+      current += "/";
+    });
 
+    setExpanded(expandMap);
+    setMenuAccess(getMenuAccess());
     setSelectedUrl(pathname);
-    setIsLoading(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    setIsLoading(false);
   }, [pathname]);
 
-  // generate drawer menu element
-  const generateDrawer = (menus: MenuListType[]) =>
-    menus.map((value) => {
-      const Icon = value.icon;
+  // ================= ACCORDION =================
+  const handleChange =
+    (panel: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded((prev) => ({
+        ...prev,
+        [panel]: isExpanded,
+      }));
+    };
 
-      // kalau tidak punya child → langsung render
-      if (!value.child) {
+  // ================= DRAWER =================
+  const generateDrawer = (menus: MenuListType[], isChild = false) =>
+    menus.map((menu) => {
+      if (!hasMenuAccess(menu.id, menuAccess)) return null;
+
+      const Icon = menu.icon;
+
+      // NO CHILD
+      if (!menu.child) {
         return (
-          <List key={value.id} disablePadding>
-            <Link
-              href={value.url ?? ""}
-              style={{ width: "100%", textDecoration: "none", color: "inherit" }}
-              onClick={() => setSelectedUrl(value.url)}
-            >
-              <ListItemButton selected={selectedUrl === value.url}>
+          <List key={menu.id} disablePadding sx={{ mb: isChild ? 0 : 1 }}>
+            <Link href={menu.url ?? ""} style={{ textDecoration: "none", color: "inherit" }}>
+              <ListItemButton selected={selectedUrl === menu.url}>
                 {Icon ? (
                   <ListItemIcon>{Icon}</ListItemIcon>
                 ) : (
@@ -90,106 +113,109 @@ const CustomDrawer = ({ isCollapsed }: { isCollapsed: boolean }): any => {
                     <FiberManualRecordIcon sx={{ width: 6, height: 6 }} />
                   </ListItemIcon>
                 )}
-                <ListItemText>{value.text}</ListItemText>
+                <ListItemText>{menu.text}</ListItemText>
               </ListItemButton>
             </Link>
           </List>
         );
       }
 
-      // kalau punya child → accordion
+      // WITH CHILD
+      const children = menu.child.filter((c) =>
+        hasMenuAccess(c.id, menuAccess)
+      );
+
+      if (children.length === 0) return null;
+
       return (
         <Accordion
-          key={value.id}
-          disableGutters
-          expanded={expanded[value.id] || false}
-          onChange={handleChange(value.id)}
-          sx={{ boxShadow: "none" }}
+          key={menu.id}
+          expanded={expanded[menu.id] || false}
+          onChange={handleChange(menu.id)}
+          sx={{ boxShadow: "none", mb: 1 }}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            {Icon && <ListItemIcon>{Icon}</ListItemIcon>}
-            <Typography>{value.text}</Typography>
+            <Box display="flex" alignItems="center">
+              {Icon && <ListItemIcon>{Icon}</ListItemIcon>}
+              <Typography>{menu.text}</Typography>
+            </Box>
           </AccordionSummary>
 
           <AccordionDetails>
-            {generateDrawer(value.child)}
+            {generateDrawer(children, true)}
           </AccordionDetails>
         </Accordion>
       );
-    }
-  );
+    });
 
-  const renderTooltipMenu = (menus: MenuListType[]) => (
-    <List>
-      {menus.map((menu) => {
-        if (menu.child) {
-          return (
-            <LightTooltip
-              key={menu.id}
-              placement="right-start"
-              title={renderTooltipMenu(menu.child)}
-            >
-              <ListItem secondaryAction={<ChevronRightIcon />}>
-                <ListItemText>{menu.text}</ListItemText>
-              </ListItem>
-            </LightTooltip>
-          );
-        }
-
-        return (
-          <Link key={menu.id} href={menu.url ?? ""} style={{ textDecoration: "none", color: "inherit" }}>
-            <ListItemButton onClick={() => setSelectedUrl(menu.url)}>
-              <ListItemText>{menu.text}</ListItemText>
-            </ListItemButton>
-          </Link>
-        );
-      })}
-    </List>
-  );
-
-  // generate mini drawer menu element
+  // ================= MINI =================
   const generateMiniDrawer = (menus: MenuListType[]) =>
-    menus.map((value) => {
-      const Icon = value.icon;
+    menus.map((menu) => {
+      if (!hasMenuAccess(menu.id, menuAccess)) return null;
+
+      const Icon = menu.icon;
 
       return (
-        <List key={value.id} disablePadding>
-          {!value.child ? (
-            <Link href={value.url ?? ""} style={{ textDecoration: "none", color: "inherit" }}>
-              <ListItemButton onClick={() => setSelectedUrl(value.url)}>
-                <ListItemIcon>{Icon}</ListItemIcon>
+        <List key={menu.id} disablePadding>
+          {!menu.child ? (
+            <Link href={menu.url ?? ""}>
+              <ListItemButton sx={{ p: 0 }}>
+                <ListItemIcon sx={{ width: 46, height: 46, justifyContent: "center" }}>
+                  {Icon}
+                </ListItemIcon>
               </ListItemButton>
             </Link>
           ) : (
             <LightTooltip
               placement="right-start"
-              title={renderTooltipMenu(value.child)}
+              open={openedTooltip === menu.id}
+              onOpen={() => setOpenedTooltip(menu.id)}
+              onClose={() => setOpenedTooltip(undefined)}
+              title={
+                <List>
+                  {menu.child.map((child) =>
+                    hasMenuAccess(child.id, menuAccess) ? (
+                      <Link key={child.id} href={child.url ?? ""}>
+                        <ListItemButton>
+                          <ListItemText>{child.text}</ListItemText>
+                        </ListItemButton>
+                      </Link>
+                    ) : null
+                  )}
+                </List>
+              }
             >
-              <ListItemButton>
-                <ListItemIcon>{Icon}</ListItemIcon>
+              <ListItemButton sx={{ p: 0 }}>
+                <ListItemIcon sx={{ width: 46, height: 46, justifyContent: "center" }}>
+                  {Icon}
+                </ListItemIcon>
               </ListItemButton>
             </LightTooltip>
           )}
         </List>
       );
-    }
-  );
+    });
 
-  // set loading when generate menu
+  // ================= STATE =================
   if (isLoading) {
     return (
-      <Box width={"100%"} height={"100%"} display={"flex"} flexDirection={"column"} alignItems={"center"} justifyContent={"center"} gap={"1rem"}>
-        <CircularProgress color="primary" size={"4rem"} />
-        <Typography variant="h6">Loading Menu Please Wait</Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <CircularProgress />
       </Box>
     );
   }
 
-  if (!isCollapsed) {
-    return <>{generateDrawer(menuList)}</>;
-  } else {
-    return <>{generateMiniDrawer(menuList)}</>;
+  if (menuAccess.length === 0) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <Typography>No Access</Typography>
+      </Box>
+    );
   }
+
+  return isCollapsed
+    ? <>{generateMiniDrawer(menuList)}</>
+    : <>{generateDrawer(menuList)}</>;
 };
 
 export default CustomDrawer;

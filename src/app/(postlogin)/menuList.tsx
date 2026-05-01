@@ -9,25 +9,16 @@ export type MenuListType = {
   text: string;
   url?: string;
   icon?: JSX.Element;
-  canCreate?: boolean;
-  canEdit?: boolean;
-  canDelete?: boolean;
   child?: MenuListType[];
 };
 
 export const menuList: MenuListType[] = [
-  // Dashboard
   {
     id: "dashboard",
     text: "Dashboard",
     icon: <DashboardIcon />,
     url: "/dashboard",
-    canCreate: false,
-    canEdit: false,
-    canDelete: false,
   },
-
-  // Master
   {
     id: "master",
     text: "Master",
@@ -37,22 +28,14 @@ export const menuList: MenuListType[] = [
         id: "master/status-lapangan",
         text: "Status Lapangan",
         url: "/master/status-lapangan",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
       },
       {
         id: "master/witel",
         text: "Witel",
         url: "/master/witel",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
       },
     ],
   },
-
-  // Transaction
   {
     id: "transaction",
     text: "Transaction",
@@ -62,14 +45,9 @@ export const menuList: MenuListType[] = [
         id: "transaction/daily-man-power",
         text: "Daily Man Power",
         url: "/transaction/daily-man-power",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
       },
     ],
   },
-
-  // Report
   {
     id: "report",
     text: "Report",
@@ -79,91 +57,29 @@ export const menuList: MenuListType[] = [
         id: "report/pt3",
         text: "PT3",
         url: "/report/pt3",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
       },
     ],
   },
-
-  // Setting
   {
     id: "setting",
     text: "Setting",
     icon: <SettingsIcon />,
     child: [
-      {
-        id: "setting/job-position",
-        text: "Job Position",
-        url: "/setting/job-position",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
-      },
-      {
-        id: "setting/department-user",
-        text: "Department User",
-        url: "/setting/department-user",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
-      },
-      {
-        id: "setting/latest-feature",
-        text: "Latest Feature",
-        url: "/setting/latest-feature",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
-      },
-      {
-        id: "setting/role-user",
-        text: "Role User",
-        url: "/setting/role-user",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
-      },
-      {
-        id: "setting/menu-access-mobile",
-        text: "Menu Access Mobile",
-        url: "/setting/menu-access-mobile",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
-      },
-      {
-        id: "setting/user",
-        text: "User",
-        url: "/setting/user",
-        canCreate: true,
-        canEdit: true,
-        canDelete: true,
-      },
+      { id: "setting/job-position", text: "Job Position", url: "/setting/job-position" },
+      { id: "setting/department-user", text: "Department User", url: "/setting/department-user" },
+      { id: "setting/latest-feature", text: "Latest Feature", url: "/setting/latest-feature" },
+      { id: "setting/role-user", text: "Role User", url: "/setting/role-user" },
+      { id: "setting/menu-access-mobile", text: "Menu Access Mobile", url: "/setting/menu-access-mobile" },
+      { id: "setting/user", text: "User", url: "/setting/user" },
     ],
   },
-  // Log
   {
-    id: 'log',
-    text: 'Log',
+    id: "log",
+    text: "Log",
     icon: <FormatListBulletedIcon />,
     child: [
-      {
-        id: 'log/log-activity',
-        text: 'Log Activity',
-        url: '/log/log-activity',
-        canCreate: false,
-        canEdit: false,
-        canDelete: false,
-      },
-      {
-        id: 'log/log-notification',
-        text: 'Notification',
-        url: '/log/log-notification',
-        canCreate: false,
-        canEdit: false,
-        canDelete: false,
-      },
+      { id: "log/log-activity", text: "Log Activity", url: "/log/log-activity" },
+      { id: "log/log-notification", text: "Notification", url: "/log/log-notification" },
     ],
   },
 ];
