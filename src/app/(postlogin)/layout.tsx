@@ -1,14 +1,13 @@
 'use client'
 
-import { ThemeProvider, useTheme } from '@mui/material/styles';
+import { ThemeProvider, useTheme, styled } from '@mui/material/styles';
 import { Box, Container, Drawer, IconButton, List, Toolbar, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuIcon from '@mui/icons-material/Menu';
 import { ConfirmProvider } from "material-ui-confirm";
 import { RootState } from "@/lib/redux/store";
-import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CustomDrawer from "./customDrawer";
@@ -17,7 +16,6 @@ import UserMenu, { UserMenuMini } from "./userMenu";
 import themes from '@/components/themes';
 import AlertsProvider from '@/components/AlertContext';
 import ToolbarButtonGroup from './toolbarButtonGroup';
-import React from 'react';
 import { redirect, usePathname } from 'next/navigation';
 import { checkAccessShow } from '@/components/helper';
 
@@ -65,11 +63,11 @@ export default function PostLoginLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname()
-  // useEffect(() => {
-  //   if (!checkAccessShow(pathname)) {
-  //     redirect('/forbidden')
-  //   }
-  // }, [pathname])
+  useEffect(() => {
+    if (!checkAccessShow(pathname)) {
+      redirect('/forbidden')
+    }
+  }, [pathname])
   
   const theme = useTheme()
   const customization = useSelector((state: RootState) => state.customization);
@@ -89,7 +87,7 @@ export default function PostLoginLayout({
     <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} height={'100%'}>
       <div>
         <Box height={'calc(100vh - 238px)'} overflow={'auto'} paddingX={'16px'}>
-          <List sx={{height: 'calc(100% - 1rem)'}}>
+          <List sx={{height: 'calc(100% - 1rem)'}} id="drawers">
             <CustomDrawer isCollapsed={false} />
           </List>
         </Box>
@@ -145,7 +143,7 @@ export default function PostLoginLayout({
               >
                 <Toolbar>
                   <Typography variant="h5" noWrap component="div" fontWeight={'bold'}>
-                    {xsScreen ? 'Intra' : 'Integrated Tracking System'}
+                    {xsScreen ? 'INTRA' : 'Integrated Tracking System'}
                   </Typography>
                   <Box
                   sx={{ flexGrow: 1 }}
@@ -156,7 +154,8 @@ export default function PostLoginLayout({
                         aria-label="open drawer"
                         onClick={handleDrawerToggle}
                         edge="end"
-                        sx={{  ml: 2, borderRadius: '12px', backgroundColor: '#2d50b0', color: 'white', '&:hover': {backgroundColor: '#223c85'}}}
+                        // sx={{  ml: 2, borderRadius: '12px', color: 'white', '&:hover': {backgroundColor: '#2D50B0'}}}
+                        sx={{  ml: 2, borderRadius: '12px', backgroundColor: '#2D50B0', color: 'white', '&:hover': {backgroundColor: '#2D50B0'}}}
                       >
                         <MenuIcon />
                       </IconButton>
@@ -195,7 +194,7 @@ export default function PostLoginLayout({
                   >
                     <Toolbar>
                       <Typography variant="h5" noWrap component="div" fontWeight={'bold'}>
-                        Ways of Waste System
+                        Integrated Tracking System
                       </Typography>
                     </Toolbar>
                     {drawers}

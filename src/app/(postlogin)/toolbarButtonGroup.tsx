@@ -32,8 +32,15 @@ const ToolbarButtonGroup = () => {
     // logout process
     const handleLogout = async () => {
         confirm({
-        title: 'Confirmation',
-        description: 'Are you sure to logout'
+            title: 'Confirmation',
+            description: 'Are you sure to logout',
+            dialogProps: {
+                PaperProps: {
+                    sx: {
+                    borderRadius: '12px'
+                    }
+                }
+            }
         }).then(() => {
         dispatch({type: LOGOUT})
         })    

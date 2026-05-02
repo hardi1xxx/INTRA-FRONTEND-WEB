@@ -209,7 +209,7 @@ $treeLine: $primary100;
 
 #drawers .MuiAccordionDetails-root .MuiList-root .Mui-selected .MuiListItemText-root,
 #drawers .MuiAccordionDetails-root .MuiList-root .MuiListItemButton-root:hover .MuiListItemText-root {
-  border: 2px solid #58A050 !important;
+  border: 2px solid $primary200 !important;
   border-radius: 12px !important;
   
   .MuiTypography-root {

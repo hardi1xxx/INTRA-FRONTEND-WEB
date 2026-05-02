@@ -65,7 +65,7 @@ $grey700: #374151;
 $grey900: #111827;
 
 
-// ==============================|| DARK THEME VARIANTS ||============================== //
+// ==============================|| DARK THEME VARIANTS (ADJUSTED BLUE) ||============================== //
 
 // background
 $darkBackground: #0F172A;
@@ -75,23 +75,23 @@ $darkPaper: #111827;
 $darkLevel1: #1F2937;
 $darkLevel2: #111827;
 
-// primary dark
-$darkPrimaryLight: #58A050;
-$darkPrimary200: #81C784;
-$darkPrimaryMain: #4CAF50;
-$darkPrimaryDark: #388E3C;
-$darkPrimary800: #2E7D32;
+// primary dark (blue adjusted)
+$darkPrimaryLight: #93C5FD;  // softer blue (light accent)
+$darkPrimary200: #60A5FA;    // mid blue
+$darkPrimaryMain: #3B82F6;   // main blue (visible on dark)
+$darkPrimaryDark: #2563EB;   // stronger hover/active
+$darkPrimary800: #1D4ED8;    // deep blue
 
-// secondary dark
-$darkSecondaryLight: #58A050;
-$darkSecondary200: #81C784;
-$darkSecondaryMain: #2E7D32;
-$darkSecondaryDark: #1B5E20;
-$darkSecondary800: #1B5E20;
+// secondary dark (optional: slightly different blue tone)
+$darkSecondaryLight: #A5B4FC;
+$darkSecondary200: #818CF8;
+$darkSecondaryMain: #6366F1;
+$darkSecondaryDark: #4F46E5;
+$darkSecondary800: #4338CA;
 
 // text
 $darkTextTitle: #F9FAFB;
-$darkTextPrimary: #D1D5DB;
+$darkTextPrimary: #E5E7EB;
 $darkTextSecondary: #9CA3AF;
 
 

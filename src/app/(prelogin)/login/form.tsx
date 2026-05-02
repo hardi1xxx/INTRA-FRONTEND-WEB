@@ -72,6 +72,11 @@ const FormLogin = () => {
                             inputMode: 'numeric',
                             pattern: '[0-9]*'
                         }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                            borderRadius: '12px'
+                            }
+                        }}
                         onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, '').slice(0, 8);
                             field.onChange(value);
@@ -95,6 +100,9 @@ const FormLogin = () => {
                                 if(e.ctrlKey && e.key == 'Enter'){
                                     submitButtonRef.current?.click()
                                 }
+                            }}
+                            sx={{
+                                borderRadius: '12px'
                             }}
                             endAdornment={
                                 <InputAdornment position="end">
@@ -126,12 +134,15 @@ const FormLogin = () => {
                     fullWidth
                     variant="contained"
                     className='btn-theme'
+                    sx={{
+                        borderRadius: '12px'
+                    }}
                     endIcon={
                         fetching && <CircularProgress color='inherit' size={'1rem'}/>
                     }
                     disabled = {fetching}
                 >
-                Login
+                    Login
                 </Button>
                 <Typography variant='caption' color={'lightslategray'} fontSize={'0.5rem'} mb={'1rem'}>Dont have an account? contact admin</Typography>
 

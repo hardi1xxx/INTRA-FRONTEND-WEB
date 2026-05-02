@@ -422,47 +422,55 @@ function MasterUserPage() {
   return (
     <MainPage title="Setting User">
       <FilterUser pageProps={pageProps} setIsFiltered={setIsFiltered} setResetSearch={setResetSearch} />
+
       <Box
         sx={{
           backgroundColor: "white",
+          // height: "auto",
         }}
-        display={"flex"}
+        display={"inline-flex"}
         flexDirection={"column"}
-        // width={"calc(100% - 40px)"}
-        p={"10px"}
-        paddingY={"15px"}
-        pb={"20px"}
         borderRadius={"12px"}
         gap={"1rem"}
       // flexGrow={0.1}
       >
-        <ActionButtonResponsive
-          items={[{
-            color: "info",
-            variant: "contained",
-            size: "small",
-            onClick: onExportButtonClick,
-            text: "Export Excel",
-            disabled: fetchingExport || rows.length === 0,
-            endIcon: fetchingExport && <CircularProgress color="inherit" size={"1rem"} />,
-            startIcon: <IosShare />,
-          }, ...actionButtons.items]}
-        />
         <Box
           flexGrow={1}
-          height={"550px"}
+          borderRadius={"12px"}
           sx={{
             backgroundColor: "white",
           }}
         >
-          <AGGrid 
+          <AGGrid
             gridRef={gridRef} 
+            actionButton={[
+              {
+                color: "info",
+                variant: "contained",
+                size: "small",
+                onClick: onExportButtonClick,
+                text: "Export Excel",
+                disabled: fetchingExport || rows.length <= 0,
+                endIcon: fetchingExport && <CircularProgress color="inherit" size={"1rem"} />,
+                startIcon: <IosShare />,
+              },
+              // ...(permission.create
+              //   ? [
+              //       {
+              //         color: "primary",
+              //         variant: "contained",
+              //         size: "small",
+              //         onClick: onCreateButtonClick,
+              //         text: "Create Data",
+              //         startIcon: <Add />,
+              //       } satisfies ActionButtonResponseType["items"][number],
+              //     ]
+              //   : []),
+            ]}
             rowData={rows} 
             columnDefs={columns} 
             totalData={recordsTotal} 
-            getRowId={getRowId} 
             isLoading={fetching}
-            height={"562px"} 
             showSearchInput 
             serverSideMode 
             onServerSidePropsChange={onServerSidePropsChange} 
