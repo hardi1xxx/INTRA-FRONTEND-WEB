@@ -37,6 +37,7 @@
     "react": "^18",
     "react-apexcharts": "^1.6.0",
     "react-date-range": "^2.0.1",
+    "react-day-picker": "^9.14.0",
     "react-dom": "^18",
     "react-draggable": "^4.4.6",
     "react-hook-form": "^7.50.1",

@@ -5,16 +5,14 @@ import createSagaMiddleware from "@redux-saga/core";
 import { configureStore } from "@reduxjs/toolkit";
 
 // redux master
-import departementUser from "@/lib/redux/slices/master/departementUser";
-import jobPosition from "@/lib/redux/slices/master/job-position";
-import latestFeature from "@/lib/redux/slices/master/latestFeature";
-import menuAccess from "@/lib/redux/slices/master/menuAccess";
-import menuAccessMobile from "@/lib/redux/slices/master/menuAccessMobile";
-import role from "@/lib/redux/slices/master/role";
-import user from "@/lib/redux/slices/master/user";
-
-import statusLapangan from "@/lib/redux/slices/master/statusLapangan";
-import witel from "@/lib/redux/slices/master/witel";
+import batch from "./slices/master/batch";
+import categoryProject from "./slices/master/categoryProject";
+import statusProject from "./slices/master/statusProject";
+import mitra from "./slices/master/mitra";
+import regional from "./slices/master/regional";
+import area from "./slices/master/area";
+import branch from "./slices/master/branch";
+import sto from "./slices/master/sto";
 
 // redux log
 import logActivity from "./slices/log/logActivity";
@@ -28,11 +26,11 @@ import systemUpdate from "./slices/systemUpdate";
 // redux notifications
 import notifications from "./slices/notifications";
 
-// Transaction
-import dailyManPower from "@/lib/redux/slices/transaction/dailyManPower";
+// transaction
+import transactionDeployment from "./slices/transaction/transactionDeployment";
 
-// Report PT3
-import reportPT3 from "@/lib/redux/slices/report/reportPT3";
+// report
+import reportDeployment from "./slices/report/reportDeployment";
 
 import { rootSaga } from "./sagas";
 
@@ -43,17 +41,15 @@ const store = configureStore({
     notification,
     auth,
 
-    departementUser,
-    statusLapangan,
-    witel,
-
-    // Setting
-    role,
-    menuAccess,
-    user,
-    jobPosition,
-    latestFeature,
-    menuAccessMobile,
+    // Master
+    batch,
+    categoryProject,
+    statusProject,
+    mitra,
+    regional,
+    area,
+    branch,
+    sto,
 
     // log
     logActivity,
@@ -68,10 +64,10 @@ const store = configureStore({
     notifications,
 
     // Transaction
-    dailyManPower,
+    transactionDeployment,
 
     // Report PT3
-    reportPT3,
+    reportDeployment,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false, serializableCheck: false }).concat(sagaMiddleware),
 });

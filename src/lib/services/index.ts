@@ -2,24 +2,19 @@ import axios from "axios";
 import { getCookie } from "cookies-next";
 import { AuthServices, AuthServiceType } from "./auth";
 import { LogActivityServices, LogActivityServiceType } from "./log-activity";
-import { DepartementUserServices, DepartementUserServicesType } from "./master/departementUser";
-import { JobPositionServices, JobPositionServicesType } from "./master/job-position";
-import { LatestFeatureServices, LatestFeatureServiceType } from "./master/latestFeature";
-import { MenuAccessMobileServices, MenuAccessMobileType } from "./master/menu-access-mobile";
-import { MenuAccessServices, MenuAccessServiceType } from "./master/menuAccess";
-import { RoleServices, RoleServiceType } from "./master/role";
-import { UserServices, UserServiceType } from "./master/user";
 
-import { StatusLapanganServices, StatusLapanganServicesType } from "./master/statusLapangan";
-import { WitelServices, WitelServicesType } from "./master/witel";
+import { StatusProjectServices, StatusProjectServicesType } from "./master/statusProject";
+import { CategoryProjectServices, CategoryProjectServicesType } from "./master/categoryProject";
+import { BatchServices, BatchServicesType } from "./master/batch";
+import { MitraServices, MitraServicesType } from "./master/mitra";
+import { RegionalServices, RegionalServicesType } from "./master/regional";
+import { AreaServices, AreaServicesType } from "./master/area";
+import { BranchServices, BranchServicesType } from "./master/branch";
+import { STOServices, STOServicesType } from "./master/sto";
 
 import { NotificationsServices, NotificationsServiceType } from "./notifications";
 import { SystemUpdateServices, SystemUpdateServiceType } from "./system-update";
 import { LogNotificationServices, LogNotificationServiceType } from "./log-notification";
-
-import { DailyManPowerServices, DailyManPowerServicesType } from "./transaction/daily-man-power";
-
-import { ReportPT3Services, ReportPT3ServicesType } from "./report/pt3";
 
 export type DefaultServiceResponse = {
   code: number;
@@ -28,34 +23,24 @@ export type DefaultServiceResponse = {
 };
 
 type ServiceType = AuthServiceType &
-  RoleServiceType &
-  MenuAccessServiceType &
-  UserServiceType &
-  JobPositionServicesType &
-  DepartementUserServicesType &
 
   // Master
-  StatusLapanganServicesType &
-  WitelServicesType &
-
-  // Transaction
-  DailyManPowerServicesType &
-
-  // Report
-  ReportPT3ServicesType &
+  StatusProjectServicesType &
+  CategoryProjectServicesType &
+  BatchServicesType &
+  MitraServicesType &
+  RegionalServicesType &
+  AreaServicesType &
+  BranchServicesType &
+  STOServicesType &
 
   //Log Activity
   LogActivityServiceType &
   LogNotificationServiceType &
-
-  //Latest Feature
-  LatestFeatureServiceType &
   // system update
   SystemUpdateServiceType &
   // notification
-  NotificationsServiceType &
-  // master menu access mobile
-  MenuAccessMobileType;
+  NotificationsServiceType
 
 const axiosInstanceWithoutToken = axios.create({
   baseURL: process.env.NEXT_PUBLIC_TARGET_API,
@@ -124,23 +109,14 @@ const services: ServiceType = {
   ...AuthServices(axiosInstanceWithToken, axiosInstanceWithoutToken),
 
   //master
-  ...DepartementUserServices(axiosInstanceWithToken),
-  ...StatusLapanganServices(axiosInstanceWithToken),
-  ...WitelServices(axiosInstanceWithToken),
-
-  // Transaction
-  ...DailyManPowerServices(axiosInstanceWithToken),
-
-  // Report
-  ...ReportPT3Services(axiosInstanceWithToken),
-
-  //Setting
-  ...RoleServices(axiosInstanceWithToken),
-  ...MenuAccessServices(axiosInstanceWithToken),
-  ...UserServices(axiosInstanceWithToken),
-  ...JobPositionServices(axiosInstanceWithToken),
-  ...LatestFeatureServices(axiosInstanceWithToken),
-  ...MenuAccessMobileServices(axiosInstanceWithToken),
+  ...StatusProjectServices(axiosInstanceWithToken),
+  ...CategoryProjectServices(axiosInstanceWithToken),
+  ...MitraServices(axiosInstanceWithToken),
+  ...BatchServices(axiosInstanceWithToken),
+  ...RegionalServices(axiosInstanceWithToken),
+  ...AreaServices(axiosInstanceWithToken),
+  ...BranchServices(axiosInstanceWithToken),
+  ...STOServices(axiosInstanceWithToken),
 
   // log activity
   ...LogActivityServices(axiosInstanceWithToken),
@@ -159,85 +135,80 @@ export const {
   changePassword,
   changeProfilePicture,
   getMenuAccess,
+  
+  //master
 
-  // master role
-  getRole,
-  createRole,
-  updateRole,
-  deleteRole,
-  exportExcelRole,
+  //Status Project
+  getDropdownStatusProject,
+  getStatusProjectDatatable,
+  createStatusProject,
+  deleteStatusProject,
+  updateStatusProject,
+  updateStatusStatusProject,
+  exportStatusProject,
 
-  getMenuAccessByRoleId,
-  saveMenuAccess,
-  exportExcelMenuAccess,
+  //Category Project
+  getDropdownCategoryProject,
+  getCategoryProjectDatatable,
+  createCategoryProject,
+  deleteCategoryProject,
+  updateCategoryProject,
+  updateStatusCategoryProject,
+  exportCategoryProject,
 
-  // master user
-  getUserFilterData,
-  getUserDropdownData,
-  createUser,
-  updateUser,
-  deleteUser,
-  exportUser,
-  resetPassword,
-  getUserDepartementDropdown,
-  getUserByID,
-  getUserByNik,
-  getUserJobPositionsDropdown,
-  getUserRoleDropdown,
+  //Mitra
+  getDropdownMitra,
+  getMitraDatatable,
+  createMitra,
+  deleteMitra,
+  updateMitra,
+  updateStatusMitra,
+  exportMitra,
 
-  // master menu access mobile
-  getMenuAccessMobile,
-  createMenuAccessMobile,
-  updateMenuAccessMobile,
-  deleteMenuAccessMobile,
-  exportExcelMenuAccessMobile,
-  getMenuAccessMobileByRoleId,
-  saveMenuAccessMobileByRoleId,
-  exportExcelMenuAccessMobileByRole,
+  //Batch
+  getDropdownBatch,
+  getBatchDatatable,
+  createBatch,
+  deleteBatch,
+  updateBatch,
+  updateStatusBatch,
+  exportBatch,
 
-  // master department user
-  createDepartementUser,
-  deleteDepartementUser,
-  exportDepartementUser,
-  getDropdownDepartementUser,
-  getDepartementUserDatatable,
-  updateDepartementUser,
-  updateStatusDepartementUser,
+  //Regional
+  getDropdownRegional,
+  getRegionalDatatable,
+  createRegional,
+  deleteRegional,
+  updateRegional,
+  updateStatusRegional,
+  exportRegional,
 
-  // master status lapangan
-  getDropdownStatusLapangan,
-  getStatusLapanganDatatable,
-  updateStatusStatusLapangan,
-  createStatusLapangan,
-  deleteStatusLapangan,
-  updateStatusLapangan,
-  exportStatusLapangan,
+  //Area
+  getDropdownArea,
+  getAreaDatatable,
+  createArea,
+  deleteArea,
+  updateArea,
+  updateStatusArea,
+  exportArea,
 
-  // master witel
-  getDropdownWitel,
-  getWitelDatatable,
-  updateStatusWitel,
-  createWitel,
-  deleteWitel,
-  updateWitel,
-  exportWitel,
+  //Branch
+  getDropdownBranch,
+  getBranchDatatable,
+  createBranch,
+  deleteBranch,
+  updateBranch,
+  updateStatusBranch,
+  exportBranch,
 
-  // setting latest feature
-  getLatestFeature,
-  getLatestFeatureDropdown,
-  createLatestFeature,
-  updateLatestFeature,
-  deleteLatestFeature,
-  exportLatestFeature,
-
-  // master job position
-  getDropdownJobPosition,
-  getJobPositionDatatable,
-  createJobPosition,
-  deleteJobPosition,
-  updateJobPosition,
-  updateStatusJobPosition,
-  exportJobPosition,
+  //STO
+  getDropdownSTO,
+  getSTODatatable,
+  createSTO,
+  deleteSTO,
+  updateSTO,
+  updateStatusSTO,
+  exportSTO,
 
   // log activity
   getLogActivity,
@@ -258,22 +229,4 @@ export const {
   downloadLogNotificationById,
   downloadLogNotificationFilter,
   getLogNotification,
-
-  // Transaction
-  getDropdownDailyManPower,
-  getDailyManPowerDatatable,
-  createDailyManPower,
-  importDailyManPower,
-  deleteDailyManPower,
-  updateDailyManPower,
-  exportDailyManPower,
-
-  // Report PT3
-  getDropdownReportPT3,
-  getReportPT3Datatable,
-  createReportPT3,
-  importReportPT3,
-  deleteReportPT3,
-  updateReportPT3,
-  exportReportPT3,
 } = services;

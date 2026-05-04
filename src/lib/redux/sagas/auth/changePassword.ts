@@ -3,7 +3,6 @@ import { CHANGE_PASSWORD } from '../../types'
 import { put, takeEvery } from 'redux-saga/effects'
 import { changePassword } from '@/lib/services';
 import { errorChangePassword, receiveChangePassword, requestChangePassword } from '../../slices/auth';
-import { errorMenuAccess } from '../../slices/master/menuAccess';
 import { errorHandler } from '../errorHandler';
 
 type AnyAction = {type: string, [key: string]: any}

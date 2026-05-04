@@ -48,7 +48,7 @@ const ModalMenuAccess = ({open,setOpen} : ModalMenuAccessType) => {
                                     <Box width={'60px'} textAlign={'center'}>
                                         <Checkbox readOnly disabled checked={checkData.find(valueCheck => valueCheck.menu == value.id)?.show || false} />
                                     </Box>
-                                    {
+                                    {/* {
                                         value.canCreate && <Box width={'60px'} textAlign={'center'}>
                                             <Checkbox readOnly disabled checked={checkData.find(valueCheck => valueCheck.menu == value.id)?.create || false} />
                                         </Box>
@@ -62,7 +62,7 @@ const ModalMenuAccess = ({open,setOpen} : ModalMenuAccessType) => {
                                         value.canDelete && <Box width={'60px'} textAlign={'center'}>
                                             <Checkbox readOnly disabled checked={checkData.find(valueCheck => valueCheck.menu == value.id)?.delete || false} />
                                         </Box>
-                                    }
+                                    } */}
                                 </>
                             }
                         </Box>

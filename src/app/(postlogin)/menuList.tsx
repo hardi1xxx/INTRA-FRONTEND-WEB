@@ -1,7 +1,6 @@
 import { Analytics, Groups } from "@mui/icons-material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderIcon from "@mui/icons-material/Folder";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 export type MenuListType = {
@@ -25,14 +24,44 @@ export const menuList: MenuListType[] = [
     icon: <FolderIcon />,
     child: [
       {
-        id: "master/status-lapangan",
-        text: "Status Lapangan",
-        url: "/master/status-lapangan",
+        id: "master/batch",
+        text: "Batch",
+        url: "/master/batch",
       },
       {
-        id: "master/witel",
-        text: "Witel",
-        url: "/master/witel",
+        id: "master/status-project",
+        text: "Status Project",
+        url: "/master/status-project",
+      },
+      {
+        id: "master/kategori-project",
+        text: "Kategori Project",
+        url: "/master/kategori-project",
+      },
+      {
+        id: "master/mitra",
+        text: "Mitra",
+        url: "/master/mitra",
+      },
+      {
+        id: "master/regional",
+        text: "Regional",
+        url: "/master/regional",
+      },
+      {
+        id: "master/area",
+        text: "Area",
+        url: "/master/area",
+      },
+      {
+        id: "master/branch",
+        text: "Branch",
+        url: "/master/branch",
+      },
+      {
+        id: "master/sto",
+        text: "STO",
+        url: "/master/sto",
       },
     ],
   },
@@ -42,9 +71,9 @@ export const menuList: MenuListType[] = [
     icon: <Groups />,
     child: [
       {
-        id: "transaction/daily-man-power",
-        text: "Daily Man Power",
-        url: "/transaction/daily-man-power",
+        id: "transaction/deployment",
+        text: "Deployment",
+        url: "/transaction/deployment",
       },
     ],
   },
@@ -54,9 +83,9 @@ export const menuList: MenuListType[] = [
     icon: <Analytics />,
     child: [
       {
-        id: "report/pt3",
-        text: "PT3",
-        url: "/report/pt3",
+        id: "report/deployment",
+        text: "Deployment",
+        url: "/report/deployment",
       },
     ],
   },
@@ -65,21 +94,9 @@ export const menuList: MenuListType[] = [
     text: "Setting",
     icon: <SettingsIcon />,
     child: [
-      { id: "setting/job-position", text: "Job Position", url: "/setting/job-position" },
-      { id: "setting/department-user", text: "Department User", url: "/setting/department-user" },
-      { id: "setting/latest-feature", text: "Latest Feature", url: "/setting/latest-feature" },
-      { id: "setting/role-user", text: "Role User", url: "/setting/role-user" },
-      { id: "setting/menu-access-mobile", text: "Menu Access Mobile", url: "/setting/menu-access-mobile" },
+      { id: "setting/role", text: "Role", url: "/setting/role" },
       { id: "setting/user", text: "User", url: "/setting/user" },
+      { id: "setting/menu", text: "Menu", url: "/setting/menu" },
     ],
-  },
-  {
-    id: "log",
-    text: "Log",
-    icon: <FormatListBulletedIcon />,
-    child: [
-      { id: "log/log-activity", text: "Log Activity", url: "/log/log-activity" },
-      { id: "log/log-notification", text: "Notification", url: "/log/log-notification" },
-    ],
-  },
+  }
 ];
