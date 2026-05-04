@@ -237,7 +237,7 @@ const TableFilter = ({ setResetSearch }: FilterType) => {
               </Box>
             </Grid>
             {/* button action */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={3}>
               <Box display={'flex'} justifyContent={'end'} alignItems={'center'} gap={'1rem'} height={'100%'}>
                 <Button color="info" variant="contained" size="small" onClick={onClear} startIcon={<Clear />} sx={{borderRadius: "12px"}}>
                     Clear
