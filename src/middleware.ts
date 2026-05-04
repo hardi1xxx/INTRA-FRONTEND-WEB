@@ -33,22 +33,14 @@ export function middleware(request: NextRequest) {
     "dashboard",
 
     // master
-    "master/status-lapangan",
-    "master/witel",
-
-    // transaction
-    "transaction/daily-man-power",
-
-    // report
-    "report/pt3",
-
-    // setting
-    "setting/role-user",
-    "setting/menu-access-mobile",
-    "setting/user",
-    "setting/job-position",
-    "setting/latest-feature",
-    "setting/department-user",
+    "master/mitra",
+    "master/batch",
+    "master/status-project",
+    "master/category-project",
+    "master/regional",
+    "master/area",
+    "master/branch",
+    "master/sto",
     "log/log-activity",
     "log/log-notification",
   ];

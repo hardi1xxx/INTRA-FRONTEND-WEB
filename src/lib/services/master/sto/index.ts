@@ -17,7 +17,7 @@ const getDropdownSTO =
       }
     );
 
-    const options = (response.data.result as Record<string, any>[]).map(
+    const options = (response.data.data as Record<string, any>[]).map(
       (item) => ({
         value: item[props.column],
         label: item[props.column],
@@ -38,7 +38,7 @@ const getSTODatatable =
       }
     );
 
-    return response.data.result;
+    return response.data.data;
   };
 
 // update status

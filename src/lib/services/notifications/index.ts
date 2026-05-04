@@ -17,7 +17,7 @@ export type DataNotificationType = {
 export const getNotificationsService = (axios: AxiosInstance) => async (): Promise<DataNotificationType[]> => {
     try {
       const response = await axios.get('/notifications/get')
-      return response.data.result
+      return response.data.data
     } catch (error: any) {
       throw new Error(error.response.data.message, {
         cause: error
@@ -28,7 +28,7 @@ export const getNotificationsService = (axios: AxiosInstance) => async (): Promi
 export const getUnreadNotificationsService = (axios: AxiosInstance) => async (): Promise<DataNotificationType[]> => {
     try {
       const response = await axios.get('/notifications/get-unread')
-      return response.data.result
+      return response.data.data
     } catch (error: any) {
       throw new Error(error.response.data.message, {
         cause: error
@@ -39,7 +39,7 @@ export const getUnreadNotificationsService = (axios: AxiosInstance) => async ():
 export const readNotificationsService = (axios: AxiosInstance) => async (): Promise<DefaultServiceResponse> => {
     try {
       const response = await axios.post('/notifications/read-notification')
-      return response.data.result
+      return response.data.data
     } catch (error: any) {
       throw new Error(error.response.data.message, {
         cause: error
@@ -50,7 +50,7 @@ export const readNotificationsService = (axios: AxiosInstance) => async (): Prom
 export const getAllNotificationsService = (axios: AxiosInstance) => async (isAll: boolean): Promise<DataNotificationType[]> => {
   try {
     const response = await axios.get(`/notifications/get-all/${isAll ? 1 : 0}`)
-    return response.data.result
+    return response.data.data
   } catch (error: any) {
     throw new Error(error.response.data.message, {
       cause: error
