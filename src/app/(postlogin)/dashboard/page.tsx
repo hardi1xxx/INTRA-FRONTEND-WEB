@@ -1,6 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { Box, Typography } from "@mui/material";
 
+export const metadata = {
+  title: "Dashboard",
+};
+
 // default page after login
 const DashboardPage = () => {
   return (

@@ -34,9 +34,9 @@ export const menuList: MenuListType[] = [
         url: "/master/status-project",
       },
       {
-        id: "master/kategori-project",
-        text: "Kategori Project",
-        url: "/master/kategori-project",
+        id: "master/category-project",
+        text: "Category Project",
+        url: "/master/category-project",
       },
       {
         id: "master/mitra",

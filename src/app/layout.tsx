@@ -4,7 +4,10 @@ import StoreProvider from "@/app/StoreProvider";
 import ToastProvider from '@/components/Toast';
 
 export const metadata: Metadata = {
-  title: "INTRA System",
+  title: {
+    default: "INTRA System",
+    template: "%s | INTRA System",
+  },
   description: "INTRA System",
 };
 

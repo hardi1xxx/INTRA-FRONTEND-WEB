@@ -67,21 +67,25 @@ export default function Page() {
     {
       field: "name",
       headerName: "Name",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "pic",
       headerName: "PIC",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "phone",
       headerName: "Phone",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "description",
       headerName: "Description",
+      flex: 1,
       minWidth: 150,
     },
     ...( [

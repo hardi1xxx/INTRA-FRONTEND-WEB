@@ -67,16 +67,19 @@ export default function Page() {
     {
       field: "category_code",
       headerName: "Category Code",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "category_name",
       headerName: "Category Name",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "description",
       headerName: "Description",
+      flex: 1,
       minWidth: 150,
     },
     ...( [

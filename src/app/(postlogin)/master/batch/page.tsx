@@ -67,16 +67,19 @@ export default function Page() {
     {
       field: "batch_code",
       headerName: "Batch Code",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "batch_name",
       headerName: "Batch Name",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "description",
       headerName: "Description",
+      flex: 1,
       minWidth: 150,
     },
     ...( [

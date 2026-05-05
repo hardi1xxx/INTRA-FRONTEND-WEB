@@ -67,16 +67,19 @@ export default function Page() {
     {
       field: "status_code",
       headerName: "Status Code",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "status_name",
       headerName: "Status Name",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "description",
       headerName: "Description",
+      flex: 1,
       minWidth: 150,
     },
     ...( [

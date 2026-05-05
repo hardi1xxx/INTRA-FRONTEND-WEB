@@ -67,36 +67,43 @@ export default function Page() {
     {
       field: "regional_code",
       headerName: "Regional Code",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "regional_name",
       headerName: "Regional Name",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "area_code",
       headerName: "Area Code",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "area_name",
       headerName: "Area Name",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "branch_code",
       headerName: "Branch Code",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "branch_name",
       headerName: "Branch Name",
+      flex: 1,
       minWidth: 150,
     },
     {
       field: "description",
       headerName: "Description",
+      flex: 1,
       minWidth: 150,
     },
     ...( [

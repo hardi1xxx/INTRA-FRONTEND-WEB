@@ -37,12 +37,19 @@ const ToolbarButtonGroup = () => {
             dialogProps: {
                 PaperProps: {
                     sx: {
-                    borderRadius: '12px'
+                        borderRadius: '12px'
                     }
                 }
             }
         }).then(() => {
-        dispatch({type: LOGOUT})
+            dispatch({
+                type: LOGOUT,
+                payload: {
+                    onSuccess: () => {
+                        window.location.href = "/login"
+                    }
+                }
+            })
         })    
     }
 
