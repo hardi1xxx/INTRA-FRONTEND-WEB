@@ -1,5 +1,5 @@
 import { UpsertRegionalRequest } from "@/app/(postlogin)/master/regional/schema";
-import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, GetFilterOptionsRequest, WithId } from "@/type/services";
+import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, GetFilterOptionsRequest, GetFilterOptionsResponse, WithId } from "@/type/services";
 import { AxiosInstance } from "axios";
 import moment from "moment";
 
@@ -8,7 +8,7 @@ const getFilterRegional =
   (axios: AxiosInstance) =>
   async (
     props: GetFilterOptionsRequest
-  ): Promise<GetDropdownOptionsResponse> => {
+  ): Promise<GetFilterOptionsResponse> => {
     const response = await axios.post(
       "v1/master/regional/filter",
       {
@@ -26,11 +26,20 @@ const getFilterRegional =
     return options;
   };
 
+export type RegionalOption = {
+  id: number | string;
+  regional_code: string;
+  regional_name: string;
+  description?: string;
+  status?: boolean;
+};
+
+
 const getDropdownRegional =
   (axios: AxiosInstance) =>
   async (
     props: GetDropdownOptionsRequest
-  ): Promise<GetDropdownOptionsResponse> => {
+  ): Promise<RegionalOption[]> => {
     const response = await axios.post(
       "v1/master/regional/dropdown",
       {
@@ -38,14 +47,7 @@ const getDropdownRegional =
       }
     );
 
-    const options = (response.data.data as Record<string, any>[]).map(
-      (item) => ({
-        value: item[props.column],
-        label: item[props.column],
-      })
-    );
-
-    return options;
+    return response.data.data;
   };
 
 // get data table

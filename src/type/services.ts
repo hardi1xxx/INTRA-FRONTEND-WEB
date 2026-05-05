@@ -6,7 +6,6 @@ export type GetFilterOptionsRequest = {
 
 export type GetDropdownOptionsRequest = {
   search?: string;
-  [key: string]: any;
 };
 
 export type DropdownOptions<T = string | number> = {
@@ -14,7 +13,10 @@ export type DropdownOptions<T = string | number> = {
   label: string;
 };
 
-export type GetDropdownOptionsResponse = DropdownOptions[];
+export type GetFilterOptionsResponse = DropdownOptions[];
+export type GetDropdownOptionsResponse = {
+  data: Record<string, any>[];
+};
 
 export type GetDatatableRequest = {
   start: number;

@@ -1,5 +1,5 @@
 import { parseStatus } from "@/lib/services/parseStatus";
-import { DropdownOptions, GetDatatableRequest, GetDatatableResponse } from "@/type/services";
+import { DropdownOptions, GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsResponse } from "@/type/services";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type DataId = {
@@ -17,6 +17,9 @@ type State = {
   dropdownOptions: {
     [key: string]: DropdownOptions[];
   };
+
+  options: GetDropdownOptionsResponse[];
+  optionsLoading: boolean;
 
   idData: DataId[];
   fetchingIdData: boolean;
@@ -39,6 +42,9 @@ const initialState: State = {
 
   dropdownOptionsLoading: false,
   dropdownOptions: {},
+
+  options: [],
+  optionsLoading: false,
 
   idData: [],
   fetchingIdData: false,
@@ -230,6 +236,19 @@ export const generateMasterSlice = (name: string) => {
         state.idData = payload;
 
         return state;
+      },
+
+      setOptionsRequest: (state) => {
+        state.optionsLoading = true;
+      },
+
+      setOptionsSuccess: (state, action: PayloadAction<GetDropdownOptionsResponse[]>) => {
+        state.options = action.payload;
+        state.optionsLoading = false;
+      },
+
+      setOptionsError: (state) => {
+        state.optionsLoading = false;
       },
     },
   });

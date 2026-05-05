@@ -6,6 +6,7 @@ import { errorHandler } from "../../errorHandler";
 import { getDropdownRegional, getFilterRegional, getRegionalDatatable } from "@/lib/services";
 import { RootState } from "@/lib/redux/store";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { GetDropdownOptionsResponse } from "@/type/services";
 
 function* getDatatable() {
   try {
@@ -62,9 +63,9 @@ function* getFilterOptions(props: PayloadAction<any>) {
   }
 }
 
-function* getDropdownOptions(props: PayloadAction<any>) {
+function* getDropdownOptions(props: PayloadAction<any>): Generator<any, void, any> {
   try {
-    yield put(regionalActions.requestDropdownOptions());
+    yield put(regionalActions.setOptionsRequest());
 
     const params: RootState["regional"]["params"] = yield select(
       (state: RootState) => state.regional.params
@@ -73,22 +74,14 @@ function* getDropdownOptions(props: PayloadAction<any>) {
     const response: Awaited<ReturnType<typeof getDropdownRegional>> =
       yield getDropdownRegional({ ...params, ...props.payload });
 
-    yield put(
-      regionalActions.receiveDropdownOptions({
-        column: props.payload.column,
-        options: response,
-      })
-    );
+    const wrappedResponse: GetDropdownOptionsResponse[] = [
+      { data: response }
+    ];
+
+    yield put(regionalActions.setOptionsSuccess(wrappedResponse));
   } catch (error) {
-    const { message, statusCode } = errorHandler(error);
-    yield put(regionalActions.error(message));
-    yield put(
-      setTextNotification({
-        text: message,
-        severity: "error",
-        responseCode: statusCode,
-      })
-    );
+    const { message } = errorHandler(error);
+    yield put(regionalActions.setOptionsError());
   }
 }
 

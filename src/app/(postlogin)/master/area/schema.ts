@@ -4,10 +4,7 @@ export const upsertAreaSchema = yup.object().shape({
   status: yup.boolean().required("Please Input Field Status"),
   regional_id: yup
     .number()
-    .nullable()
-    .transform((value, originalValue) =>
-      originalValue === "" ? null : value
-    )
+    .typeError("Please Select Regional")
     .required("Please Select Regional"),
   area_code: yup
     .string()
@@ -20,9 +17,9 @@ export const upsertAreaSchema = yup.object().shape({
   description: yup
     .string()
     .max(255, 'Description must be at most 255 characters'),
-  regional: yup
+  regional_code: yup
     .string()
-    .max(255, 'Description must be at most 255 characters'),
+    .max(255, 'Regional Code must be at most 255 characters'),
 });
 
 export type UpsertAreaRequest = yup.InferType<
