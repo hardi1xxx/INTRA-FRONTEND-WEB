@@ -1,9 +1,9 @@
 import { branchActions } from "@/lib/redux/slices/master/branch";
 import { setTextNotification } from "@/lib/redux/slices/notification";
-import { GET_BRANCH, GET_BRANCH_DROPDOWN } from "@/lib/redux/types";
+import { GET_BRANCH, GET_BRANCH_DROPDOWN, GET_BRANCH_FILTER } from "@/lib/redux/types";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { errorHandler } from "../../errorHandler";
-import { getDropdownBranch, getBranchDatatable } from "@/lib/services";
+import { getFilterBranch, getBranchDatatable, getDropdownBatch } from "@/lib/services";
 import { RootState } from "@/lib/redux/store";
 import { PayloadAction } from "@reduxjs/toolkit";
 
@@ -32,6 +32,36 @@ function* getDatatable() {
   }
 }
 
+function* getFilterOptions(props: PayloadAction<any>) {
+  try {
+    yield put(branchActions.requestDropdownOptions());
+
+    const params: RootState["branch"]["params"] = yield select(
+      (state: RootState) => state.branch.params
+    );
+
+    const response: Awaited<ReturnType<typeof getFilterBranch>> =
+      yield getFilterBranch({ ...params, ...props.payload });
+
+    yield put(
+      branchActions.receiveDropdownOptions({
+        column: props.payload.column,
+        options: response,
+      })
+    );
+  } catch (error) {
+    const { message, statusCode } = errorHandler(error);
+    yield put(branchActions.error(message));
+    yield put(
+      setTextNotification({
+        text: message,
+        severity: "error",
+        responseCode: statusCode,
+      })
+    );
+  }
+}
+
 function* getDropdownOptions(props: PayloadAction<any>) {
   try {
     yield put(branchActions.requestDropdownOptions());
@@ -40,8 +70,8 @@ function* getDropdownOptions(props: PayloadAction<any>) {
       (state: RootState) => state.branch.params
     );
 
-    const response: Awaited<ReturnType<typeof getDropdownBranch>> =
-      yield getDropdownBranch({ ...params, ...props.payload });
+    const response: Awaited<ReturnType<typeof getDropdownBatch>> =
+      yield getDropdownBatch({ ...params, ...props.payload });
 
     yield put(
       branchActions.receiveDropdownOptions({
@@ -64,5 +94,6 @@ function* getDropdownOptions(props: PayloadAction<any>) {
 
 export function* watchGetBranchAsync() {
   yield takeEvery(GET_BRANCH, getDatatable);
+  yield takeEvery(GET_BRANCH_FILTER, getFilterOptions);
   yield takeEvery(GET_BRANCH_DROPDOWN, getDropdownOptions);
 }

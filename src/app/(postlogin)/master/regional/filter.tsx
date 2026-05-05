@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { RootState } from "@/lib/redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GET_REGIONAL, GET_REGIONAL_DROPDOWN } from "@/lib/redux/types";
+import { GET_REGIONAL, GET_REGIONAL_DROPDOWN, GET_REGIONAL_FILTER } from "@/lib/redux/types";
 import { parseStatus } from "@/lib/services/parseStatus";
 import { FilterAutoComplete } from "@/components/Input/FilterAutoComplete";
 import { regionalActions } from "@/lib/redux/slices/master/regional";
@@ -63,7 +63,7 @@ const TableFilter = ({ setResetSearch }: FilterType) => {
         const filter = form.getValues();
         filter.status = parseStatus(filter.status);
         dispatch({
-          type: GET_REGIONAL_DROPDOWN,
+          type: GET_REGIONAL_FILTER,
           payload: {
             ...filter,
             column: field,

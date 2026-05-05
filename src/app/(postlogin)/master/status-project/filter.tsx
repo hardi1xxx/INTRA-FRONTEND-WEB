@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { RootState } from "@/lib/redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GET_STATUS_PROJECT, GET_STATUS_PROJECT_DROPDOWN } from "@/lib/redux/types";
+import { GET_STATUS_PROJECT, GET_STATUS_PROJECT_DROPDOWN, GET_STATUS_PROJECT_FILTER } from "@/lib/redux/types";
 import { parseStatus } from "@/lib/services/parseStatus";
 import { FilterAutoComplete } from "@/components/Input/FilterAutoComplete";
 import { statusProjectActions } from "@/lib/redux/slices/master/statusProject";
@@ -62,7 +62,7 @@ const TableFilter = ({ setResetSearch }: FilterType) => {
         const filter = form.getValues();
         filter.status = parseStatus(filter.status);
         dispatch({
-          type: GET_STATUS_PROJECT_DROPDOWN,
+          type: GET_STATUS_PROJECT_FILTER,
           payload: {
             ...filter,
             column: field,

@@ -1,9 +1,9 @@
 import { batchActions } from "@/lib/redux/slices/master/batch";
 import { setTextNotification } from "@/lib/redux/slices/notification";
-import { GET_BATCH, GET_BATCH_DROPDOWN } from "@/lib/redux/types";
+import { GET_BATCH, GET_BATCH_DROPDOWN, GET_BATCH_FILTER } from "@/lib/redux/types";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { errorHandler } from "../../errorHandler";
-import { getDropdownBatch, getBatchDatatable } from "@/lib/services";
+import { getFilterBatch, getBatchDatatable, getDropdownArea } from "@/lib/services";
 import { RootState } from "@/lib/redux/store";
 import { PayloadAction } from "@reduxjs/toolkit";
 
@@ -32,6 +32,36 @@ function* getDatatable() {
   }
 }
 
+function* getFilterOptions(props: PayloadAction<any>) {
+  try {
+    yield put(batchActions.requestDropdownOptions());
+
+    const params: RootState["batch"]["params"] = yield select(
+      (state: RootState) => state.batch.params
+    );
+
+    const response: Awaited<ReturnType<typeof getFilterBatch>> =
+      yield getFilterBatch({ ...params, ...props.payload });
+
+    yield put(
+      batchActions.receiveDropdownOptions({
+        column: props.payload.column,
+        options: response,
+      })
+    );
+  } catch (error) {
+    const { message, statusCode } = errorHandler(error);
+    yield put(batchActions.error(message));
+    yield put(
+      setTextNotification({
+        text: message,
+        severity: "error",
+        responseCode: statusCode,
+      })
+    );
+  }
+}
+
 function* getDropdownOptions(props: PayloadAction<any>) {
   try {
     yield put(batchActions.requestDropdownOptions());
@@ -40,8 +70,8 @@ function* getDropdownOptions(props: PayloadAction<any>) {
       (state: RootState) => state.batch.params
     );
 
-    const response: Awaited<ReturnType<typeof getDropdownBatch>> =
-      yield getDropdownBatch({ ...params, ...props.payload });
+    const response: Awaited<ReturnType<typeof getDropdownArea>> =
+      yield getDropdownArea({ ...params, ...props.payload });
 
     yield put(
       batchActions.receiveDropdownOptions({
@@ -64,5 +94,6 @@ function* getDropdownOptions(props: PayloadAction<any>) {
 
 export function* watchGetBatchAsync() {
   yield takeEvery(GET_BATCH, getDatatable);
+  yield takeEvery(GET_BATCH_FILTER, getFilterOptions);
   yield takeEvery(GET_BATCH_DROPDOWN, getDropdownOptions);
 }

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { RootState } from "@/lib/redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GET_MITRA, GET_MITRA_DROPDOWN } from "@/lib/redux/types";
+import { GET_MITRA, GET_MITRA_DROPDOWN, GET_MITRA_FILTER } from "@/lib/redux/types";
 import { parseStatus } from "@/lib/services/parseStatus";
 import { FilterAutoComplete } from "@/components/Input/FilterAutoComplete";
 import { mitraActions } from "@/lib/redux/slices/master/mitra";
@@ -63,7 +63,7 @@ const TableFilter = ({ setResetSearch }: FilterType) => {
         const filter = form.getValues();
         filter.status = parseStatus(filter.status);
         dispatch({
-          type: GET_MITRA_DROPDOWN,
+          type: GET_MITRA_FILTER,
           payload: {
             ...filter,
             column: field,
