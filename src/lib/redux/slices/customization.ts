@@ -3,6 +3,7 @@ import config from '@/components/config';
 
 export type CustomizationType = {
     isOpen: string[], // for active default menu
+    isOpenDrawer: boolean,
     defaultId: string,
     fontFamily: string,
     borderRadius: number,
@@ -11,6 +12,7 @@ export type CustomizationType = {
 
 const initialState : CustomizationType = {
     isOpen: [], // for active default menu
+    isOpenDrawer: false,
     defaultId: 'default',
     fontFamily: config.fontFamily,
     borderRadius: config.borderRadius,
@@ -41,9 +43,17 @@ const notification = createSlice({
 
             return state
         },
+        toggleOpenDrawer: (state) => {
+            state.isOpenDrawer = !state.isOpenDrawer
+            return state
+        },
+        setOpenDrawer: (state, action) => {
+            state.isOpenDrawer = action.payload
+            return state
+        }
     }
 })
 
-export const {menuOpen, setMenu, setFontFamily, setBorderRadius} = notification.actions
+export const {menuOpen, setMenu, setFontFamily, setBorderRadius, toggleOpenDrawer, setOpenDrawer} = notification.actions
 
 export default notification.reducer

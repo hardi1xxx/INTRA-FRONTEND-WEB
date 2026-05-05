@@ -243,3 +243,12 @@ export function checkAccessEdit(path: string): boolean {
 export function checkAccessDelete(path: string): boolean {
   return JSON.parse(window.localStorage.getItem("intra_auth_menu_access_delete") ?? "[]").includes(path)
 }
+
+export function getShortName(fullName: string) {
+  if (!fullName) return '';
+  return fullName
+    .trim()
+    .split(/\s+/)
+    .map(word => word[0].toUpperCase())
+    .join('');
+}

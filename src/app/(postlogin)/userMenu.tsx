@@ -1,173 +1,210 @@
+'use client'
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {  Avatar, Box, Card, CardContent, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Skeleton} from "@mui/material"
-import EditIcon from '@mui/icons-material/Edit';
-import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
-import Link from "next/link";
+import { Avatar, Box, Typography } from "@mui/material"
 import { getCookie } from "cookies-next";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { RootState } from "@/lib/redux/store";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import ModalProfilePicture from "./modalProfilePicture";
 import { useSnackbar } from "@/components/hooks";
+import { getShortName } from "@/components/helper";
+
+const buildProfilePictureSrc = (picturePath: string, cacheVersion: number) => {
+  if (!picturePath || picturePath === "/storage/") return "";
+
+  if (picturePath.startsWith("http")) {
+    return `${picturePath}?t=${cacheVersion}`;
+  }
+
+  const baseStorageUrl = process.env.NEXT_PUBLIC_TARGET_API?.replace("/api", "/storage") ?? "";
+  const trimmedPath = picturePath.replace(/^\/+/, "");
+  const normalizedPath = trimmedPath.startsWith("storage/") ? trimmedPath : `storage/${trimmedPath}`;
+
+  return `${baseStorageUrl.replace(/\/+$/, "")}/${normalizedPath.replace(/^storage\//, "")}?t=${cacheVersion}`;
+};
 
 const UserMenu = () => {
   const router = useRouter()
   const snackbar = useSnackbar()
-  const pathname = usePathname()
 
   const [openEditProfile, setOpenEditProfile] = useState(false)
   const [name, setName] = useState('')
   const [role, setRole] = useState('')
   const [profilePicture, setProfilePicture] = useState('')
+  const [avatarCacheVersion, setAvatarCacheVersion] = useState<number>(Date.now())
   const [nik, setNik] = useState('')
-  const {auth: {picture}} = useSelector((state:RootState) => state.auth)
-  const {severity,text} = useSelector((state:RootState) => state.notification)
+  const { auth: { picture }, auth } = useSelector((state: RootState) => state.auth)
+  const { severity, text } = useSelector((state: RootState) => state.notification)
+  const [currentPath, setCurrentPath] = useState("");
+
 
   // init data on page load
   useEffect(() => {
-    setName(getCookie('intra_auth_name') ?? '')
-    setRole(getCookie('intra_auth_role') ?? '')
-    setProfilePicture(getCookie('intra_auth_picture') ?? '')
-    setNik(getCookie('intra_auth_nik') ?? '')
-  },[])
-
+    initData()
+  }, [])
 
   useEffect(() => {
-    if(picture != ''){
-      setProfilePicture(getCookie('intra_auth_picture') ?? '')
+    const onAuthUserUpdated = async () => {
+      await initData();
+      setAvatarCacheVersion(Date.now());
+    };
+
+    window.addEventListener("intra:auth-user-updated", onAuthUserUpdated);
+    return () => {
+      window.removeEventListener("intra:auth-user-updated", onAuthUserUpdated);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentPath(window.location.pathname);
+    }
+  }, []);
+  
+  const initData = async () => {
+    setName(await getCookie('intra_auth_name') ?? '')
+    setRole(await getCookie('intra_auth_role') ?? '')
+    setProfilePicture(await getCookie('intra_auth_picture') ?? '')
+    setNik(await getCookie('intra_auth_nik') ?? '')
+  }
+
+  useEffect(() => {
+    if (picture != '') {
+      const fetchProfilePicture = async () => {
+        setProfilePicture(await getCookie('intra_auth_picture') ?? '')
+        setAvatarCacheVersion(Date.now())
+      }
+      fetchProfilePicture()
     }
 
-    if(picture == ''){
+    if (picture == '') {
       const showSnackbar = async () => {
-        if(text && severity){
-          const res = await snackbar.show(text,severity,500)
+        if (text && severity) {
+          const res = await snackbar.show(text, severity, 500)
 
-          if(res){
-              router.push('/login')
+          if (res) {
+            // router.push('/login')
           }
         }
       }
 
       showSnackbar()
     }
-  },[picture,text,severity])
+  }, [picture, text, severity])
 
-  return(
+  useEffect(() => {
+    setName(auth.name ?? name)
+  }, [auth])
+
+  return (
     <>
-      <Box padding={'0px 16px 16px 16px'}>
-        <Card sx={{
-          color: 'rgb(54, 65, 82)',
-          transition: 'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-          boxShadow: 'none',
-          borderRadius: '12px',
-          background: '#2d50b0',
-          overflow: 'hidden',
-          position: 'relative',
-        }}>
-          <CardContent sx={{
-            padding: '16px',
-            paddingBottom: '16px !important'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              width: '157px',
-              height: '157px',
-              background: '#223c85 !important',
-              borderRadius: '50%',
-              top: '-105px',
-              right: '-96px',
-            }}/>
-            <List sx={{
-              paddingTop: '0px'
-            }}>
-              <ListItem
-                disablePadding
-              >
-                <ListItemAvatar>
-                  <Avatar
-                    onClick={() => setOpenEditProfile(true)}
-                    sx={{
-                      position: 'relative',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: '0',
-                      fontFamily: 'Roboto, sans-serif',
-                      lineHeight: '1',
-                      overflow: 'hidden',
-                      userSelect: 'none',
-                      cursor: 'pointer',
-                      borderRadius: '22px',
-                      width: '44px',
-                      height: '44px',
-                      fontSize: '1.5rem',
-                      color: '#50623A',
-                      border: 'none rgb(33, 150, 243)',
-                      background: 'rgb(255, 255, 255)',
-                      marginRight: '12px',
-                      '&:hover .edit-icon-hover': {
-                        display: 'flex',
-                      }
-                    }}
-                  >
-                    <Box
-                      className="edit-icon-hover"
-                      sx={{
-                        height: '100%',
-                        width: '100%',
-                        display: 'none',
-                        position: 'absolute',
-                        color: 'white',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.4)'
-                      }}>
-                      <EditIcon />
-                    </Box>
-                    {
-                      profilePicture != '/storage/' ?
-                      <img src={`${(process.env.NEXT_PUBLIC_TARGET_API)?.replace('/api','')}${profilePicture}`} alt="profile-picture" style={{
-                        objectFit: 'cover',
-                        objectPosition: 'bottom',
-                        width: '100%',
-                      }}/>
-                      :
-                      <PersonIcon />
-                    }
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={name ?? <Skeleton variant="text" sx={{ fontSize: '1rem' }} />} secondary={role ?? <Skeleton variant="text" sx={{ fontSize: '1rem' }} />} primaryTypographyProps={{sx: {color: 'white !important'}}} secondaryTypographyProps={{sx: {color: 'white !important'}}}/>
-              </ListItem>
-            </List>
-            <Box>
-              <Link
-                href={'/profile'}
-                style={{
-                  width: '100%',
-                  textDecoration: 'none',
-                  color: pathname == '/profile' ? '#50623A' : 'inherit',
-                  fontWeight: pathname == '/profile' ? 'bold' : 'normal',
-                  fontFamily: 'Roboto,sans-serif',
-                  fontSize: '0.875rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'rgb(255, 255, 255)',
-                  padding: '10px 0',
-                  borderRadius: '12px'
+      <Box sx={{
+        borderTop: 'none !important',
+        padding: '4px'
+      }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px'
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              router.push('/profile')
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                cursor: 'pointer',
+
+                border: '2px solid #30318B',
+                borderRadius: '12px',
+                padding: '8px 10px',
+                width: '100%',
+                transition: '0.2s',
+
+                '&:hover': {
+                  backgroundColor: '#30318B',
+                  boxShadow: '0 0 12px rgba(124, 58, 237, 0.5)',
+                  '& *': { color: 'white !important' },
+                },
+                ...(currentPath.includes('/profile') && {
+                  backgroundColor: '#30318B',
+                  '& *': { color: 'white !important' },
+                }),
+
+              }}
+
+              onClick={() => router.push('/profile')}
+            >
+
+              <Avatar
+                sx={{
+                  width: '35px',
+                  height: '35px',
+                  borderRadius: '100%',
+                  marginRight: '25px',
+                  overflow: 'hidden',
+                  border: '2px solid #30318B',
                 }}
               >
-                <SettingsIcon sx={{
-                  width: '44px',
-                  marginRight: '12px'
-                }}/>
-                Profile
-              </Link>
+                {
+                  profilePicture != '/storage/' ?
+                    <img
+                      src={buildProfilePictureSrc(profilePicture, avatarCacheVersion)}
+                      alt="profile-picture"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = "/images/person.png";
+                      }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                      }}
+                    />
+                    :
+                    <Box
+                      sx={{
+                        width: '44px',
+                        height: '44px',
+                        background: '#F59E0B',
+                        borderRadius: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontSize: '18px',
+                        color: 'white'
+                      }}
+                    >
+                      {getShortName(name ?? '')}
+                    </Box>
+                }
+              </Avatar>
+
+              <Box>
+             <Typography fontSize={14} fontWeight={600} lineHeight="18px">
+  {name}
+</Typography>
+<Typography fontSize={12} lineHeight="14px">
+  {role}
+</Typography>
+              </Box>
             </Box>
-          </CardContent>
-        </Card>
+          </Box>
+        </Box>
       </Box>
       <ModalProfilePicture open={openEditProfile} setOpen={setOpenEditProfile} />
     </>
@@ -175,104 +212,151 @@ const UserMenu = () => {
 }
 
 export const UserMenuMini = () => {
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
   const router = useRouter()
   const snackbar = useSnackbar()
 
   const [openEditProfile, setOpenEditProfile] = useState(false)
   const [profilePicture, setProfilePicture] = useState('')
-  const {auth: {picture}} = useSelector((state:RootState) => state.auth)
-  const {severity,text} = useSelector((state:RootState) => state.notification)
+  const [avatarCacheVersion, setAvatarCacheVersion] = useState<number>(Date.now())
+  const [name, setName] = useState('')
+  const { auth: { picture }, auth } = useSelector((state: RootState) => state.auth)
+  const { severity, text } = useSelector((state: RootState) => state.notification)
 
   useEffect(() => {
-    setProfilePicture(getCookie('intra_auth_picture') ?? '')
-  },[])
+    const fetchProfilePicture = async () => {
+      setProfilePicture(await getCookie('intra_auth_picture') ?? '')
+      setAvatarCacheVersion(Date.now())
+    }
+    fetchProfilePicture()
+    initData()
+  }, [])
 
   useEffect(() => {
-    if(picture != ''){
-      setProfilePicture(getCookie('intra_auth_picture') ?? '')
+    const onAuthUserUpdated = async () => {
+      setProfilePicture(await getCookie('intra_auth_picture') ?? '');
+      setName(await getCookie('intra_auth_name') ?? '');
+      setAvatarCacheVersion(Date.now());
+    };
+
+    window.addEventListener("intra:auth-user-updated", onAuthUserUpdated);
+    return () => {
+      window.removeEventListener("intra:auth-user-updated", onAuthUserUpdated);
+    };
+  }, []);
+
+  const initData = async () => {
+    setName(await getCookie('intra_auth_name') ?? '')
+  }
+
+  useEffect(() => {
+    if (picture != '') {
+      const fetchProfilePicture = async () => {
+        setProfilePicture(await getCookie('intra_auth_picture') ?? '')
+        setAvatarCacheVersion(Date.now())
+      }
+      fetchProfilePicture()
     }
 
-    if(picture == ''){
+    if (picture == '') {
       const showSnackbar = async () => {
-        if(text && severity){
-          const res = await snackbar.show(text,severity,500)
+        if (text && severity) {
+          const res = await snackbar.show(text, severity, 500)
 
-          if(res){
-              router.push('/login')
+          if (res) {
+            // router.push('/login')
           }
         }
       }
 
       showSnackbar()
     }
-  },[picture,text,severity])
+  }, [picture, text, severity])
 
-  return(
+  useEffect(() => {
+    setName(auth.name ?? name)
+  }, [auth])
+
+  return (
     <>
-      <ListItem
-        disablePadding
-      >
-        <ListItemAvatar>
-          <Avatar
-            onClick={() => setOpenEditProfile(true)}
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: '0',
-              fontFamily: 'Roboto, sans-serif',
-              lineHeight: '1',
-              overflow: 'hidden',
-              userSelect: 'none',
-              cursor: 'pointer',
-              borderRadius: '22px',
-              width: '44px',
-              height: '44px',
-              fontSize: '1.5rem',
-              color: '#50623A',
-              border: 'none rgb(33, 150, 243)',
-              background: 'rgb(255, 255, 255)',
-              marginRight: '12px',
-              '&:hover .edit-icon-hover': {
-                display: 'flex',
-              }
-            }}
-          >
-            <Box
-              className="edit-icon-hover"
-              sx={{
-                height: '100%',
-                width: '100%',
-                display: 'none',
-                position: 'absolute',
-                color: 'white',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)'
-              }}>
-              <EditIcon />
-            </Box>
-            {
-              profilePicture != '/storage/' ?
-              <img src={`${(process.env.NEXT_PUBLIC_TARGET_API)?.replace('/api','')}${profilePicture}`} alt="profile-picture" style={{
-                objectFit: 'cover',
-                objectPosition: 'bottom',
-                width: '100%',
-              }}/>
-              :
-              <PersonIcon />
-            }
-          </Avatar>
-        </ListItemAvatar>
-      </ListItem>
-      <Link href={'/profile'} passHref style={{ textDecoration: 'none', color: 'inherit'}}>
-          <ListItemButton sx={{padding: '0px'}}>
-              <ListItemIcon sx={{height: '46px', width: '46px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                  <SettingsIcon />
-              </ListItemIcon>
-          </ListItemButton>
-      </Link>
+      <Box>
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      flexDirection: 'column',
+      gap: '12px',
+      border: '2px solid #30318B',
+      borderRadius: '12px',
+      padding: '5px',
+      transition: '0.2s',
+
+      // Hover
+      '&:hover': {
+        backgroundColor: '#30318B',
+        '& *': { color: 'white !important' },
+      },
+
+      // Active / current page
+      ...(currentPath.includes('/profile') && {
+        backgroundColor: '#30318B',
+        '& *': { color: 'white !important' },
+      }),
+    }}
+  >
+    <Avatar
+      onClick={() => router.push('/profile')}
+      sx={{
+        width: 34,
+        height: 34,
+        cursor: 'pointer',
+        bgcolor: '#fff',
+        outline: 'none',
+
+        '&:focus, &:focus-visible': {
+          outline: 'none',
+          boxShadow: 'none',
+        },
+      }}
+    >
+      {profilePicture !== '/storage/' ? (
+        <img
+          src={buildProfilePictureSrc(profilePicture, avatarCacheVersion)}
+          alt="profile-picture"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = "/images/person.png";
+          }}
+          style={{
+            objectFit: 'cover',
+            width: '100%',
+            height: '100%',
+            borderRadius: '100%',
+          }}
+        />
+      ) : (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#F59E0B',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '14px',
+            fontWeight: 600,
+            color: 'white',
+          }}
+        >
+          {getShortName(name ?? '')}
+        </Box>
+      )}
+    </Avatar>
+  </Box>
+</Box>
+
       <ModalProfilePicture open={openEditProfile} setOpen={setOpenEditProfile} />
     </>
   )

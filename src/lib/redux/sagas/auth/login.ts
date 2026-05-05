@@ -15,9 +15,6 @@ export function* loginSagas({ param }: AnyAction) {
     const loginResponse: LoginServiceResponse = yield login(param);
     const data = loginResponse.data;
 
-    console.log(data);
-
-    // 🚨 WARNING: access_token boolean itu aneh
     setCookie("intra_auth_user_id", data.user.id);
     setCookie("intra_auth_token", data.access_token); 
     setCookie("intra_auth_name", data.user.name);
@@ -25,17 +22,12 @@ export function* loginSagas({ param }: AnyAction) {
     setCookie("intra_auth_role", data.role);
     setCookie("intra_auth_expires_in", data.expires_in);
 
-    // menu access sekarang simple array
     setCookie("intra_auth_menu_access", data.menu_access);
 
     window.localStorage.setItem(
       "intra_auth_menu_access",
       JSON.stringify(data.menu_access)
     );
-
-    // ❌ REMOVE ini semua karena sudah tidak ada di backend
-    // create/edit/delete access sudah hilang
-    // kalau kamu tetap pakai, itu fake security
 
     yield put(
       receiveAuth({

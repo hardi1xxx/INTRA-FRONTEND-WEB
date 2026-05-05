@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login?" + searchParams.toString(), request.url));
   }
 
-  if (request.nextUrl.pathname == "/" || (request.nextUrl.pathname.includes("/login") && request.cookies.has("intra_auth_token"))) {
+  if (request.nextUrl.pathname === "/" && request.cookies.has("intra_auth_token")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
