@@ -1,18 +1,39 @@
 import { UpsertSTORequest } from "@/app/(postlogin)/master/sto/schema";
-import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, WithId } from "@/type/services";
+import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, GetFilterOptionsRequest, WithId } from "@/type/services";
 import { AxiosInstance } from "axios";
 import moment from "moment";
 
 // get dropdown options
+const getFilterSTO =
+  (axios: AxiosInstance) =>
+  async (
+    props: GetFilterOptionsRequest
+  ): Promise<GetDropdownOptionsResponse> => {
+    const response = await axios.post(
+      "v1/master/sto/filter",
+      {
+        ...props,
+      }
+    );
+
+    const options = (response.data.data as Record<string, any>[]).map(
+      (item) => ({
+        value: item[props.column],
+        label: item[props.column],
+      })
+    );
+
+    return options;
+  };
+
 const getDropdownSTO =
   (axios: AxiosInstance) =>
   async (
     props: GetDropdownOptionsRequest
   ): Promise<GetDropdownOptionsResponse> => {
     const response = await axios.post(
-      "/master/sto/show",
+      "v1/master/sto/dropdown",
       {
-        type: "dropdown",
         ...props,
       }
     );
@@ -32,7 +53,7 @@ const getSTODatatable =
   (axios: AxiosInstance) =>
   async (props: GetDatatableRequest): Promise<GetDatatableResponse> => {
     const response = await axios.post(
-      "/master/sto/show",
+      "v1/master/sto/show",
       {
         ...props,
       }
@@ -41,12 +62,23 @@ const getSTODatatable =
     return response.data.data;
   };
 
+// get data table
+const getSTOByID =
+  (axios: AxiosInstance) =>
+  async ({ id }: WithId): Promise<string> => {
+    const response = await axios.get(
+      `v1/master/sto/detail/${id}`
+    );
+
+    return response.data;
+  };
+
 // update status
 const updateStatusSTO =
   (axios: AxiosInstance) =>
   async ({ id, status }: WithId & { status: 0 | 1 }): Promise<string> => {
     const response = await axios.put(
-      `/master/sto/update-status/${id}`,
+      `v1/master/sto/update-status/${id}`,
       {
         status,
       }
@@ -60,7 +92,7 @@ const createSTO =
   (axios: AxiosInstance) =>
   async (props: UpsertSTORequest): Promise<string> => {
     const response = await axios.post(
-      `/master/sto/insert`,
+      `v1/master/sto/create`,
       {
         ...props,
       }
@@ -77,7 +109,7 @@ const updateSTO =
     ...props
   }: UpsertSTORequest & WithId): Promise<string> => {
     const response = await axios.put(
-      `/master/sto/update/${id}`,
+      `v1/master/sto/update/${id}`,
       {
         ...props,
       }
@@ -91,7 +123,7 @@ const deleteSTO =
   (axios: AxiosInstance) =>
   async ({ id }: WithId): Promise<string> => {
     const response = await axios.delete(
-      `/master/sto/delete/${id}`
+      `v1/master/sto/delete/${id}`
     );
 
     return response.data.message;
@@ -102,7 +134,7 @@ const exportSTO =
   (axios: AxiosInstance) =>
   async (props?: GetDatatableRequest): Promise<Blob> => {
     const response = await axios.post(
-      `/master/sto/excel-download`,
+      `v1/master/sto/export`,
       {
         ...props,
       },
@@ -115,7 +147,7 @@ const exportSTO =
     link.href = url;
     link.setAttribute(
       "download",
-      `Master-sto-export-${moment().format("YYYY-MM-DD")}.xlsx`
+      `Master-STO-export-${moment().format("YYYY-MM-DD")}.xlsx`
     );
     document.body.appendChild(link);
     link.click();
@@ -126,7 +158,9 @@ const exportSTO =
 // make a singleton services
 export const STOServices = (axios: AxiosInstance) => ({
   getDropdownSTO: getDropdownSTO(axios),
+  getFilterSTO: getFilterSTO(axios),
   getSTODatatable: getSTODatatable(axios),
+  getSTOByID: getSTOByID(axios),
   updateStatusSTO: updateStatusSTO(axios),
   createSTO: createSTO(axios),
   updateSTO: updateSTO(axios),

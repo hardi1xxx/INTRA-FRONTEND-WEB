@@ -1,18 +1,39 @@
 import { UpsertBranchRequest } from "@/app/(postlogin)/master/branch/schema";
-import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, WithId } from "@/type/services";
+import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, GetFilterOptionsRequest, WithId } from "@/type/services";
 import { AxiosInstance } from "axios";
 import moment from "moment";
 
 // get dropdown options
+const getFilterBranch =
+  (axios: AxiosInstance) =>
+  async (
+    props: GetFilterOptionsRequest
+  ): Promise<GetDropdownOptionsResponse> => {
+    const response = await axios.post(
+      "v1/master/branch/filter",
+      {
+        ...props,
+      }
+    );
+
+    const options = (response.data.data as Record<string, any>[]).map(
+      (item) => ({
+        value: item[props.column],
+        label: item[props.column],
+      })
+    );
+
+    return options;
+  };
+
 const getDropdownBranch =
   (axios: AxiosInstance) =>
   async (
     props: GetDropdownOptionsRequest
   ): Promise<GetDropdownOptionsResponse> => {
     const response = await axios.post(
-      "/master/branch/show",
+      "v1/master/branch/dropdown",
       {
-        type: "dropdown",
         ...props,
       }
     );
@@ -32,7 +53,7 @@ const getBranchDatatable =
   (axios: AxiosInstance) =>
   async (props: GetDatatableRequest): Promise<GetDatatableResponse> => {
     const response = await axios.post(
-      "/master/branch/show",
+      "v1/master/branch/show",
       {
         ...props,
       }
@@ -41,12 +62,23 @@ const getBranchDatatable =
     return response.data.data;
   };
 
+// get data table
+const getBranchByID =
+  (axios: AxiosInstance) =>
+  async ({ id }: WithId): Promise<string> => {
+    const response = await axios.get(
+      `v1/master/branch/detail/${id}`
+    );
+
+    return response.data;
+  };
+
 // update status
 const updateStatusBranch =
   (axios: AxiosInstance) =>
   async ({ id, status }: WithId & { status: 0 | 1 }): Promise<string> => {
     const response = await axios.put(
-      `/master/branch/update-status/${id}`,
+      `v1/master/branch/update-status/${id}`,
       {
         status,
       }
@@ -60,7 +92,7 @@ const createBranch =
   (axios: AxiosInstance) =>
   async (props: UpsertBranchRequest): Promise<string> => {
     const response = await axios.post(
-      `/master/branch/insert`,
+      `v1/master/branch/create`,
       {
         ...props,
       }
@@ -77,7 +109,7 @@ const updateBranch =
     ...props
   }: UpsertBranchRequest & WithId): Promise<string> => {
     const response = await axios.put(
-      `/master/branch/update/${id}`,
+      `v1/master/branch/update/${id}`,
       {
         ...props,
       }
@@ -91,7 +123,7 @@ const deleteBranch =
   (axios: AxiosInstance) =>
   async ({ id }: WithId): Promise<string> => {
     const response = await axios.delete(
-      `/master/branch/delete/${id}`
+      `v1/master/branch/delete/${id}`
     );
 
     return response.data.message;
@@ -102,7 +134,7 @@ const exportBranch =
   (axios: AxiosInstance) =>
   async (props?: GetDatatableRequest): Promise<Blob> => {
     const response = await axios.post(
-      `/master/branch/excel-download`,
+      `v1/master/branch/export`,
       {
         ...props,
       },
@@ -126,7 +158,9 @@ const exportBranch =
 // make a singleton services
 export const BranchServices = (axios: AxiosInstance) => ({
   getDropdownBranch: getDropdownBranch(axios),
+  getFilterBranch: getFilterBranch(axios),
   getBranchDatatable: getBranchDatatable(axios),
+  getBranchByID: getBranchByID(axios),
   updateStatusBranch: updateStatusBranch(axios),
   createBranch: createBranch(axios),
   updateBranch: updateBranch(axios),

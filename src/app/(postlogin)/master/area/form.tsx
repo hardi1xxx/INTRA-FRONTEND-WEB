@@ -6,7 +6,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Dialogs } from "@/components/dialog";
 import { RootState } from "@/lib/redux/store";
-import { CREATE_AREA, UPDATE_AREA } from "@/lib/redux/types";
+import { CREATE_AREA, GET_REGIONAL_DROPDOWN, UPDATE_AREA } from "@/lib/redux/types";
 import { WithId } from "@/type/services";
 import { UpsertAreaRequest, upsertAreaSchema } from "./schema";
 import { TextControlWidget } from "@/components/Input/TextControlWidget";
@@ -24,6 +24,7 @@ const UpsertForm = ({ open, setOpen, data, ...props }: FormType) => {
   const dispatch = useDispatch();
   const { fetching } = useSelector((state: RootState) => state.area);
   const { severity } = useSelector((state: RootState) => state.notification);
+  const { dropdownOptions, dropdownOptionsLoading } = useSelector((state: RootState) => state.regional);
 
   const {
     control, 
@@ -82,6 +83,17 @@ const UpsertForm = ({ open, setOpen, data, ...props }: FormType) => {
       dispatch({ type: CREATE_AREA, payload });
     }
   };
+
+  const onRegionalInputChange = (event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => {
+    if (reason === "input" && value.length >= 1) {
+      dispatch({
+        type: GET_REGIONAL_DROPDOWN,
+        payload: { search: value },
+      });
+    }
+  };
+
+  const debouncedRegionalInputChange = debounce(onRegionalInputChange, 500);
 
   return (
     <Dialogs open={open} title={`Form ${data?.id ? "Edit" : "Add"}`} setOpen={setOpen}>

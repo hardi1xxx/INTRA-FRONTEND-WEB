@@ -1,18 +1,39 @@
 import { UpsertMitraRequest } from "@/app/(postlogin)/master/mitra/schema";
-import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, WithId } from "@/type/services";
+import { GetDatatableRequest, GetDatatableResponse, GetDropdownOptionsRequest, GetDropdownOptionsResponse, GetFilterOptionsRequest, WithId } from "@/type/services";
 import { AxiosInstance } from "axios";
 import moment from "moment";
 
 // get dropdown options
+const getFilterMitra =
+  (axios: AxiosInstance) =>
+  async (
+    props: GetFilterOptionsRequest
+  ): Promise<GetDropdownOptionsResponse> => {
+    const response = await axios.post(
+      "v1/master/mitra/filter",
+      {
+        ...props,
+      }
+    );
+
+    const options = (response.data.data as Record<string, any>[]).map(
+      (item) => ({
+        value: item[props.column],
+        label: item[props.column],
+      })
+    );
+
+    return options;
+  };
+
 const getDropdownMitra =
   (axios: AxiosInstance) =>
   async (
     props: GetDropdownOptionsRequest
   ): Promise<GetDropdownOptionsResponse> => {
     const response = await axios.post(
-      "/master/mitra/show",
+      "v1/master/mitra/dropdown",
       {
-        type: "dropdown",
         ...props,
       }
     );
@@ -32,7 +53,7 @@ const getMitraDatatable =
   (axios: AxiosInstance) =>
   async (props: GetDatatableRequest): Promise<GetDatatableResponse> => {
     const response = await axios.post(
-      "/master/mitra/show",
+      "v1/master/mitra/show",
       {
         ...props,
       }
@@ -41,12 +62,23 @@ const getMitraDatatable =
     return response.data.data;
   };
 
+// get data table
+const getMitraByID =
+  (axios: AxiosInstance) =>
+  async ({ id }: WithId): Promise<string> => {
+    const response = await axios.get(
+      `v1/master/mitra/detail/${id}`
+    );
+
+    return response.data;
+  };
+
 // update status
 const updateStatusMitra =
   (axios: AxiosInstance) =>
   async ({ id, status }: WithId & { status: 0 | 1 }): Promise<string> => {
     const response = await axios.put(
-      `/master/mitra/update-status/${id}`,
+      `v1/master/mitra/update-status/${id}`,
       {
         status,
       }
@@ -60,7 +92,7 @@ const createMitra =
   (axios: AxiosInstance) =>
   async (props: UpsertMitraRequest): Promise<string> => {
     const response = await axios.post(
-      `/master/mitra/insert`,
+      `v1/master/mitra/create`,
       {
         ...props,
       }
@@ -77,7 +109,7 @@ const updateMitra =
     ...props
   }: UpsertMitraRequest & WithId): Promise<string> => {
     const response = await axios.put(
-      `/master/mitra/update/${id}`,
+      `v1/master/mitra/update/${id}`,
       {
         ...props,
       }
@@ -91,7 +123,7 @@ const deleteMitra =
   (axios: AxiosInstance) =>
   async ({ id }: WithId): Promise<string> => {
     const response = await axios.delete(
-      `/master/mitra/delete/${id}`
+      `v1/master/mitra/delete/${id}`
     );
 
     return response.data.message;
@@ -102,7 +134,7 @@ const exportMitra =
   (axios: AxiosInstance) =>
   async (props?: GetDatatableRequest): Promise<Blob> => {
     const response = await axios.post(
-      `/master/mitra/excel-download`,
+      `v1/master/mitra/export`,
       {
         ...props,
       },
@@ -115,7 +147,7 @@ const exportMitra =
     link.href = url;
     link.setAttribute(
       "download",
-      `Master-mitra-export-${moment().format("YYYY-MM-DD")}.xlsx`
+      `Master-Mitra-export-${moment().format("YYYY-MM-DD")}.xlsx`
     );
     document.body.appendChild(link);
     link.click();
@@ -126,7 +158,9 @@ const exportMitra =
 // make a singleton services
 export const MitraServices = (axios: AxiosInstance) => ({
   getDropdownMitra: getDropdownMitra(axios),
+  getFilterMitra: getFilterMitra(axios),
   getMitraDatatable: getMitraDatatable(axios),
+  getMitraByID: getMitraByID(axios),
   updateStatusMitra: updateStatusMitra(axios),
   createMitra: createMitra(axios),
   updateMitra: updateMitra(axios),

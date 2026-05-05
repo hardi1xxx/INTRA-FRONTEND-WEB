@@ -1,5 +1,10 @@
-export type GetDropdownOptionsRequest = {
+export type GetFilterOptionsRequest = {
   column: string;
+  search?: string;
+  [key: string]: any;
+};
+
+export type GetDropdownOptionsRequest = {
   search?: string;
   [key: string]: any;
 };

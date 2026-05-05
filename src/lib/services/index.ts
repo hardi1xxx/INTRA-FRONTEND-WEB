@@ -139,8 +139,10 @@ export const {
   //master
 
   //Status Project
+  getFilterStatusProject,
   getDropdownStatusProject,
   getStatusProjectDatatable,
+  getStatusProjectByID,
   createStatusProject,
   deleteStatusProject,
   updateStatusProject,
@@ -148,8 +150,10 @@ export const {
   exportStatusProject,
 
   //Category Project
+  getFilterCategoryProject,
   getDropdownCategoryProject,
   getCategoryProjectDatatable,
+  getCategoryProjectByID,
   createCategoryProject,
   deleteCategoryProject,
   updateCategoryProject,
@@ -157,8 +161,10 @@ export const {
   exportCategoryProject,
 
   //Mitra
+  getFilterMitra,
   getDropdownMitra,
   getMitraDatatable,
+  getMitraByID,
   createMitra,
   deleteMitra,
   updateMitra,
@@ -166,8 +172,10 @@ export const {
   exportMitra,
 
   //Batch
+  getFilterBatch,
   getDropdownBatch,
   getBatchDatatable,
+  getBatchByID,
   createBatch,
   deleteBatch,
   updateBatch,
@@ -175,8 +183,10 @@ export const {
   exportBatch,
 
   //Regional
+  getFilterRegional,
   getDropdownRegional,
   getRegionalDatatable,
+  getRegionalByID,
   createRegional,
   deleteRegional,
   updateRegional,
@@ -184,8 +194,10 @@ export const {
   exportRegional,
 
   //Area
+  getFilterArea,
   getDropdownArea,
   getAreaDatatable,
+  getAreaByID,
   createArea,
   deleteArea,
   updateArea,
@@ -193,8 +205,10 @@ export const {
   exportArea,
 
   //Branch
+  getFilterBranch,
   getDropdownBranch,
   getBranchDatatable,
+  getBranchByID,
   createBranch,
   deleteBranch,
   updateBranch,
@@ -202,8 +216,10 @@ export const {
   exportBranch,
 
   //STO
+  getFilterSTO,
   getDropdownSTO,
   getSTODatatable,
+  getSTOByID,
   createSTO,
   deleteSTO,
   updateSTO,
